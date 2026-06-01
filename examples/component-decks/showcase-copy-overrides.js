@@ -2349,6 +2349,18 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       text: "工具调用示例聚焦真实汇报中的动作。",
       colorToken: "--ink",
     },
+    "text:xhs3_12:7": {
+      id: "text:xhs3_12:7",
+      slide: 55,
+      slideId: "xhs3_12-55",
+      slideKey: "xhs3_12",
+      layout: "XHS3-12",
+      html: "讨论结束后，动作和结论进入待办。",
+      text: "讨论结束后，动作和结论进入待办。",
+      colorToken: "--theme-st1-paper",
+      scope: "theme",
+      theme: "dark",
+    },
     "text:xhs3_14:6": {
       id: "text:xhs3_14:6",
       slide: 57,
