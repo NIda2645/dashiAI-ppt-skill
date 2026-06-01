@@ -1389,7 +1389,7 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       layout: "RP02",
       html: "复盘目录导航进入负责人",
       text: "复盘目录导航进入负责人",
-      colorToken: "--border-subtle",
+      colorToken: "--theme-xhs-navy",
     },
     "text:rp03:3": {
       id: "text:rp03:3",
@@ -2040,7 +2040,7 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       slideId: "bt09-9",
       slideKey: "bt09",
       layout: "BT09",
-      backgroundColorToken: "--grey-1",
+      backgroundColorToken: "--focus-mark",
     },
     "text:bt10:5": {
       id: "text:bt10:5",
@@ -2050,6 +2050,7 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       layout: "BT10",
       html: "视觉概念目标<br><span class=\"bt-accent\">视觉概念</span>P1",
       text: "视觉概念目标 视觉概念P1",
+      colorToken: "--theme-x2-bg",
     },
     "text:bt10:7": {
       id: "text:bt10:7",
@@ -2129,6 +2130,16 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       html: "讨论结束后，依赖和结论进入待办。",
       text: "讨论结束后，依赖和结论进入待办。",
       colorToken: "--accent-on",
+    },
+    "text:bt12:6": {
+      id: "text:bt12:6",
+      slide: 12,
+      slideId: "bt12-12",
+      slideKey: "bt12",
+      layout: "BT12",
+      html: "Owner<br><span class=\"bt-title-alt\">范围</span>.<br>会后行动<br>排期<span class=\"dim\">.</span>",
+      text: "Owner 范围. 会后行动 排期.",
+      colorToken: "--theme-x2-on-accent",
     },
     "text:bt12:8": {
       id: "text:bt12:8",
@@ -2379,6 +2390,7 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       html: "能力边界页 · 边界<span>边界</span>证据<br>动作由 Owner 跟进<br>能力边界边界",
       text: "能力边界页 · 边界边界证据 动作由 Owner 跟进 能力边界边界",
       fontSizeToken: "--fs-h2",
+      colorToken: "--ink",
     },
     "text:xhs3_04:7": {
       id: "text:xhs3_04:7",
@@ -2921,7 +2933,9 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       layout: "XHS3-20",
       html: "这页面向真实 PPT 场景，重点是对齐范围、确认排期，并形成可追踪结论。",
       text: "这页面向真实 PPT 场景，重点是对齐范围、确认排期，并形成可追踪结论。",
-      colorToken: "--accent-on",
+      colorToken: "--text-primary",
+      scope: "theme",
+      theme: "dark",
     },
     "text:xhs3_20:10": {
       id: "text:xhs3_20:10",
@@ -2954,7 +2968,7 @@ export const SHOWCASE_DEV_ADJUSTMENTS = {
       layout: "XHS3-20",
       html: "治理任务列表不做泛泛介绍，只承载会中判断、负责人和下一步动作。",
       text: "治理任务列表不做泛泛介绍，只承载会中判断、负责人和下一步动作。",
-      colorToken: "--accent-on",
+      colorToken: "--text-primary",
       scope: "theme",
       theme: "dark",
     },
