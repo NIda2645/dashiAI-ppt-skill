@@ -410,7 +410,7 @@ export const SHOWCASE_TEXT_OVERRIDES = {
   "text:bt01:4": "<span>LAUNCH</span>",
   "text:bt01:5": "MARKET",
   "text:bt01:6": "新品发布会目标<span class=\"bt-accent\">新品发布</span>",
-  "text:bt01:7": "Q2<br><span class=\"bt-title-alt muted\">目标</span><br>负责人<span class=\"dim\">.</span>",
+  "text:bt01:7": "Q2<br><span class=\"bt-title-alt muted\">目标</span><br>负责人211<span class=\"dim\">.</span>",
   "text:bt01:8": "AGENDA",
   "text:bt01:9": "新品发布会线索",
   "text:bt01:10": "SIGNAL",
