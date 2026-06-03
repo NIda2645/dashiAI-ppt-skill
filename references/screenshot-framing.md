@@ -53,7 +53,7 @@
 - 背景: `paper` / `blurred` / 低饱和 `gradient`
 - 质感:纸张、墨水、胶片颗粒、暖白、低对比
 - 截图:可用小圆角和轻微阴影,但不要像 SaaS 营销卡片
-- 背景资产:优先使用 `assets/screenshot-backgrounds/style-a/` 下对应主题的 16:9 crop-safe WebP,截图合成时按槽位裁切
+- 背景:由当前布局自身 CSS 承担,不再依赖内置浅色背景图片素材
 - 推荐语义:
 
 ```text
@@ -65,7 +65,7 @@ ratio:16:10, background:paper, padding:standard, inset:balanced, shadow:editoria
 - 背景: `plain` / `grid` / `dot-matrix`
 - 色彩:只允许当前锚点色作为极低占比强调;不要大面积亮色块
 - 截图:直角、无阴影、无圆角、少量 hairline 或顶部 accent 线
-- 背景资产:优先使用 `assets/screenshot-backgrounds/style-b/` 下对应主题色的 16:9 crop-safe WebP,只用当前 accent,不要混色
+- 背景:由当前布局自身 CSS 承担,只用当前 accent,不要混色
 - 推荐语义:
 
 ```text
@@ -82,32 +82,9 @@ ratio:21:9, background:grid, padding:standard, inset:subtle, shadow:none, corner
 - 背景不能有文字、logo、图标、人物、设备、边框、明显主体或方向性构图。
 - 背景必须 crop-safe:裁成 `21:9`、`16:10`、`4:3`、`1:1` 都不能暴露“被裁掉”的痕迹。
 
-## 内置主题背景资产
+## 背景素材约束
 
-本 Skill 已经内置一组 GPT-M 2.0 预生成背景。处理截图时**优先使用这些资产**,不要实时调用 GPT-M 2.0 重新生成背景。只有用户明确要求新风格、现有主题缺失,或背景与内容明显不匹配时,才生成新的背景。
-
-背景图之后由程序复用到每张截图中。不要把背景当作单张 slide 来画,背景图内部不能有标题、页脚、边框、logo、人物或明显主体。
-
-### Style A · 5 套主题背景
-
-| 主题 | 内置资产 | 背景语义 |
-|---|---|---|
-| 墨水经典 | `assets/screenshot-backgrounds/style-a/monocle-classic.webp` | 黑白灰纸张纹理、柔和阴影、细颗粒 |
-| 靛蓝瓷 | `assets/screenshot-backgrounds/style-a/indigo-porcelain.webp` | 靛蓝低饱和墨色、纸感渐变、轻微噪点 |
-| 森林墨 | `assets/screenshot-backgrounds/style-a/forest-ink.webp` | 模糊植物阴影、低饱和绿色、纸张颗粒 |
-| 牛皮纸 | `assets/screenshot-backgrounds/style-a/kraft-paper.webp` | 暖纸色、淡墨阴影、复古印刷颗粒 |
-| 沙丘 | `assets/screenshot-backgrounds/style-a/dune.webp` | 沙色/灰调柔和渐变、低对比、留白安静 |
-
-### Style B · 4 套主题背景
-
-| 主题色 | 内置资产 | 背景语义 |
-|---|---|---|
-| IKB 蓝 | `assets/screenshot-backgrounds/style-b/ikb-dot-gradient.webp` | 点阵 + 低对比蓝色渐变,避免亮蓝大色块 |
-| 柠檬黄 | `assets/screenshot-backgrounds/style-b/lemon-grid.webp` | 纯网格 + 稀疏点阵,黄色只做低透明细线/点 |
-| 柠檬绿 | `assets/screenshot-backgrounds/style-b/lemon-green-dot-shadow.webp` | 点阵 + 阴影场,绿色只做轻微光感 |
-| 安全橙 | `assets/screenshot-backgrounds/style-b/safety-orange-halftone.webp` | 模块化半调点阵 + 暗部阴影,橙色低占比 |
-
-内置背景都是 1920×1080 级别的 16:9 WebP。程序化合成时,先把背景 cover 到目标画布,再裁成 `21:9` / `16:10` / `4:3` / `1:1` 等截图槽位。背景必须四角安静,因为截图可能居中、左上、右下或被裁成不同尺寸。
+内置浅色背景图片素材已删除。处理截图时,只保留截图自身和必要的程序化留边/缩放/对齐;背景由当前布局、主题或 Shader 自己承担,不要再引用旧浅色背景图片目录。
 
 ## 截图类型决策
 

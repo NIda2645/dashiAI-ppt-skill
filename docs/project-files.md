@@ -4,6 +4,9 @@
 
 ```text
 .
+|-- .codex/
+|   `-- environments/
+|       `-- environment.toml - 项目源码或配置文件。
 |-- .githooks/
 |   `-- pre-commit - 本地 Git pre-commit hook,提交前重生成 README、ADR 和文件作用说明并自动 stage。
 |-- assets/
@@ -79,28 +82,16 @@
 |   |           |-- img-066.jpg - 小红书分享3导入布局使用的本地图片资源。
 |   |           |-- img-067.jpg - 小红书分享3导入布局使用的本地图片资源。
 |   |           `-- img-068.jpg - 小红书分享3导入布局使用的本地图片资源。
-|   |-- screenshot-backgrounds/
-|   |   |-- style-a/
-|   |   |   |-- dune.webp - Style A 沙丘截图背景资源。
-|   |   |   |-- forest-ink.webp - Style A 森林墨截图背景资源。
-|   |   |   |-- indigo-porcelain.webp - Style A 靛蓝瓷截图背景资源。
-|   |   |   |-- kraft-paper.webp - Style A 牛皮纸截图背景资源。
-|   |   |   `-- monocle-classic.webp - Style A 墨水经典截图背景资源。
-|   |   `-- style-b/
-|   |       |-- ikb-dot-gradient.webp - Style B IKB 蓝截图背景资源。
-|   |       |-- lemon-green-dot-shadow.webp - Style B 柠檬绿截图背景资源。
-|   |       |-- lemon-grid.webp - Style B 柠檬黄截图背景资源。
-|   |       `-- safety-orange-halftone.webp - Style B 安全橙截图背景资源。
 |   |-- unicorn/
-|   |   |-- automations_remix_scene.json - 可选 shader 背景使用的 Unicorn Studio 本地场景文件。
-|   |   |-- blue_donut_remix_scene.json - 媒体占位组件使用的 Unicorn Studio 本地 shader 场景文件,运行时会跟随主题 focus 色替换主色。
-|   |   |-- goey_balls_remix_scene.json - 可选 shader 背景使用的 Unicorn Studio 本地场景文件。
-|   |   |-- moving_into_remix_scene.json - 第 7 页可选随机 shader 背景使用的 Unicorn Studio 本地场景文件。
-|   |   `-- tech_background_remix_scene.json - 可选 shader 背景使用的 Unicorn Studio 本地场景文件。
-|   `-- template-swiss.html - 静态 PPT HTML 外壳模板,包含 CSS、背景、翻页、导航、预览控制器和 GSAP 动效入口。
+|   |   |-- automations_remix_scene.json - Shader 背景 Automations 场景 JSON。
+|   |   |-- blue_donut_remix_scene.json - Shader 背景 Blue Donut 场景 JSON。
+|   |   |-- goey_balls_remix_scene.json - Shader 背景 Goey Balls 场景 JSON。
+|   |   |-- moving_into_remix_scene.json - Shader 背景 Moving Into 场景 JSON。
+|   |   `-- tech_background_remix_scene.json - Shader 背景 Tech Background 场景 JSON。
+|   `-- template-swiss.html - 静态 PPT HTML 外壳模板,包含 CSS、Shader 背景、翻页、导航、预览控制器和 GSAP 动效入口。
 |-- docs/
 |   |-- ADR.md - 架构决策记录,描述当前生成链路和组件化边界。
-|   |-- import-tokenization-notes.md - 项目文档。
+|   |-- import-fidelity-notes.md - 项目文档。
 |   `-- project-files.md - 项目文件作用说明,由脚本根据当前文件列表生成。
 |-- examples/
 |   |-- component-decks/
@@ -124,7 +115,7 @@
 |   |-- render-deck.jsx - 渲染 CLI 入口,把 deck 配置文件输出成静态 HTML。
 |   |-- render-goal-deck.jsx - 目标计划渲染 CLI,把 JSON 组件组合计划输出成静态 HTML。
 |   |-- update-project-docs.mjs - 文档同步脚本,更新 README、ADR 和项目文件作用说明。
-|   |-- validate-layout-showcase.mjs - 布局总览覆盖校验器,确保 all-layouts-showcase 穷举 A01-A10、canonical S01-S22 和 Style B 登记扩展。
+|   |-- validate-layout-showcase.mjs - 布局总览覆盖校验器,确保 all-layouts-showcase 穷举当前 LAYOUT_OPTIONS 登记的逻辑页。
 |   `-- validate-swiss-deck.mjs - 静态 deck 校验器,检查合法 layout、图片槽位和禁用模式。
 |-- src/
 |   |-- components/
@@ -135,14 +126,14 @@
 |   |   |   |-- BT04Pipeline.jsx - 黑科技技能分享第 4 页四阶段流程布局组件。
 |   |   |   |-- BT05Halftone.jsx - 黑科技技能分享第 5 页半调海报+说明列表布局组件。
 |   |   |   |-- BT06Dither.jsx - 黑科技技能分享第 6 页媒体占位+可切换图表布局组件。
-|   |   |   |-- BT07Warp.jsx - 黑科技技能分享第 7 页可替换 shader 背景布局组件。
+|   |   |   |-- BT07Warp.jsx - 黑科技技能分享第 7 页 Shader 视觉转场布局组件。
 |   |   |   |-- BT08Compression.jsx - 黑科技技能分享第 8 页大数字+基准表格布局组件。
 |   |   |   |-- BT09Failures.jsx - 黑科技技能分享第 9 页失败模式三栏布局组件。
 |   |   |   |-- BT10Observation.jsx - 黑科技技能分享第 10 页点阵观察布局组件。
 |   |   |   |-- BT11Applications.jsx - 黑科技技能分享第 11 页应用场景四宫格布局组件。
 |   |   |   |-- BT12Closing.jsx - 黑科技技能分享第 12 页收尾布局组件。
 |   |   |   |-- index.jsx - 黑科技技能分享布局组件统一导出口。
-|   |   |   `-- primitives.jsx - 黑科技技能分享布局共享基础件,包含可替换页眉页脚、媒体占位、caption、shader 背景和可切换图表。
+|   |   |   `-- primitives.jsx - 黑科技技能分享布局共享基础件,包含可替换页眉页脚、媒体占位、caption、Shader 背景和可切换图表。
 |   |   |-- cards/
 |   |   |   |-- Card.jsx - 卡片组件。
 |   |   |   `-- index.jsx - 卡片组件。
@@ -199,7 +190,6 @@
 |   |   |-- style2/
 |   |   |   |-- index.jsx - style2 布局组件统一导出口。
 |   |   |   |-- primitives.jsx - style2 布局共享基础件。
-|   |   |   |-- Style2_01Cover.jsx - style2 幕間影像年鑑第 1 页封面布局组件。
 |   |   |   |-- Style2_02Manifesto.jsx - style2 幕間影像年鑑第 2 页引言布局组件。
 |   |   |   |-- Style2_03Data.jsx - style2 幕間影像年鑑第 3 页数据图表布局组件。
 |   |   |   |-- Style2_04Editorial.jsx - style2 幕間影像年鑑第 4 页文章排版布局组件。
@@ -210,6 +200,88 @@
 |   |   |   |-- KickerTitle.jsx - 文本表达组件,负责 kicker、标题、引用和 meta 信息。
 |   |   |   |-- MetaRow.jsx - 文本表达组件,负责 kicker、标题、引用和 meta 信息。
 |   |   |   `-- QuoteBlock.jsx - 文本表达组件,负责 kicker、标题、引用和 meta 信息。
+|   |   |-- theme-pages/
+|   |   |   |-- index.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page01.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page02.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page03.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page04.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page05.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page06.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page07.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page08.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page09.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page10.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page11.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page12.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page13.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page14.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page15.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page16.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page17.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page18.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page19.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page20.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page21.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page22.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page23.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page24.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page25.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page26.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page27.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page28.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page29.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page30.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page31.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page32.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page33.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page34.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page35.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page36.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page37.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page38.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page39.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page40.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page41.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page42.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page43.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page44.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page45.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page46.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page47.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page48.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page49.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page50.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page51.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page52.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page53.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page54.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page55.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page56.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page57.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page58.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page59.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page60.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page61.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page62.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page63.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page64.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page65.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page66.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page67.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page68.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page69.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page70.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page71.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page72.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page73.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page74.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page76.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page77.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page78.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page79.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   |-- Page80.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
+|   |   |   `-- ThemePage.jsx - 逻辑页薄包装组件,把 pageXX 映射到当前登记布局。
 |   |   |-- timelines/
 |   |   |   |-- index.jsx - 时间线与流程组件。
 |   |   |   `-- Pipeline.jsx - 时间线与流程组件。
@@ -226,18 +298,11 @@
 |   |   |   |-- primitives.jsx - 小红书分享3布局组件。
 |   |   |   `-- Xhs3Deck.jsx - 小红书分享3布局组件。
 |   |   `-- index.jsx - React 生成层源码。
-|   |-- tokens/
-|   |   |-- font-weights.js - 组件生成层 token 选项。
-|   |   |-- fonts.js - 组件生成层 token 选项。
-|   |   |-- index.js - 组件生成层 token 选项。
-|   |   |-- spacing.js - 组件生成层 token 选项。
-|   |   |-- themes.js - 组件生成层 token 选项。
-|   |   `-- typography.js - 组件生成层 token 选项。
 |   |-- view-model/
 |   |   |-- context.jsx - Slide ViewModel 的 React Context,让 SlideShell 能给每页注入稳定 VM 标识。
-|   |   `-- index.jsx - Deck ViewModel 构建层,把 deck model 解析为 slide view model、token 状态和可序列化运行时模型。
+|   |   `-- index.jsx - Deck ViewModel 构建层,把 deck model 解析为 slide view model、页面顺序和可序列化运行时模型。
 |   |-- deckComposer.jsx - 目标 deck 编排器,把用户目标 JSON 计划映射为已登记布局组件组合。
-|   |-- options.jsx - 选项注册表,集中登记主题色、字体组合、字号、间距和页面版式,slide() 返回可组合的 slide model。
+|   |-- options.jsx - 选项注册表,集中登记浅色/深色主题、页面版式和旧 layout key 别名,slide() 返回可组合的 slide model。
 |   `-- renderDeck.jsx - 核心渲染器,先构建 Deck ViewModel,再把 React slides 注入模板并替换 CSS 变量、注入预览控制器选项。
 |-- .gitignore - 忽略本地依赖、生成产物和系统临时文件。
 |-- AGENTS.md - 项目级 Agent 记忆,记录本仓库长期遵守的实现约束。

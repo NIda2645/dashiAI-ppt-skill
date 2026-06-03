@@ -15,13 +15,12 @@ output/my-deck/ppt/
 
 ## 核心思路
 
-每个可变部分都是多选一:
+当前只保留两个可变入口:
 
-- `theme`: 从主题色选项中选一个
-- `fontSet`: 从字体组合中选一个
+- `theme`: `dark` 或 `light`
 - 每一页: 从页面版式选项中选一个
 
-主题、字体、字号和间距 token 在 [src/tokens/](/Users/jadon7/Documents/SynologyDrive/code/项目研究/guizang-ppt-skill-main/src/tokens/index.js)。页面版式登记在 [src/options.jsx](/Users/jadon7/Documents/SynologyDrive/code/项目研究/guizang-ppt-skill-main/src/options.jsx)。可组合基础组件按职责放在 [src/components/](/Users/jadon7/Documents/SynologyDrive/code/项目研究/guizang-ppt-skill-main/src/components/index.jsx),项目布局 preset 分别在 `components/blacktech/`、`components/report/`、`components/xhs/`、`components/xhs2/`、`components/xhs3/`、`components/style1/` 和 `components/style2/`。
+页面版式登记在 [src/options.jsx](/Users/jadon7/Documents/SynologyDrive/code/项目研究/guizang-ppt-skill-main/src/options.jsx)。当前对外只有 `page01` 到 `page74`、`page76` 到 `page80` 这 79 个逻辑页。旧的 `bt`、`report`、`xhs`、`xhs2`、`xhs3`、`style1`、`style2` key 只是兼容别名,不再增加额外页面。
 
 ## 快速开始
 
@@ -65,55 +64,30 @@ npm run render:examples
 
 ## 当前选项
 
-主题色:
+主题:
 
 - `light`: 浅色背景
 - `dark`: 深色背景
-- `colorful`: 多彩
-- `acidIndigo`: 酸绿靛蓝
-- `vermilionPaper`: 赤橙米白
-- `neonTerminal`: 霓光终端
-
-字体组合:
-
-- `cnReport`: 标题字中文: 苹方 / 正文: 苹方 / 数字字体: DIN
-- `cnEditorial`: 标题字中文: 宋体 / 正文: 思源黑体 / 数字字体: Georgia
-- `cnStrong`: 标题字中文: 思源黑体 Heavy / 正文: 苹方 / 数字字体: Avenir
-
-字号:
-
-- `large`: 大字号
-- `medium`: 中字号
-- `small`: 小字号
-
-字重:
-
-- `light`: 轻字重
-- `regular`: 标准字重
-- `bold`: 粗字重
 
 页面版式:
 
-- `bt01` 到 `bt12`: 黑科技技能分享项目提炼出的 12 个布局组件
-- `rp01`、`rp02`、`rp03`、`rp04`、`rp08`、`rp09`、`rp10`、`rp11`、`rp13`、`rp14`、`rp15`、`rp16`: 汇报 PPT 项目保留的 12 个布局组件
-- `xhs01`、`xhs02`、`xhs04`、`xhs12`、`xhs15`、`xhs17`、`xhs18`、`xhs19`、`xhs22`、`xhs25`: 小红书分享项目保留的 10 个布局组件
-- `xhs2_01`、`xhs2_02`、`xhs2_03`、`xhs2_04`、`xhs2_05`、`xhs2_11`、`xhs2_15`、`xhs2_33`、`xhs2_34`: 小红书分享 2 项目保留的 9 个布局组件
-- `xhs3_01` 到 `xhs3_25`: 小红书分享 3 项目提炼出的 25 个布局组件
-- `style1_01` 到 `style1_06`: 潮流色彩报告布局组件
-- `style2_01` 到 `style2_06`: 幕間影像年鑑布局组件
+- `page01` 到 `page74`、`page76` 到 `page80`: 当前完整逻辑页组件池
+
+兼容别名:
+
+- `bt01` 到 `bt12`、`rp01` 等旧 layout key 会映射到对应 `pageXX`
 
 ## 项目结构
 
 ```text
 assets/
-  screenshot-backgrounds/style-a/
-  screenshot-backgrounds/style-b/
+  unicorn/
   template-swiss.html
 src/
-  tokens/
   options.jsx
   renderDeck.jsx
   components/
+    theme-pages/
     shell/
     text/
     media/
@@ -165,5 +139,5 @@ npm run validate:swiss -- output/goal-demo/ppt/index.html
 提交前 hook 还会运行 `npm run showcase:update`,确保 `all-layouts-showcase.jsx` 覆盖当前全部已登记布局,并刷新 `output/all-components-showcase/ppt/index.html`。
 
 - [ADR](docs/ADR.md): 当前架构决策记录
-- [项目文件作用说明](docs/project-files.md): 当前 206 个源码文件的主要作用
+- [项目文件作用说明](docs/project-files.md): 当前 272 个源码文件的主要作用
 <!-- project-docs:end -->

@@ -1,5 +1,4 @@
 import React from 'react';
-import UnicornScene from 'unicornstudio-react';
 import { ChartSwitch as BaseChartSwitch } from '../charts/index.jsx';
 import { SlideShell } from '../shell/index.jsx';
 
@@ -7,63 +6,46 @@ const UNICORN_SDK_URL = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstud
 
 const UNICORN_IMAGE_SCENE = {
   jsonFilePath: 'assets/unicorn/blue_donut_remix_scene.json',
-  width: '1440px',
-  height: '900px',
   scale: 1,
   dpi: 1.5,
   sdkUrl: UNICORN_SDK_URL,
 };
 
-const UNICORN_SHADER_BACKDROPS = {
+const SHADER_BACKDROP_OPTIONS = {
   movingInto: {
     label: 'Moving Into',
-    type: 'unicorn',
     jsonFilePath: 'assets/unicorn/moving_into_remix_scene.json',
-    width: '1440px',
-    height: '900px',
     scale: 1,
     dpi: 1.5,
     sdkUrl: UNICORN_SDK_URL,
   },
   gooeyBalls: {
     label: 'Gooey Balls',
-    type: 'unicorn',
     jsonFilePath: 'assets/unicorn/goey_balls_remix_scene.json',
-    width: '1440px',
-    height: '900px',
     scale: 1,
     dpi: 1.5,
     sdkUrl: UNICORN_SDK_URL,
   },
   techBackground: {
     label: 'Tech Background',
-    type: 'unicorn',
     jsonFilePath: 'assets/unicorn/tech_background_remix_scene.json',
-    width: '1440px',
-    height: '900px',
     scale: 1,
     dpi: 1.5,
     sdkUrl: UNICORN_SDK_URL,
   },
   automations: {
     label: 'Automations',
-    type: 'unicorn',
     jsonFilePath: 'assets/unicorn/automations_remix_scene.json',
-    width: '1440px',
-    height: '900px',
     scale: 1,
     dpi: 1.5,
     sdkUrl: UNICORN_SDK_URL,
   },
 };
 
-const SHADER_BACKDROP_OPTIONS = UNICORN_SHADER_BACKDROPS;
-
 const SHADER_BACKDROP_OPTIONS_JSON = JSON.stringify(
   Object.entries(SHADER_BACKDROP_OPTIONS).map(([key, option]) => ({
     key,
     label: option.label,
-    type: option.type,
     jsonFilePath: option.jsonFilePath,
     scale: option.scale,
     dpi: option.dpi,
@@ -175,52 +157,29 @@ export function MediaPlaceholder({ slotId, children, className = '', style }) {
 export const ImagePlaceholder = MediaPlaceholder;
 
 export function UnicornImageScene() {
-  return (
-    <UnicornScene
-      jsonFilePath={UNICORN_IMAGE_SCENE.jsonFilePath}
-      width={UNICORN_IMAGE_SCENE.width}
-      height={UNICORN_IMAGE_SCENE.height}
-      scale={UNICORN_IMAGE_SCENE.scale}
-      dpi={UNICORN_IMAGE_SCENE.dpi}
-      sdkUrl={UNICORN_IMAGE_SCENE.sdkUrl}
-      lazyLoad={false}
-      className="bt-unicorn-scene"
-    />
-  );
+  return <div className="bt-unicorn-scene" aria-hidden="true" />;
 }
 
 export function ShaderVisual({ variant }) {
   return <div className={`bt-visual ${variant}`} aria-hidden="true" />;
 }
 
-export function ShaderBackdrop({ variant = 'warp' }) {
+export function ShaderBackdrop({ variant = 'movingInto' }) {
   const option = SHADER_BACKDROP_OPTIONS[variant] || SHADER_BACKDROP_OPTIONS.movingInto;
   const current = SHADER_BACKDROP_OPTIONS[variant] ? variant : 'movingInto';
-  const attrs = {
-    'data-shader-backdrop': 'true',
-    'data-shader-current': current,
-    'data-shader-options': SHADER_BACKDROP_OPTIONS_JSON,
-  };
 
   return (
     <div
       className="bt-shader-backdrop bt-unicorn-frame"
-      {...attrs}
+      data-shader-backdrop="true"
+      data-shader-current={current}
+      data-shader-options={SHADER_BACKDROP_OPTIONS_JSON}
       data-unicorn-json-file-path={option.jsonFilePath}
       data-unicorn-scale={option.scale}
       data-unicorn-dpi={option.dpi}
       data-unicorn-sdk-url={option.sdkUrl}
     >
-      <UnicornScene
-        jsonFilePath={option.jsonFilePath}
-        width={option.width}
-        height={option.height}
-        scale={option.scale}
-        dpi={option.dpi}
-        sdkUrl={option.sdkUrl}
-        lazyLoad={false}
-        className="bt-unicorn-scene"
-      />
+      <div className="bt-unicorn-scene" aria-hidden="true" />
     </div>
   );
 }

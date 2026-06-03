@@ -1,78 +1,36 @@
-import { DEFAULT_FONT, DEFAULT_FONT_WEIGHT, DEFAULT_SPACING, DEFAULT_THEME, DEFAULT_TYPE_SCALE, slide } from './options.jsx';
+import { DEFAULT_THEME, slide } from './options.jsx';
 
 export const ROLE_LAYOUTS = {
-  cover: 'bt01',
-  statement: 'bt02',
-  context: 'bt03',
-  process: 'bt04',
-  breakdown: 'bt05',
-  metrics: 'bt06',
-  transition: 'bt07',
-  result: 'bt08',
-  risks: 'bt09',
-  observation: 'bt10',
-  actions: 'bt11',
-  closing: 'bt12',
-};
-
-const LAYOUT_ROLES = Object.fromEntries(Object.entries(ROLE_LAYOUTS).map(([role, layout]) => [layout, role]));
-
-const STYLE_VARIANTS = [
-  { key: 'a', label: '风格 A' },
-  { key: 'b', label: '风格 B' },
-  { key: 'c', label: '风格 C' },
-];
-
-export const DEFAULT_STYLE_PRESETS = {
-  a: { theme: 'light', font: 'cnReport', fontWeight: 'regular', typeScale: 'medium' },
-  b: { theme: 'dark', font: 'cnStrong', fontWeight: 'bold', typeScale: 'large' },
-  c: { theme: 'colorful', font: 'cnEditorial', fontWeight: 'light', typeScale: 'small' },
-};
-
-const ROLE_BRANCHES = {
-  cover: ['cover', 'statement', 'transition'],
-  statement: ['statement', 'observation', 'result'],
-  context: ['context', 'breakdown', 'process'],
-  process: ['process', 'actions', 'breakdown'],
-  breakdown: ['breakdown', 'context', 'actions'],
-  metrics: ['metrics', 'result', 'observation'],
-  transition: ['transition', 'statement', 'cover'],
-  result: ['result', 'metrics', 'observation'],
-  risks: ['risks', 'breakdown', 'statement'],
-  observation: ['observation', 'statement', 'transition'],
-  actions: ['actions', 'process', 'breakdown'],
-  closing: ['closing', 'transition', 'statement'],
+  cover: 'page01',
+  statement: 'page02',
+  context: 'page03',
+  process: 'page04',
+  breakdown: 'page05',
+  metrics: 'page06',
+  transition: 'page07',
+  result: 'page08',
+  risks: 'page09',
+  observation: 'page10',
+  actions: 'page11',
+  closing: 'page12',
 };
 
 export function composeDeck(spec = {}) {
   const goal = spec.goal || spec.title || '主题汇报';
   const title = spec.title || goal;
   const sourceSlides = spec.slides?.length ? spec.slides : defaultSlides({ ...spec, goal, title, randomSeed: spec.randomSeed });
-  const seed = spec.randomSeed || `${title}|${goal}`;
-  const branchSlides = spec.styleBranches === false ? sourceSlides : expandStyleBranches(sourceSlides, seed);
-  const styleVariant = pickDefaultStyleVariant(spec.styleVariant, spec.randomSeed || `${title}|${goal}`);
-  const stylePresets = { ...DEFAULT_STYLE_PRESETS, ...(spec.stylePresets || {}) };
-  const currentPreset = stylePresets[styleVariant] || DEFAULT_STYLE_PRESETS.a;
-  const useStylePresetTokens = spec.styleBranches !== false;
-  const slides = branchSlides
+  const theme = normalizeTheme(spec.theme) || inferTheme(goal);
+  const slides = sourceSlides
     .map(composeSlide);
 
   return {
-    style: 'swiss',
-    styleVariant,
-    stylePresets,
-    theme: (useStylePresetTokens ? currentPreset.theme : spec.theme) || spec.theme || inferTheme(goal) || DEFAULT_THEME,
-    fontSet: (useStylePresetTokens ? currentPreset.font : spec.fontSet) || spec.fontSet || DEFAULT_FONT,
-    fontWeight: (useStylePresetTokens ? currentPreset.fontWeight : spec.fontWeight) || spec.fontWeight || DEFAULT_FONT_WEIGHT,
-    typeScale: (useStylePresetTokens ? currentPreset.typeScale : spec.typeScale) || spec.typeScale || DEFAULT_TYPE_SCALE,
-    spacing: spec.spacing || DEFAULT_SPACING,
+    theme: theme || DEFAULT_THEME,
     title,
     text: spec.text || {},
     media: spec.media || {},
     chart: spec.chart || {},
     icon: spec.icon || {},
     shader: spec.shader || {},
-    developerAdjustments: spec.developerAdjustments,
     slides,
   };
 }
@@ -87,8 +45,6 @@ function composeSlide(page) {
     ...slide(layout, page.props || {}),
     id: page.id,
     key: page.key || page.slideKey,
-    styleVariant: page.styleVariant,
-    styleVariantLabel: page.styleVariantLabel,
     logicalIndex: page.logicalIndex,
     copy: page.copy,
     media: page.media,
@@ -98,187 +54,13 @@ function composeSlide(page) {
   };
 }
 
-function expandStyleBranches(sourceSlides, seed) {
-  const random = createRandom(`${seed}|style-branches`);
-  return sourceSlides.flatMap((page, logicalIndex) => {
-    const base = normalizeRolePage(page);
-    const branchOffset = Math.floor(random() * STYLE_VARIANTS.length);
-    return STYLE_VARIANTS.map((variant, variantIndex) => {
-      const targetRole = pickVariantRole(base.role, variantIndex + branchOffset);
-      const layout = base.layout && targetRole === base.role ? base.layout : ROLE_LAYOUTS[targetRole];
-      return {
-        ...base,
-        role: targetRole,
-        layout,
-        id: `${base.id || base.key || base.layout || base.role || 'slide'}-${variant.key}-${logicalIndex + 1}`,
-        key: `${base.key || base.slideKey || `${targetRole}_${logicalIndex + 1}`}-${variant.key}`,
-        styleVariant: variant.key,
-        styleVariantLabel: variant.label,
-        logicalIndex,
-        props: adaptProps(targetRole, base.role, base.props || {}),
-      };
-    });
-  });
-}
-
-function normalizeRolePage(page) {
-  if (typeof page === 'string') {
-    return {
-      role: LAYOUT_ROLES[page],
-      layout: page,
-      props: {},
-    };
-  }
-  const layout = page.layout || ROLE_LAYOUTS[page.role];
-  return {
-    ...page,
-    role: page.role || LAYOUT_ROLES[layout],
-    layout,
-    props: page.props || {},
-  };
-}
-
-function pickVariantRole(role, variantIndex) {
-  const branches = ROLE_BRANCHES[role] || [role, role, role];
-  return branches[variantIndex % branches.length] || role;
-}
-
-function adaptProps(targetRole, sourceRole, props) {
-  if (targetRole === sourceRole) return props;
-  const title = plainTitle(props.title || props.titleTop || props.accent || props.subtitle || '核心判断');
-  const body = props.body || props.subtitle || props.title || '围绕当前主题补充证据、判断和下一步。';
-  if (targetRole === 'cover') {
-    return {
-      titleTop: title.slice(0, 12),
-      titleAlt: props.titleAlt || props.accent || '主题',
-      titleBottom: props.titleBottom || '汇报',
-      captions: props.captions || [['Focus', title], ['Owner', '项目团队']],
-    };
-  }
-  if (targetRole === 'statement') {
-    return {
-      accent: props.accent || '核心判断',
-      quote: Array.isArray(props.quote) ? props.quote : [title, '需要被压缩成一条清晰主线。'],
-      body: Array.isArray(body) ? body : [String(body)],
-      strong: props.strong || title,
-    };
-  }
-  if (targetRole === 'context') {
-    return {
-      accent: props.accent || '背景与现状',
-      figureTitle: props.figureTitle || ['关键背景', '与当前状态'],
-      title: Array.isArray(props.title) ? props.title : [title, ''],
-      body: Array.isArray(body) ? body : [String(body)],
-      captions: props.captions || [['Signal', '信号'], ['Question', '问题']],
-    };
-  }
-  if (targetRole === 'process') {
-    return {
-      accent: props.accent || '推进路径',
-      title,
-      stages: props.stages || [
-        ['STEP 01', '目标定义', '统一判断标准。'],
-        ['STEP 02', '证据整理', '补齐关键材料。'],
-        ['STEP 03', '方案组合', '形成执行路径。'],
-        ['STEP 04', '结果交付', '进入评审或交付。'],
-      ],
-    };
-  }
-  if (targetRole === 'breakdown') {
-    return {
-      accent: props.accent || '结构拆解',
-      title,
-      items: props.items || [
-        ['1.', '目标', '确认最终要解决的问题。'],
-        ['2.', '受众', '组织信息层级。'],
-        ['3.', '证据', '支撑关键判断。'],
-        ['4.', '动作', '落到负责人和下一步。'],
-      ],
-    };
-  }
-  if (targetRole === 'metrics') {
-    return {
-      accent: props.accent || '关键指标',
-      title,
-      chartRows: props.chartRows || [
-        ['目标清晰度', 88, 'focus'],
-        ['信息完整度', 76],
-        ['执行确定性', 64],
-        ['风险可控度', 58],
-      ],
-    };
-  }
-  if (targetRole === 'transition') {
-    return {
-      eyebrow: props.eyebrow || props.accent || 'SECTION',
-      title,
-    };
-  }
-  if (targetRole === 'result') {
-    return {
-      accent: props.accent || '结果摘要',
-      percent: props.percent || '82',
-      subtitle: Array.isArray(body) ? body[0] : String(body),
-    };
-  }
-  if (targetRole === 'risks') {
-    return {
-      accent: props.accent || '风险边界',
-      title,
-      cases: props.cases || [
-        ['01', '信息过载', '主判断被稀释。'],
-        ['02', '证据不足', '结论缺少支撑。'],
-        ['03', '动作模糊', '负责人和时点不清。'],
-      ],
-    };
-  }
-  if (targetRole === 'observation') {
-    return {
-      accent: props.accent || '观察结论',
-      titleTop: title,
-      titleSuffix: props.titleSuffix || '。',
-      body: Array.isArray(body) ? body : [String(body)],
-    };
-  }
-  if (targetRole === 'actions') {
-    return {
-      accent: props.accent || '行动建议',
-      title,
-      apps: props.apps || [
-        ['01', '先定主线', '压缩核心判断。', true],
-        ['02', '补齐证据', '准备数据和案例。'],
-        ['03', '明确取舍', '删掉不服务主线的内容。'],
-        ['04', '交付版本', '形成可打开的页面。'],
-      ],
-    };
-  }
-  if (targetRole === 'closing') {
-    return {
-      titleTop: props.titleTop || '最终',
-      titleAlt: props.titleAlt || '交付',
-      titleMiddle: props.titleMiddle || '可复用',
-      titleBottom: props.titleBottom || '版本',
-      body: Array.isArray(body) ? body : [String(body)],
-      inline: props.inline || 'index.html',
-    };
-  }
-  return props;
-}
-
-function plainTitle(value) {
-  if (Array.isArray(value)) return value.join('');
-  return String(value || '').replace(/<[^>]*>/g, '').trim();
-}
-
-function pickDefaultStyleVariant(preferred, seed) {
-  if (STYLE_VARIANTS.some(item => item.key === preferred)) return preferred;
-  const random = createRandom(seed);
-  return STYLE_VARIANTS[Math.floor(random() * STYLE_VARIANTS.length)].key;
+function normalizeTheme(theme) {
+  if (theme === 'light' || theme === 'dark') return theme;
+  return null;
 }
 
 function inferTheme(goal) {
-  if (/(浅色|白底|明亮|教育|培训)/.test(goal)) return 'light';
-  if (/(品牌|发布|上市|营销|活动|多色|多彩)/.test(goal)) return 'colorful';
+  if (/(浅色|白底|明亮|教育|培训|品牌|发布|上市|营销|活动|多色|彩色|色彩丰富)/.test(goal)) return 'light';
   return 'dark';
 }
 

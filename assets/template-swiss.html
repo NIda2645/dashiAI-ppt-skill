@@ -6,12 +6,11 @@
 <title>[必填] 替换为 PPT 标题 · Deck Title</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500;700;900&family=Noto+Serif+SC:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800;900&family=Hanken+Grotesk:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@300;400;500;600&family=Instrument+Serif:ital@0;1&family=Inter+Tight:wght@400;500;600&family=Inter:wght@200;300;400;500;600;700;800;900&family=JetBrains+Mono:wght@300;400;500;600&family=Noto+Sans+SC:wght@200;300;400;500;700;900&family=Noto+Serif+SC:wght@400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,500;8..60,600;8..60,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
 <link href="assets/vendor/remixicon/remixicon.css" rel="stylesheet">
 <style>
   :root{
-    /* ============ 主题色(默认: 🔵 克莱因蓝 IKB) ============
-       由 src/options.jsx 的 THEME_OPTIONS 统一替换,不要手写散落色值 */
+    /* ============ 基础颜色 ============ */
     --paper:#fafaf8;          /* 主底色: 高级灰白 */
     --paper-rgb:250,250,248;
     --paper-tint:#f0f0ee;
@@ -50,9 +49,7 @@
     --theme-focus:#002FA7;
     --theme-focus-fg:#ffffff;
 
-    /* ============ Carbon 文本角色 token (role-based,代替 opacity) ============
-       亮底:  primary 主文 / secondary 次文 / helper 辅助 / placeholder 占位
-       暗底:  inverse 自动反向 */
+    /* ============ 文本角色 ============ */
     --text-primary:#0a0a0a;        /* = ink, 100% */
     --text-secondary:#525252;      /* gray 70 */
     --text-helper:#737373;         /* gray 60 */
@@ -120,10 +117,8 @@
     --fs-number-md:var(--fs-09);
     --fs-number-lg:var(--fs-12);
 
-    /* ============ Carbon 2x Grid 间距模数 (基础 8px) ============
-       参考: https://carbondesignsystem.com/elements/2x-grid/overview/
-       任何 padding/gap/margin 优先用这套 token,确保 8px 基线对齐 */
-    --sp-3:8px;     /* 02 token */
+    /* ============ 间距模数 ============ */
+    --sp-3:8px;     /* 02 */
     --sp-4:12px;    /* 03 */
     --sp-5:16px;    /* 04 */
     --sp-6:24px;    /* 05 */
@@ -135,9 +130,7 @@
     --sp-12:96px;   /* 11 */
     --sp-13:160px;  /* 12 */
 
-    /* ============ Carbon Motion tokens ============
-       https://carbondesignsystem.com/guidelines/motion/overview/
-       两套体系:productive (功能) 短 + 锐 / expressive (叙事) 长 + 软 */
+    /* ============ 动效参数 ============ */
     --ease-prod:cubic-bezier(.2,0,.38,.9);          /* productive standard */
     --ease-exp:cubic-bezier(.4,.14,.3,1);            /* expressive standard */
     --ease-entry-prod:cubic-bezier(0,0,.38,.9);     /* productive entrance */
@@ -179,6 +172,7 @@
     overflow:hidden;
     background:var(--surface-bg);color:var(--surface-fg);
   }
+  #deck>.slide[hidden]{display:none!important}
   .slide.grey{background:var(--grey-1)}
   .slide.dark{background:var(--inverse-bg);color:var(--inverse-fg)}
   .slide.dark .grey-only{display:none}
@@ -189,16 +183,6 @@
   .slide.hero{background:transparent}
   .slide.hero.grey{background:rgba(var(--surface-rgb),.86);backdrop-filter:blur(1px)}
   .slide.hero.dark{background:rgba(var(--inverse-rgb),.92);color:var(--inverse-fg)}
-  html[data-theme="light"] .slide[data-light-bg-image]{
-    background-image:var(--light-bg-image)!important;
-    background-size:cover!important;
-    background-position:center!important;
-    background-repeat:no-repeat!important
-  }
-  html[data-theme="light"] .slide[data-light-bg-image] :is(.rp-page,.xhs-frame,.xhs2-frame,.xhs3-frame){
-    background:transparent!important
-  }
-
   .page-transition-pixels,
   .page-transition-stage{
     position:fixed;left:0;top:0;width:var(--deck-w);height:100vh;
@@ -777,104 +761,6 @@
     background:var(--paper);color:var(--ink);padding:0 10px;
     font-family:var(--sans),var(--sans-zh);font-size:15px;border-radius:0
   }
-  .preview-dev-toggle{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--text-helper);cursor:pointer}
-  .preview-dev-toggle input{width:16px;height:16px;margin:0;accent-color:var(--ink)}
-  .preview-dev-panel{border-top:1px solid var(--border-subtle);padding-top:14px;display:flex;flex-direction:column;gap:12px}
-  .preview-dev-panel[hidden]{display:none}
-  .preview-dev-selected{min-height:34px;border:1px solid var(--border-subtle);background:color-mix(in srgb,var(--paper) 86%,var(--ink));padding:8px 10px;font-family:var(--mono);font-size:11px;line-height:1.45;color:var(--text-helper);word-break:break-all}
-  .preview-dev-tools{display:flex;flex-direction:column;gap:12px}
-  .preview-dev-section{border-top:1px solid var(--border-subtle);padding-top:10px;display:flex;flex-direction:column;gap:8px}
-  .preview-dev-section:first-child{border-top:0;padding-top:0}
-  .preview-dev-section-title{display:flex;align-items:center;justify-content:space-between;font-family:var(--mono);font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--text-helper)}
-  .preview-dev-row{display:grid;grid-template-columns:76px minmax(0,1fr);align-items:center;gap:8px;min-height:30px}
-  .preview-dev-row>label{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.08em;text-transform:uppercase;color:var(--text-helper)}
-  .preview-dev-row select{
-    width:100%;height:30px;border:1px solid var(--border-subtle);background:var(--paper);color:var(--ink);
-    padding:0 8px;font-family:var(--sans),var(--sans-zh);font-size:13px;border-radius:0
-  }
-  .preview-dev-row select:focus{outline:2px solid var(--focus-mark);outline-offset:1px;border-color:var(--focus-mark)}
-  .preview-dev-row.is-stacked{grid-template-columns:1fr;gap:6px}
-  .preview-dev-row.is-stacked>label{display:flex;justify-content:space-between}
-  .preview-token-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:4px}
-  .preview-token-chip{
-    height:28px;border:1px solid var(--border-subtle);background:transparent;color:var(--ink);
-    font-family:var(--mono);font-size:10px;font-weight:650;letter-spacing:.02em;cursor:pointer;padding:0;border-radius:0
-  }
-  .preview-token-chip:hover{border-color:var(--border-strong)}
-  .preview-token-chip.is-active{background:var(--ink);color:var(--paper);border-color:var(--ink)}
-  .preview-token-chip.is-empty{color:var(--text-helper)}
-  .preview-token-meta{font-family:var(--mono);font-size:10px;color:var(--text-helper);text-transform:none;letter-spacing:.02em}
-  .preview-color-palette{display:grid;grid-template-columns:repeat(6,1fr);gap:6px;margin-top:-2px}
-  .preview-color-swatch{
-    height:26px;border:1px solid var(--border-subtle);background:var(--paper);cursor:pointer;
-    padding:0;position:relative
-  }
-  .preview-color-swatch span{display:block;position:absolute;inset:4px;background:var(--swatch-color);box-shadow:inset 0 0 0 1px rgba(0,0,0,.14)}
-  .preview-color-swatch.is-empty span{
-    background:linear-gradient(135deg,transparent calc(50% - 1px),var(--border-strong) 50%,transparent calc(50% + 1px))
-  }
-  .preview-color-swatch.is-active{outline:2px solid var(--focus-mark);outline-offset:1px;border-color:var(--focus-mark)}
-  [data-dev-text-mark="block"]{
-    background:color-mix(in srgb,var(--focus-mark) 72%,var(--paper))!important;
-    color:var(--focus-fg)!important;
-    padding:.02em .18em .08em;
-    -webkit-box-decoration-break:clone;
-    box-decoration-break:clone
-  }
-  [data-dev-text-mark="underline"]{
-    background:linear-gradient(to bottom,transparent 70%,color-mix(in srgb,var(--focus-mark) 28%,transparent) 70%,color-mix(in srgb,var(--focus-mark) 28%,transparent) 96%,transparent 96%)!important;
-    padding:0 .05em;
-    -webkit-box-decoration-break:clone;
-    box-decoration-break:clone
-  }
-  .style2-slide [data-dev-text-mark="underline"]{background:var(--st2-pull-mark)!important}
-  .preview-dev-log{width:100%;min-height:160px;resize:vertical;border:1px solid var(--border-strong);background:var(--paper);color:var(--ink);padding:10px;font-family:var(--mono);font-size:11px;line-height:1.45;border-radius:0;box-sizing:border-box}
-  .preview-dev-buttons{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-  .preview-dev-buttons button{
-    height:34px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
-    font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;cursor:pointer
-  }
-  .preview-dev-buttons button.secondary{background:transparent;color:var(--ink);border-color:var(--border-strong)}
-  .preview-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:auto}
-  .preview-actions button{
-    height:38px;border:1px solid var(--ink);background:var(--ink);color:var(--paper);
-    font-family:var(--mono);font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;cursor:pointer
-  }
-  .preview-actions button:disabled{opacity:.55;cursor:wait}
-  .preview-actions button.secondary{background:transparent;color:var(--ink);border-color:var(--border-strong)}
-  .preview-actions button.wide{grid-column:1/-1}
-  .preview-field.is-hidden{display:none}
-  [data-editable-text="true"]{cursor:text}
-  [data-editable-text="true"]:focus{
-    outline:2px solid var(--bt-focus, var(--focus-mark));
-    outline-offset:3px
-  }
-  body.developer-mode [data-editable-text="true"]:hover{
-    outline:1px dashed var(--focus-mark);
-    outline-offset:3px
-  }
-  body.developer-mode [data-dev-text-fragment="true"]:hover{
-    outline:2px dashed var(--focus-mark);
-    outline-offset:2px
-  }
-  body.developer-mode [data-dev-style-target="true"]{
-    cursor:crosshair
-  }
-  body.developer-mode [data-dev-style-target="true"]:hover{
-    outline:1px dotted var(--focus-mark);
-    outline-offset:4px
-  }
-  body.developer-mode .dev-selected{
-    outline:3px solid var(--focus-mark)!important;
-    outline-offset:4px
-  }
-  body.pptx-export-capturing [data-editable-text="true"],
-  body.pptx-export-capturing [data-editable-text="true"] *{
-    color:transparent!important;
-    -webkit-text-fill-color:transparent!important;
-    text-shadow:none!important;
-    caret-color:transparent!important
-  }
   .remix-icon-slot{
     appearance:none;border:0;border-radius:0;display:grid;place-items:center;padding:0;
     color:var(--paper);background:var(--focus-mark);cursor:pointer;line-height:1
@@ -930,7 +816,7 @@
   #overview [data-anim]{opacity:1!important;transform:none!important}
   #overview .slide *{animation:none!important;transition:none!important}
 
-  /* 统一卡片样式 token: card-fill (默认灰底 · 中性) + card-ink (反转高对比) + card-accent (单一焦点) */
+  /* 统一卡片样式 */
   .card-fill{background:#f5f5f4;border:0;color:var(--text-primary)}
   .card-ink{background:var(--ink);border:0;color:var(--paper)}
   .card-ink .t-meta,.card-ink .t-cat{color:rgba(255,255,255,.6)}
@@ -1103,7 +989,7 @@
     min-width:0
   }
 
-  /* 横向时间线 (.timeline-h) — 与 .timeline-v 共享 axis token, 视觉语言一致 */
+  /* 横向时间线 (.timeline-h) */
   .timeline-h{
     --tl-axis-w:8px;
     --tl-dot:8px;
@@ -1722,7 +1608,7 @@
     font-family:var(--bt-mono);font-size:clamp(12px,1.25vw,24px);letter-spacing:.08em;text-transform:uppercase;color:rgba(242,241,238,.5)
   }
 
-  /* Black Tech token bridge: 让黑科技布局响应主题、字体和字号控制器 */
+  /* Black Tech theme bridge */
   .slide.bt-slide{
     --bt-bg:var(--bt-page-bg,var(--theme-backdrop));
     --bt-ink:var(--bt-page-bg,var(--theme-bg));
@@ -2021,139 +1907,6 @@
   }
   .bt-app-card.is-focus .bt-small{color:var(--bt-focus)}
   .bt-app-card:not(.is-focus){opacity:.74}
-  html[data-theme="colorful"] .slide.bt-slide{
-    --bt-card:var(--bt-card-bg);
-    --bt-line:color-mix(in srgb,var(--bt-color-ink) 14%,transparent);
-    --bt-line-strong:color-mix(in srgb,var(--bt-color-ink) 22%,transparent);
-    --bt-muted:color-mix(in srgb,var(--bt-color-ink) 58%,transparent);
-    --bt-soft:color-mix(in srgb,var(--bt-color-ink) 76%,transparent);
-    --bt-body-ink:color-mix(in srgb,var(--bt-color-ink) 82%,transparent);
-    --bt-dim:color-mix(in srgb,var(--bt-color-ink) 42%,transparent);
-    --bt-faint:color-mix(in srgb,var(--bt-color-ink) 5%,transparent);
-    --bt-title-alt-color:var(--bt-color-red);
-    --bt-title-alt-muted:var(--bt-color-blue);
-    background:var(--bt-bg);
-    color:var(--bt-paper)
-  }
-  html[data-theme="colorful"] .bt-accent,
-  html[data-theme="colorful"] .bt-title .bt-accent{
-    color:var(--bt-color-amber)
-  }
-  html[data-theme="colorful"] .bt-display .bt-accent,
-  html[data-theme="colorful"] .bt-small.inline{
-    color:var(--bt-color-red)
-  }
-  html[data-theme="colorful"] .bt-poster{
-    background:var(--bt-color-red);color:#fff
-  }
-  html[data-theme="colorful"] .bt-image-slot{
-    background:var(--bt-color-cream)
-  }
-  html[data-theme="colorful"] .bt-image-slot::after{
-    background:color-mix(in srgb,var(--bt-color-ink) 78%,transparent);
-    color:#fff
-  }
-  html[data-theme="colorful"] .bt-image-slot .bt-unicorn-scene{
-    filter:invert(1) hue-rotate(150deg) saturate(1.2) brightness(1.04);
-    mix-blend-mode:multiply;
-    opacity:.86
-  }
-  html[data-theme="colorful"] .bt-signal-left{
-    background:var(--bt-bg)
-  }
-  html[data-theme="colorful"] .bt-signal-right{
-    background:var(--bt-color-cream);
-    box-shadow:inset 2.4vw 0 0 var(--bt-color-amber);
-    color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .bt-signal-right .bt-accent,
-  html[data-theme="colorful"] .bt-signal-right .bt-title.light{
-    color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .bt-signal-right .bt-eyebrow.light,
-  html[data-theme="colorful"] .bt-signal-right .bt-body.light{
-    color:color-mix(in srgb,var(--bt-color-ink) 76%,transparent)
-  }
-  html[data-theme="colorful"] .bt-stage:nth-child(1) .bt-stage-head span,
-  html[data-theme="colorful"] .bt-stage:nth-child(1) .bt-stage-title{
-    color:var(--bt-color-red);border-color:var(--bt-color-red)
-  }
-  html[data-theme="colorful"] .bt-stage:nth-child(2) .bt-stage-head span,
-  html[data-theme="colorful"] .bt-stage:nth-child(2) .bt-stage-title{
-    color:var(--bt-color-blue);border-color:var(--bt-color-blue)
-  }
-  html[data-theme="colorful"] .bt-stage:nth-child(3) .bt-stage-head span,
-  html[data-theme="colorful"] .bt-stage:nth-child(3) .bt-stage-title{
-    color:var(--bt-color-amber);border-color:var(--bt-color-amber)
-  }
-  html[data-theme="colorful"] .bt-stage:nth-child(4) .bt-stage-head span,
-  html[data-theme="colorful"] .bt-stage:nth-child(4) .bt-stage-title{
-    color:var(--bt-color-ink);border-color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .bt-stage-head span.filled{
-    background:currentColor
-  }
-  html[data-theme="colorful"] .bt-ref-list .item:nth-child(1) .n,
-  html[data-theme="colorful"] .bt-failure-card:nth-child(1) .bt-subtitle{
-    color:var(--bt-color-red)
-  }
-  html[data-theme="colorful"] .bt-ref-list .item:nth-child(2) .n,
-  html[data-theme="colorful"] .bt-failure-card:nth-child(2) .bt-subtitle{
-    color:var(--bt-color-blue)
-  }
-  html[data-theme="colorful"] .bt-ref-list .item:nth-child(3) .n,
-  html[data-theme="colorful"] .bt-failure-card:nth-child(3) .bt-subtitle{
-    color:var(--bt-color-amber)
-  }
-  html[data-theme="colorful"] .bt-failure-card:nth-child(1){border-top-color:var(--bt-color-red)}
-  html[data-theme="colorful"] .bt-failure-card:nth-child(2){border-top-color:var(--bt-color-blue)}
-  html[data-theme="colorful"] .bt-failure-card:nth-child(3){border-top-color:var(--bt-color-amber)}
-  html[data-theme="colorful"] .bt-failure-card{
-    background:#fff;
-    padding:2.4vh 1.5vw;
-    border-top-width:6px
-  }
-  html[data-theme="colorful"] .bt-percent{
-    color:var(--bt-color-amber)
-  }
-  html[data-theme="colorful"] .bt-spec .focus td{
-    color:var(--bt-color-red)
-  }
-  html[data-theme="colorful"] .bt-app-card{
-    opacity:1;color:var(--bt-card-fg);border-color:transparent
-  }
-  html[data-theme="colorful"] .bt-app-card:nth-child(1){
-    background:var(--bt-color-red);color:#fff
-  }
-  html[data-theme="colorful"] .bt-app-card:nth-child(2){
-    background:var(--bt-color-blue);color:#fff
-  }
-  html[data-theme="colorful"] .bt-app-card:nth-child(3){
-    background:var(--bt-color-amber);color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .bt-app-card:nth-child(4){
-    background:var(--bt-color-cream);color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .bt-app-card .bt-small,
-  html[data-theme="colorful"] .bt-app-card .bt-subtitle,
-  html[data-theme="colorful"] .bt-app-card .bt-body{
-    color:currentColor
-  }
-  html[data-theme="colorful"] .bt-app-card.is-focus{
-    border-color:var(--bt-color-cream);
-    box-shadow:0 2.4vh 5vh rgba(224,74,47,.26)
-  }
-  html[data-theme="colorful"] .bt-closing-slide{
-    --bt-bg:var(--bt-page-bg);
-    --bt-ink:var(--bt-page-bg);
-    --bt-paper:var(--bt-page-fg);
-    --bt-title-alt-color:var(--bt-color-red);
-    background:var(--bt-bg);
-    box-shadow:inset 16vw 0 0 var(--bt-color-blue),inset -24vw 0 0 var(--bt-color-amber)
-  }
-  html[data-theme="colorful"] .bt-closing-slide .bt-visual{
-    opacity:.18
-  }
   body.preview-panel-open .bt-cover-poster{left:4vw;top:18vh;width:22vw;height:56vh}
   body.preview-panel-open .bt-cover-copy{left:32vw;right:3vw;top:15vh;width:auto}
   body.preview-panel-open .bt-cover-copy .bt-caption-row{gap:1.6vw;margin-top:4vh}
@@ -2200,7 +1953,6 @@
   .st1-shader-slide .st1-cover-content,.st1-shader-slide .st1-end-content{color:var(--st1-ink)}
   .st1-shader-slide .st1-meta,.st1-shader-slide .st1-eyebrow,.st1-shader-slide .st1-left-meta,.st1-shader-slide .st1-contact .k{color:var(--st1-shader-meta)}
   .st1-shader-slide .st1-sub,.st1-shader-slide .st1-contact .v{color:var(--st1-shader-sub)}
-
   /* ============ Imported Style2 Layouts · 幕間影像年鑑 ============ */
   .slide.style2-slide{
     --st2-ink:var(--theme-st2-ink,#0a0b10);--st2-ink-2:var(--theme-st2-ink-2,#11131c);--st2-ivory:var(--theme-st2-ivory,#f0ebe0);--st2-paper:var(--theme-st2-paper,#e9e3d5);--st2-blue:var(--theme-st2-blue,#1d3cff);--st2-blue-deep:var(--theme-st2-blue-deep,#0c1f8a);--st2-red:var(--theme-st2-red,#e23a1c);--st2-gold:var(--theme-st2-gold,#b08a3e);--st2-mute:var(--theme-st2-mute,#8d8678);--st2-night-bg:var(--theme-st2-night-bg,var(--st2-ink));--st2-night-bg-2:var(--theme-st2-night-bg-2,var(--st2-ink-2));--st2-night-fg:var(--theme-st2-night-fg,var(--st2-ivory));--st2-cover-fg:var(--theme-st2-cover-fg,var(--st2-night-fg));--st2-paper-bg:var(--theme-st2-paper-bg,var(--st2-ivory));--st2-paper-fg:var(--theme-st2-paper-fg,var(--st2-ink));--st2-paper-muted:var(--theme-st2-paper-muted,#6a6558);--st2-body-on-paper:var(--theme-st2-body-on-paper,#2a2820);--st2-sub-on-night:var(--theme-st2-sub-on-night,#bdb6a4);--st2-rule-on-night:var(--theme-st2-rule-on-night,rgba(255,255,255,.12));--st2-rule-on-paper:var(--theme-st2-rule-on-paper,#b9b1a0);--st2-track-bg:var(--theme-st2-track-bg,rgba(255,255,255,.04));--st2-track-border:var(--theme-st2-track-border,rgba(255,255,255,.18));--st2-track-dim:var(--theme-st2-track-dim,#2a3160);--st2-down:var(--theme-st2-down,#6c8cff);--st2-cover-bg:var(--theme-st2-cover-bg,radial-gradient(ellipse 70% 55% at 28% 60%,#2545d6 0%,#0d1c6e 35%,#060823 70%,#04050f 100%));--st2-cover-wash:var(--theme-st2-cover-wash,radial-gradient(ellipse 40% 28% at 60% 50%,rgba(255,255,255,.18),transparent 70%),radial-gradient(ellipse 80% 30% at 30% 70%,rgba(0,0,0,.45),transparent 70%));--st2-grain-bg:var(--theme-st2-grain-bg,repeating-linear-gradient(112deg,rgba(255,255,255,.04) 0 1px,transparent 1px 5px));--st2-grain-opacity:var(--theme-st2-grain-opacity,.5);--st2-pull-mark:var(--theme-st2-pull-mark,linear-gradient(transparent 70%,rgba(29,60,255,.18) 70%));--st2-canvas-bg:var(--theme-st2-canvas-bg,linear-gradient(180deg,rgba(0,0,0,.45),rgba(0,0,0,0) 30%,rgba(0,0,0,.6)),repeating-linear-gradient(45deg,#1a2138 0 18px,#141a2c 18px 36px));--st2-canvas-glow:var(--theme-st2-canvas-glow,radial-gradient(ellipse 60% 40% at 70% 30%,rgba(226,58,28,.6),transparent 60%),radial-gradient(ellipse 55% 50% at 30% 70%,rgba(29,60,255,.55),transparent 65%));--st2-shader-bg:var(--theme-st2-shader-bg,#05070b);--st2-wash-bg:var(--theme-st2-wash-bg,radial-gradient(ellipse 60% 50% at 80% 50%,rgba(29,60,255,.35),transparent 65%),linear-gradient(120deg,rgba(226,58,28,.18),transparent 45%));--st2-credit-fg:var(--theme-st2-credit-fg,rgba(240,235,224,.78));
@@ -2419,92 +2171,6 @@
     background:#d9d9d9;color:#090b10
   }
 
-  html[data-theme="colorful"] .slide[data-layout="BT01"]{
-    --bt-bg:var(--bt-color-red);--bt-paper:#fff;--bt-muted:rgba(255,255,255,.74);--bt-dim:rgba(255,255,255,.62);
-    --bt-faint:rgba(255,255,255,.12);--bt-title-alt-color:#fff;--bt-title-alt-muted:var(--bt-color-amber)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT01"] .bt-cover-poster{
-    background:var(--bt-color-blue);color:#fff
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT02"]{
-    --bt-bg:var(--bt-color-blue);--bt-paper:#fff;--bt-muted:rgba(255,255,255,.74);--bt-dim:rgba(255,255,255,.62);
-    --bt-title-alt-color:#fff;--bt-title-alt-muted:var(--bt-color-amber);--bt-focus:var(--bt-color-amber)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT03"]{
-    --bt-bg:var(--bt-color-blue);--bt-paper:#fff;--bt-muted:rgba(255,255,255,.74);--bt-dim:rgba(255,255,255,.62);
-    --bt-surface:var(--bt-color-blue);--bt-surface-fg:#fff;--bt-surface-soft:rgba(255,255,255,.78)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-left{
-    background:var(--bt-color-red)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-right{
-    background:var(--bt-color-blue);color:#fff;box-shadow:inset 2.4vw 0 0 var(--bt-color-red)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-right .bt-title.light,
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-right .bt-accent,
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-right .bt-caption.light .v{
-    color:#fff
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-right .bt-eyebrow.light,
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-right .bt-body.light,
-  html[data-theme="colorful"] .slide[data-layout="BT03"] .bt-signal-right .bt-caption.light .k{
-    color:rgba(255,255,255,.74)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list{
-    gap:1.1vh;margin-top:3.4vh
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .item{
-    padding:1.25vh 1.15vw;background:#fff;color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .item:nth-child(1){background:var(--bt-color-red);color:#fff}
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .item:nth-child(2){background:var(--bt-color-blue);color:#fff}
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .item:nth-child(3){background:var(--bt-color-amber);color:var(--bt-color-ink)}
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .item:nth-child(4){background:var(--bt-color-cream);color:var(--bt-color-ink)}
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .n,
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .n span,
-  html[data-theme="colorful"] .slide[data-layout="BT05"] .bt-ref-list .d{
-    color:currentColor
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT08"]{
-    --bt-bg:#fff;--bt-paper:var(--bt-color-ink);--bt-muted:color-mix(in srgb,var(--bt-color-ink) 58%,transparent);
-    --bt-line:var(--bt-color-ink);background:#fff;color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-compression-grid{
-    grid-template-columns:1.15fr .95fr;gap:4.2vw;align-items:flex-end;border:0
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-compression-grid>div{
-    padding:0;background:transparent;color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-compression-grid>div+div{
-    padding:4vh 2.2vw;background:#fff;border:2px solid var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-spec,
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-spec th,
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-spec td,
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-subtitle,
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-small{
-    color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-spec th,
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-spec td{
-    border-bottom-color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT08"] .bt-spec .focus td{
-    color:var(--bt-color-red)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT09"],
-  html[data-theme="colorful"] .slide[data-layout="BT11"]{
-    --bt-bg:#fff;--bt-paper:var(--bt-color-ink);--bt-muted:color-mix(in srgb,var(--bt-color-ink) 58%,transparent);
-    background:#fff;color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT09"] .bt-failure-card{
-    background:var(--bt-color-cream);color:var(--bt-color-ink)
-  }
-  html[data-theme="colorful"] .slide[data-layout="BT09"] .bt-failure-card .bt-small,
-  html[data-theme="colorful"] .slide[data-layout="BT09"] .bt-failure-card .bt-subtitle,
-  html[data-theme="colorful"] .slide[data-layout="BT09"] .bt-failure-card .bt-body{
-    color:currentColor
-  }
   /* ============ Imported XHS AI Governance Layouts · 小红书分享 ============ */
   .xhs-slide{
     --xhs-navy:var(--theme-xhs-navy,#0e0e1b);--xhs-navy-2:var(--theme-xhs-navy-2,#16162a);--xhs-lime:var(--theme-xhs-lime,#b6f569);--xhs-indigo:var(--theme-xhs-indigo,#6e70f0);
@@ -2575,46 +2241,6 @@
     background:repeating-linear-gradient(135deg,rgba(244,241,234,.08) 0 14px,rgba(244,241,234,.03) 14px 28px),var(--xhs-navy-2);
     border-color:rgba(244,241,234,.24);color:rgba(244,241,234,.58)
   }
-  html[data-theme="acidIndigo"] .xhs-slide{
-    background:var(--xhs-navy);color:var(--xhs-cream)
-  }
-  html[data-theme="acidIndigo"] .xhs-slide.xhs-lime{
-    background:var(--xhs-lime);color:var(--xhs-navy);--xhs-focus:var(--xhs-indigo)
-  }
-  html[data-theme="acidIndigo"] .xhs-slide.xhs-indigo{
-    background:var(--xhs-indigo);color:var(--xhs-cream);--xhs-focus:var(--xhs-lime)
-  }
-  html[data-theme="acidIndigo"] .xhs-slide.xhs-cream{
-    background:var(--xhs-cream);color:var(--xhs-navy);--xhs-focus:var(--xhs-indigo)
-  }
-  html[data-theme="colorful"] .xhs-slide{
-    background:var(--xhs-cream);color:var(--xhs-navy);--xhs-focus:var(--xhs-indigo)
-  }
-  html[data-theme="colorful"] .xhs-slide.xhs-lime{
-    background:var(--xhs-lime);color:var(--xhs-navy);--xhs-focus:var(--xhs-indigo)
-  }
-  html[data-theme="colorful"] .xhs-slide.xhs-indigo{
-    background:var(--xhs-indigo);color:#fff;--xhs-focus:var(--xhs-lime)
-  }
-  html[data-theme="colorful"] .xhs-slide.xhs-cream{
-    background:var(--xhs-cream);color:var(--xhs-navy);--xhs-focus:var(--xhs-indigo)
-  }
-  html[data-theme="colorful"] .xhs-placeholder{
-    background:repeating-linear-gradient(135deg,rgba(17,19,23,.05) 0 14px,rgba(17,19,23,.02) 14px 28px),#fff;
-    border-color:rgba(17,19,23,.24);color:rgba(17,19,23,.56)
-  }
-  html[data-theme="colorful"] .xhs-card{
-    background:#fff;color:var(--xhs-navy);border-color:var(--xhs-rule)
-  }
-  html[data-theme="colorful"] .xhs-card.lime{
-    background:var(--xhs-lime);color:var(--xhs-navy);border:0
-  }
-  html[data-theme="colorful"] .xhs-card.cream{
-    background:#fff;color:var(--xhs-navy);border:1px solid var(--xhs-rule)
-  }
-  html[data-theme="colorful"] .xhs-collapse{
-    background:#fff;border-color:var(--xhs-rule)
-  }
 
   /* ============ Imported XHS AI Anti-Anxiety Layouts · 小红书分享 2 ============ */
   .slide.xhs2-slide{
@@ -2633,7 +2259,6 @@
   .xhs2-title span,.xhs2-statement h1 span,.xhs2-cover-copy h1 span,.xhs2-half-copy h2 span{color:var(--x2-accent)}
   .xhs2-body{font-size:clamp(21px,1.55vw,30px);line-height:1.55;color:var(--x2-dim);margin:2.2vh 0 0;max-width:70vw}
   .xhs2-cover{position:absolute;inset:0;display:grid;grid-template-columns:45% 55%;gap:0}.xhs2-cover-art{background:var(--x2-yellow);color:var(--x2-on-accent);position:relative;overflow:hidden}.xhs2-cover-copy{padding:8.4vh 5.7vw;display:flex;flex-direction:column;justify-content:space-between;background:var(--x2-bg)}.xhs2-cover-copy h1{font-size:clamp(66px,6.45vw,124px);line-height:1}
-  .xhs2-arrow-burst{position:absolute;inset:9vh 5vw;display:grid;grid-template-columns:1fr 1fr;grid-template-rows:1fr 1fr;gap:4vw}.xhs2-arrow-burst span{position:relative}.xhs2-arrow-burst span::before{content:"";position:absolute;left:45%;top:12%;width:14px;height:64%;background:currentColor}.xhs2-arrow-burst span::after{content:"";position:absolute;left:32%;top:66%;width:42%;height:14px;background:currentColor;clip-path:polygon(0 0,100% 50%,0 100%,16% 50%)}.xhs2-arrow-burst .magenta{color:var(--x2-magenta)}.xhs2-arrow-burst .cyan{color:var(--x2-cyan)}.xhs2-arrow-burst .green{color:var(--x2-green)}.xhs2-arrow-burst .red{color:var(--x2-red)}
   .xhs2-about-tags{display:grid;grid-template-columns:1fr 1fr;gap:1.7vw;margin-top:3vh}.xhs2-cover-grid{display:grid;grid-template-columns:repeat(6,1fr);gap:1vw;margin-top:4vh}.xhs2-mini-stat{display:flex;justify-content:space-between;gap:.6vw;font-family:var(--mono);font-size:var(--fs-caption);margin-top:1vh;color:var(--x2-dim)}.xhs2-mini-stat span:first-child{color:var(--x2-yellow)}
   .xhs2-half{position:absolute;inset:0;display:grid;grid-template-columns:1fr 1fr}.xhs2-yellow-panel{background:var(--x2-yellow);color:var(--x2-on-accent);padding:var(--x2-pad-y) var(--x2-pad-x);display:flex;flex-direction:column;justify-content:space-between}.xhs2-yellow-panel h1{font-size:clamp(118px,12.5vw,240px);line-height:.9;margin:0;font-weight:900;letter-spacing:-.02em}.xhs2-half-copy{padding:var(--x2-pad-y) var(--x2-pad-x);display:flex;flex-direction:column;justify-content:space-between}.xhs2-half-copy h2{font-size:clamp(42px,3.15vw,60px);line-height:1.12;margin:0;font-weight:850}.xhs2-half-copy p{font-size:clamp(21px,1.55vw,30px);line-height:1.6;color:var(--x2-dim)}
   .xhs2-grid{display:grid;gap:1.5vw;margin-top:4.6vh}.xhs2-grid.cols-1{grid-template-columns:1fr}.xhs2-grid.cols-2{grid-template-columns:repeat(2,1fr)}.xhs2-grid.cols-3{grid-template-columns:repeat(3,1fr)}.xhs2-grid.cols-4{grid-template-columns:repeat(4,1fr)}.xhs2-grid.cols-6{grid-template-columns:repeat(6,1fr)}
@@ -2651,7 +2276,7 @@
   .xhs2-thanks{position:absolute;left:var(--x2-pad-x);right:var(--x2-pad-x);top:50%;transform:translateY(-50%);display:grid;grid-template-columns:1.1fr .9fr;gap:5vw;align-items:center}.xhs2-thanks h1{font-size:clamp(80px,7vw,136px);line-height:1;margin:0}.xhs2-thanks p{font-size:clamp(28px,2.5vw,48px);color:var(--x2-yellow)}.xhs2-thanks strong{font-size:clamp(96px,8.6vw,164px);line-height:.95;color:var(--x2-yellow)}
 
   html[data-theme="light"] .xhs2-cover-art,
-  html[data-theme="light"] .xhs2-yellow-panel{
+  html[data-theme="light"] .xhs2-yellow-panel:not(.xhs2-shader-panel){
     background:var(--x2-bg-soft);color:var(--x2-ink);box-shadow:inset 0 0 0 2px var(--x2-yellow)
   }
   html[data-theme="light"] .xhs2-cover-copy,
@@ -2664,16 +2289,6 @@
   html[data-theme="light"] .xhs2-callout.red{
     color:#fff
   }
-  html[data-theme="colorful"] .xhs2-card{
-    background:#fff;color:var(--x2-ink)
-  }
-  html[data-theme="colorful"] .xhs2-callout.red{
-    color:#fff
-  }
-  html[data-theme="acidIndigo"] .xhs2-callout.red{
-    color:var(--x2-on-accent)
-  }
-
   /* ============ Imported XHS AI Open Day Layouts · 小红书分享3 ============ */
   .slide.xhs3-slide{
     --x3-ink:var(--theme-x3-ink,#0e0e0e);--x3-paper:var(--theme-x3-paper,#f2efea);--x3-paper-2:var(--theme-x3-paper-2,#e8e4dd);--x3-accent:var(--theme-x3-accent,#ff4a2a);--x3-accent-deep:var(--theme-x3-accent-deep,#e13815);
@@ -2751,98 +2366,19 @@
     background:var(--x3-rule)
   }
   html[data-theme="dark"] .xhs3-slide.xhs3-field,
-  html[data-theme="dark"] .xhs3-slide.xhs3-accent,
-  html[data-theme="acidIndigo"] .xhs3-slide.xhs3-field,
-  html[data-theme="acidIndigo"] .xhs3-slide.xhs3-accent{
+  html[data-theme="dark"] .xhs3-slide.xhs3-accent{
     background:var(--x3-ink);color:var(--x3-paper)
   }
-  html[data-theme="dark"] .xhs3-frame > .xhs3-field,
-  html[data-theme="acidIndigo"] .xhs3-frame > .xhs3-field{
+  html[data-theme="dark"] .xhs3-frame > .xhs3-field{
     background:radial-gradient(80% 60% at 80% 20%,var(--x3-field-glow),transparent 60%),radial-gradient(60% 60% at 10% 90%,var(--x3-field-shadow),transparent 65%),var(--x3-ink)
   }
   html[data-theme="dark"] .xhs3-field .xhs3-cover-copy span,
   html[data-theme="dark"] .xhs3-field .xhs3-divider h1 span,
-  html[data-theme="dark"] .xhs3-accent .xhs3-gap span,
-  html[data-theme="acidIndigo"] .xhs3-field .xhs3-cover-copy span,
-  html[data-theme="acidIndigo"] .xhs3-field .xhs3-divider h1 span,
-  html[data-theme="acidIndigo"] .xhs3-accent .xhs3-gap span{
+  html[data-theme="dark"] .xhs3-accent .xhs3-gap span{
     color:var(--x3-accent)
   }
 
-  /* ============ Type Scale Bridge · Imported Layouts After Page 28 ============ */
-  .style1-slide :where(.st1-meta,.st1-eyebrow,.st1-left-meta,.st1-name-en,.st1-footnote,.st1-meta-grid .k,.st1-signature span,.st1-footer-row,.st1-cast-card .stage span,.st1-cast-card .hex,.st1-contact .k),
-  .style2-slide :where(.st2-corner,.st2-cover-title b,.st2-cover-foot span,.st2-data-head div,.st2-chart .label span,.st2-chart .num span,.st2-data-foot,.st2-kicker,.st2-page,.st2-ed-col .num small,.st2-ed-col .pin,.st2-canvas div,.st2-by,.st2-credits,.st2-credits dt,.st2-credits dd,.st2-end-foot),
-  .xhs-slide :where(.xhs-footer,.xhs-eyebrow,.xhs-kicker,.xhs-page,.xhs-logomark,.xhs-tag-row span,.xhs-cover-grid small,.xhs-placeholder),
-  .xhs2-slide :where(.xhs2-footer,.xhs2-eyebrow,.xhs2-kicker,.xhs2-page,.xhs2-mini-stat,.xhs2-ph),
-  .xhs3-slide :where(.xhs3-top,.xhs3-footer,.xhs3-kicker,.xhs3-credit,.xhs3-metric div,.xhs3-media figcaption,.xhs3-terminal pre,.xhs3-risk-duo p span){
-    font-size:var(--fs-caption)!important
-  }
-  .style1-slide :where(.st1-sub,.st1-quote,.st1-signature,.st1-contact .v),
-  .style2-slide :where(.st2-cover-foot,.st2-data-sub,.st2-chart,.st2-data-foot div,.st2-lede,.st2-ed-col p,.st2-vlead,.st2-end-tagline),
-  .xhs-slide :where(.xhs-body,.xhs-center-statement p,.xhs-card p),
-  .xhs2-slide :where(.xhs2-body,.xhs2-half-copy p,.xhs2-card p,.xhs2-statement p,.xhs2-thanks p),
-  .xhs3-slide :where(.xhs3-cover-copy p,.xhs3-statement p,.xhs3-body,.xhs3-divider p,.xhs3-gap p,.xhs3-card p,.xhs3-slop p,.xhs3-terminal p,.xhs3-risk-duo p){
-    font-size:var(--fs-body)!important
-  }
-  .style1-slide :where(.st1-data-head h2,.st1-cast h2,.st1-name,.st1-meta-grid .v,.st1-cast-card .cn),
-  .style2-slide :where(.st2-data-head h2,.st2-ed-top h1,.st2-ed-col h3),
-  .xhs-slide :where(.xhs-card h3),
-  .xhs2-slide :where(.xhs2-title,.xhs2-title.compact,.xhs2-half-copy h2,.xhs2-card h3,.xhs2-callout span),
-  .xhs3-slide :where(.xhs3-page-title,.xhs3-card h3,.xhs3-risk-duo h2,.xhs3-deepfake h1){
-    font-size:var(--fs-h4)!important
-  }
-  .style1-slide :where(.st1-cover h1,.st1-end h1,.st1-names,.st1-chip),
-  .style2-slide :where(.st2-cover-title span,.st2-pull,.st2-vert,.st2-end-mark),
-  .xhs-slide :where(.xhs-title,.xhs-center-statement h1,.xhs-cover-title),
-  .xhs2-slide :where(.xhs2-statement h1,.xhs2-cover-copy h1,.xhs2-yellow-panel h1,.xhs2-thanks h1),
-  .xhs3-slide :where(.xhs3-cover-copy h1,.xhs3-statement h1,.xhs3-divider h1,.xhs3-split h1,.xhs3-original h1,.xhs3-strength h1,.xhs3-topics h1,.xhs3-gap h1,.xhs3-intro h1){
-    font-size:var(--fs-h1)!important
-  }
-  .style1-slide :where(.st1-pct),
-  .style2-slide :where(.st2-cover-num,.st2-ed-col .num),
-  .xhs2-slide :where(.xhs2-callout strong,.xhs2-vs>strong,.xhs2-thanks strong),
-  .xhs3-slide :where(.xhs3-number-rail strong,.xhs3-metric strong,.xhs3-token-box strong,.xhs3-part-num){
-    font-size:var(--fs-number-lg)!important
-  }
-  .report-slide :where(.rp-mark,.rp-eyebrow,.rp-footer,.rp-cover-meta,.rp-cover-meta span,.rp-meta-row,.rp-stat-note,.rp-toc-row span:last-child,.rp-table th,.rp-chart-switch .chart-value,.rp-chart-switch .chart-tick,.rp-chart-switch .chart-card-label,.rp-metric-card span,.rp-metric-card>div,.rp-tile small,.rp-card-num){
-    font-size:var(--fs-caption)!important
-  }
-  .report-slide :where(.rp-stat-label,.rp-table,.rp-chart-switch .chart-label,.rp-worked-item p,.rp-miss-card p,.rp-priority p){
-    font-size:var(--fs-body-sm)!important
-  }
-  .report-slide :where(p,.rp-body,.rp-cover-hero p,.rp-closing p){
-    font-size:var(--fs-body)!important
-  }
-  .report-slide :where(.rp-title,.rp-title.compact,.rp-toc-row,.rp-worked-item h3,.rp-miss-card h3,.rp-priority h3,.rp-callout){
-    font-size:var(--fs-h4)!important
-  }
-  .report-slide :where(.rp-title.xl,.rp-cover-review,.rp-closing h1){
-    font-size:var(--fs-h1)!important
-  }
-  .report-slide :where(.rp-cover-year,.rp-lift-number,.rp-stat-num,.rp-metric-card strong,.rp-tile strong,.rp-chart-switch .chart-card-value){
-    font-size:var(--fs-number-lg)!important
-  }
-  .style1-slide :where(.st1-wordmark,.st1-wordmark span,.st1-cast-card .en){
-    font-size:var(--fs-caption)!important
-  }
-  .style2-slide :where(.st2-attrib,.st2-attrib div,.st2-attrib span){
-    font-size:var(--fs-caption)!important
-  }
-  .style2-slide :where(.st2-chart .num){
-    font-size:var(--fs-h4)!important
-  }
-  .style2-slide :where(.st2-lede .st2-drop){
-    font-size:var(--fs-h2)!important
-  }
-  .xhs-slide :where(.xhs-arrow){
-    font-size:var(--fs-h3)!important
-  }
-  .xhs3-slide :where(.xhs3-token-box span){
-    font-size:var(--fs-caption)!important
-  }
-  .xhs3-slide :where(.xhs3-slop h1){
-    font-size:var(--fs-h1)!important
-  }
+
   .report-slide[data-layout="RP02"] .rp-stat-num,
   .report-slide[data-layout="RP11"] .rp-metric-card strong{
     font-size:var(--fs-number-md)!important
@@ -2939,9 +2475,6 @@
   .xhs3-slide[data-layout="XHS3-14"] .xhs3-token-box>div:not(.xhs3-kicker) span,
   .xhs3-slide[data-layout="XHS3-14"] .xhs3-token-box>div:not(.xhs3-kicker) strong{
     white-space:nowrap
-  }
-  .xhs3-slide[data-layout="XHS3-14"] .xhs3-token-box [data-dev-font-size-token] strong{
-    font-size:inherit!important
   }
   .xhs3-slide[data-layout="XHS3-22"] .xhs3-deepfake{
     align-items:end
@@ -3186,34 +2719,6 @@
     font-size:var(--fs-subtitle)!important
   }
 
-  /* ============ Font Weight Bridge · 全页面字重 token ============ */
-  #deck .slide :where(*){
-    font-weight:var(--fw-03)!important
-  }
-  #deck .slide :where(.t-cat,.t-meta,.chrome,.foot,.kicker,.tag,.bt-eyebrow,.bt-tiny,.bt-stage-head,.bt-observation-foot,.chart-title,.rp-mark,.rp-eyebrow,.rp-footer,.rp-meta-row,.rp-stat-note,.xhs-eyebrow,.xhs-kicker,.xhs-page,.xhs-logomark,.xhs-footer,.xhs2-eyebrow,.xhs2-kicker,.xhs2-page,.xhs2-footer,.xhs3-top,.xhs3-footer,.xhs3-kicker,.xhs3-credit,.xhs3-media figcaption,.st1-meta,.st1-eyebrow,.st1-name-en,.st1-footnote,.st1-footer-row,.st2-kicker,.st2-page,.st2-chart .label span,.st2-ed-col .pin){
-    font-weight:var(--fw-02)!important
-  }
-  #deck .slide :where(p,li,td,th,dd,figcaption,.t-body,.t-body-sm,.t-helper,.bt-body,.bt-small,.rp-body,.rp-table,.rp-stat-label,.rp-worked-item p,.rp-miss-card p,.rp-priority p,.xhs-body,.xhs-card p,.xhs2-body,.xhs2-half-copy p,.xhs2-card p,.xhs2-statement p,.xhs2-thanks p,.xhs3-body,.xhs3-card p,.xhs3-terminal p,.xhs3-risk-duo p,.st1-sub,.st1-quote,.st2-lede,.st2-vlead,.st2-ed-col p){
-    font-weight:var(--fw-03)!important
-  }
-  #deck .slide :where(.t-body-emp,strong,b,.bt-body strong,.xhs2-callout span,.st2-chart .label){
-    font-weight:var(--fw-05)!important
-  }
-  #deck .slide :where(h4,h5,h6,.t-h-prod,.bt-subtitle,.bt-stage-title,.bt-ref-list .n,.rp-toc-row,.rp-worked-item h3,.rp-miss-card h3,.rp-priority h3,.xhs-card h3,.xhs2-half-copy h2,.xhs2-card h3,.xhs3-card h3,.st1-name,.st1-cast-card .cn,.st2-ed-col h3){
-    font-weight:var(--fw-06)!important
-  }
-  #deck .slide :where(h2,h3,.bt-title,.rp-title,.rp-callout,.xhs-title,.xhs-answer,.xhs2-title,.xhs3-page-title,.xhs3-risk-duo h2,.st1-data-head h2,.st1-cast h2,.st2-data-head h2,.st2-pull,.st2-ed-top h1,.st2-end-tagline){
-    font-weight:var(--fw-08)!important
-  }
-  #deck .slide :where(.h-xl,.h-xl-zh,.xhs-cover-title,.xhs-center-statement h1,.xhs2-cover-copy h1,.xhs2-thanks h1,.xhs3-strength h1,.xhs3-topics h1,.xhs3-gap h1,.st1-names,.st1-chip,.st2-cover-title span,.st2-vert){
-    font-weight:var(--fw-10)!important
-  }
-  #deck .slide :where(h1,.h-hero,.h-hero-zh,.bt-display,.bt-ghostword,.bt-percent,.rp-cover-year,.rp-cover-review,.rp-lift-number,.xhs2-yellow-panel h1,.xhs3-cover-copy h1,.xhs3-statement h1,.xhs3-divider h1,.xhs3-intro h1,.st1-cover h1,.st1-end h1,.st2-cover-num,.st2-end-mark){
-    font-weight:var(--fw-11)!important
-  }
-  #deck .slide :where(.num-mega,.name-mega,.kpi-hero,.kpi-big,.kpi-cell .nb,.bar-tower .nb,.h-bar-chart .row-val,.ledger-num,.bottom-hero,.rp-stat-num,.rp-metric-card strong,.rp-tile strong,.rp-chart-switch .chart-card-value,.xhs2-callout strong,.xhs2-vs>strong,.xhs2-thanks strong,.xhs3-number-rail strong,.xhs3-metric strong,.xhs3-token-box strong,.xhs3-part-num,.st1-pct,.st2-ed-col .num){
-    font-weight:var(--fw-12)!important
-  }
 
   /* 响应式降级 */
   @media (max-width:900px){
@@ -3298,28 +2803,12 @@
   </div>
   <div class="preview-fields">
     <div class="preview-field">
-      <label for="preview-style">风格</label>
-      <select id="preview-style"></select>
-    </div>
-    <div class="preview-field">
       <label for="preview-theme">主题</label>
       <select id="preview-theme" data-preview-select="theme"></select>
     </div>
-    <div class="preview-field is-hidden" id="preview-bg-image-field">
-      <label for="preview-bg-image">背景图片</label>
-      <select id="preview-bg-image"></select>
-    </div>
-    <div class="preview-field">
-      <label for="preview-font">字体</label>
-      <select id="preview-font" data-preview-select="font"></select>
-    </div>
-    <div class="preview-field">
-      <label for="preview-font-weight">字重</label>
-      <select id="preview-font-weight" data-preview-select="fontWeight"></select>
-    </div>
-    <div class="preview-field">
-      <label for="preview-type-scale">字号</label>
-      <select id="preview-type-scale" data-preview-select="typeScale"></select>
+    <div class="preview-field is-hidden" id="preview-shader-field">
+      <label for="preview-shader">背景</label>
+      <select id="preview-shader"></select>
     </div>
     <div class="preview-field">
       <label for="preview-animation">入场动画</label>
@@ -3338,73 +2827,6 @@
         <option value="sectionWrap">动画 4 · 连续分屏</option>
       </select>
     </div>
-    <div class="preview-field">
-      <label class="preview-dev-toggle" for="preview-dev-mode">
-        <input id="preview-dev-mode" type="checkbox">
-        开发者模式
-      </label>
-      <div class="preview-dev-panel" id="preview-dev-panel" hidden>
-        <div class="preview-dev-selected" id="preview-dev-selected">未选择文本</div>
-        <div class="preview-dev-tools">
-          <div class="preview-dev-section">
-            <div class="preview-dev-section-title">Scope</div>
-            <div class="preview-dev-row">
-              <label for="preview-dev-scope">作用域</label>
-              <select id="preview-dev-scope">
-                <option value="global">全局</option>
-                <option value="theme">当前主题</option>
-              </select>
-            </div>
-          </div>
-          <div class="preview-dev-section">
-            <div class="preview-dev-section-title">Text</div>
-            <div class="preview-dev-row">
-              <label for="preview-dev-font-size">字号</label>
-              <select id="preview-dev-font-size"></select>
-            </div>
-            <div class="preview-dev-row">
-              <label for="preview-dev-text-mark">高亮</label>
-              <select id="preview-dev-text-mark"></select>
-            </div>
-          </div>
-          <div class="preview-dev-section">
-            <div class="preview-dev-section-title">Fill</div>
-            <div class="preview-dev-row is-stacked">
-              <label for="preview-dev-bg-color">背景色</label>
-              <select id="preview-dev-bg-color"></select>
-            </div>
-            <div class="preview-dev-row is-stacked">
-              <label for="preview-dev-color">文字颜色</label>
-              <select id="preview-dev-color"></select>
-            </div>
-          </div>
-          <div class="preview-dev-section">
-            <div class="preview-dev-section-title">Layout</div>
-            <div class="preview-dev-row is-stacked">
-              <label for="preview-dev-padding">Padding <span class="preview-token-meta" data-token-meta-for="preview-dev-padding">继承</span></label>
-              <select id="preview-dev-padding"></select>
-            </div>
-            <div class="preview-dev-row is-stacked">
-              <label for="preview-dev-margin">Margin <span class="preview-token-meta" data-token-meta-for="preview-dev-margin">继承</span></label>
-              <select id="preview-dev-margin"></select>
-            </div>
-            <div class="preview-dev-row is-stacked">
-              <label for="preview-dev-gap">Gap <span class="preview-token-meta" data-token-meta-for="preview-dev-gap">继承</span></label>
-              <select id="preview-dev-gap"></select>
-            </div>
-          </div>
-        </div>
-        <textarea class="preview-dev-log" id="preview-dev-log" readonly spellcheck="false"></textarea>
-        <div class="preview-dev-buttons">
-          <button id="preview-dev-copy" type="button">复制记录</button>
-          <button class="secondary" id="preview-dev-clear" type="button">清空记录</button>
-        </div>
-      </div>
-    </div>
-    <div class="preview-field is-hidden" id="preview-shader-field">
-      <label for="preview-shader">背景</label>
-      <select id="preview-shader"></select>
-    </div>
     <div class="preview-field is-hidden" id="preview-chart-field">
       <label for="preview-chart">图表</label>
       <select id="preview-chart"></select>
@@ -3418,12 +2840,11 @@
     <button class="secondary" id="preview-reset" type="button">重置</button>
   </div>
 </aside>
-<script id="preview-options" type="application/json">{"themes":{},"fonts":{},"fontWeights":{},"typeScales":{},"spacings":{},"current":{}}</script>
+<script id="preview-options" type="application/json">{"themes":{},"current":{}}</script>
 <script id="deck-view-model" type="application/json">{}</script>
 <script id="embedded-media-state" type="application/json">{}</script>
 <script id="embedded-text-state" type="application/json">{}</script>
 <script id="embedded-icon-state" type="application/json">{}</script>
-<script id="embedded-dev-state" type="application/json">{}</script>
 <script id="unicorn-scene-json-map" type="application/json">{}</script>
 <script src="assets/vendor/remixicon/remixicon-names.js"></script>
 
@@ -3445,14 +2866,12 @@
   const embeddedIcon = readJson(iconEl, {});
   const deckSignature = createDeckSignature(vm, {...(vm.state?.text || {}), ...embeddedText});
   const saved = readSaved(deckSignature);
-  vm.state.tokens = {...(vm.tokens || {}), ...(saved.tokens || {})};
   vm.state.slideOrder = saved.slideOrder || vm.state.slideOrder || (vm.slides || []).map(slide => slide.id);
   vm.state.text = {...(vm.state.text || {}), ...embeddedText, ...(saved.text || {})};
   vm.state.media = {...(vm.state.media || {}), ...embeddedMedia, ...(saved.media || {})};
   vm.state.chart = {...(vm.state.chart || {}), ...(saved.chart || {})};
   vm.state.icon = {...(vm.state.icon || {}), ...embeddedIcon, ...(saved.icon || {})};
   vm.state.shader = {...(vm.state.shader || {}), ...(saved.shader || {})};
-  vm.state.background = {...(vm.state.background || {}), ...(saved.background || {})};
   vm.state.__deckSignature = deckSignature;
 
   writeJson(textEl, vm.state.text);
@@ -3463,14 +2882,12 @@
   window.__deckViewModel = {
     model: vm,
     getState,
-    setTokens,
     setTextState,
     setMediaState,
     setIconState,
     setSlideOrder,
     setChart,
     setShader,
-    setBackground,
     syncFromDom,
     write: writeVm,
     persist,
@@ -3482,11 +2899,6 @@
     return JSON.parse(JSON.stringify(vm.state || {}));
   }
 
-  function setTokens(tokens){
-    vm.state.tokens = {...(vm.state.tokens || {}), ...(tokens || {})};
-    writeVm();
-    persist();
-  }
 
   function setTextState(text){
     vm.state.text = {...(text || {})};
@@ -3529,14 +2941,6 @@
     persist();
   }
 
-  function setBackground(slideId, key){
-    if(!slideId) return;
-    if(key) vm.state.background[slideId] = key;
-    else delete vm.state.background[slideId];
-    writeVm();
-    persist();
-  }
-
   function syncFromDom(){
     const slides = window.__getVisibleSlides?.() || [...document.querySelectorAll('#deck .slide:not([hidden])')];
     setSlideOrder(slides.map((slide, index) => slide.dataset.vmSlideId || vm.slides?.[index]?.id || `slide-${index + 1}`));
@@ -3562,14 +2966,6 @@
   }
 
   function writeVm(){
-    vm.tokens = {...(vm.tokens || {}), ...(vm.state.tokens || {})};
-    if(optionsEl){
-      try {
-        const options = JSON.parse(optionsEl.textContent || '{}');
-        options.current = {...(options.current || {}), ...(vm.state.tokens || {})};
-        writeJson(optionsEl, options);
-      } catch {}
-    }
     writeJson(vmEl, vm);
   }
 
@@ -3697,7 +3093,7 @@ function bootGL(canvasId, fsSrc){
   };
   addEventListener('resize',resize);resize();
 
-  // 读取 CSS 变量,把 accent 颜色塞进 shader
+  // 读取 CSS 变量,同步背景主色
   function readAccent(){
     const cs = getComputedStyle(document.documentElement);
     const hex = cs.getPropertyValue('--theme-focus').trim() || cs.getPropertyValue('--accent').trim() || '#002FA7';
@@ -3748,42 +3144,16 @@ addEventListener('swiss-low-power-change', () => window.__syncActiveEffects?.())
 // =============== 导航 ===============
 const deck=document.getElementById('deck');
 let allSlides=[...deck.querySelectorAll('.slide')];
-let activeStyleVariant='a';
-let slides=[];
+let slides=[...allSlides];
 const nav=document.getElementById('nav');
 let idx=0,total=0,lock=false;
 let deckW=innerWidth;
 const CURRENT_SLIDE_STORE='guizang-ppt-current-slide';
 
-function getStyleVariants(){
-  const variants=[...new Set(allSlides.map(slide => slide.dataset.styleVariant).filter(Boolean))];
-  return variants.length ? variants : ['a'];
-}
-
 function getVisibleSlides(){
-  return allSlides.filter(slide => !slide.dataset.styleVariant || slide.dataset.styleVariant === activeStyleVariant);
+  return slides;
 }
 window.__getVisibleSlides = getVisibleSlides;
-window.__getStyleVariants = getStyleVariants;
-
-function applyStyleVariant(variant, opts={}){
-  const variants = getStyleVariants();
-  activeStyleVariant = variants.includes(variant) ? variant : variants[0];
-  document.documentElement.dataset.styleVariant = activeStyleVariant;
-  allSlides.forEach(slide => {
-    const visible = !slide.dataset.styleVariant || slide.dataset.styleVariant === activeStyleVariant;
-    slide.hidden = !visible;
-    slide.setAttribute('aria-hidden', visible ? 'false' : 'true');
-  });
-  refreshSlideList();
-  idx = Math.max(0, Math.min(total - 1, opts.keepIndex === false ? 0 : idx));
-  renderNav();
-  layoutDeck();
-  if(opts.navigate !== false) go(idx);
-  dispatchEvent(new CustomEvent('swiss-style-variant-change', {detail:{variant:activeStyleVariant}}));
-}
-window.__setStyleVariant = applyStyleVariant;
-window.__getStyleVariant = () => activeStyleVariant;
 
 function currentSlideStoreKey(){
   const signature = window.__deckViewModel?.model?.state?.__deckSignature || location.pathname || 'deck';
@@ -3811,32 +3181,15 @@ function writeStoredSlideIndex(index){
   } catch {}
 }
 
-function readStoredStyleVariant(){
-  try {
-    return JSON.parse(localStorage.getItem(previewStoreKey()) || '{}')?.styleVariant || readDefaultStyleVariant();
-  } catch {
-    return readDefaultStyleVariant();
-  }
-}
-
 function previewStoreKey(){
   const signature = window.__deckViewModel?.model?.state?.__deckSignature || location.pathname || 'deck';
   return `guizang-ppt-preview:${signature}`;
 }
 window.__previewStoreKey = previewStoreKey;
 
-function readDefaultStyleVariant(){
-  try {
-    const options = JSON.parse(document.getElementById('preview-options')?.textContent || '{}');
-    return options.current?.styleVariant || document.documentElement.dataset.styleVariant || null;
-  } catch {
-    return document.documentElement.dataset.styleVariant || null;
-  }
-}
-
 function refreshSlideList(){
   allSlides=[...deck.querySelectorAll('.slide')];
-  slides=getVisibleSlides();
+  slides=allSlides;
   total=slides.length;
 }
 
@@ -3860,10 +3213,9 @@ addEventListener('resize',layoutDeck);
 
 deck.addEventListener('mousedown', e=>{
   if(document.body.classList.contains('preview-panel-open')) return;
-  if(isDeveloperModeActive()) return;
   if(overviewOn) return;
   if(e.button===0 && e.target.closest('[contenteditable="true"]')) return;
-  if(e.target.closest('button,select,input,textarea,a,.bt-image-slot,[data-media-slot].frame-img,#preview-panel,#preview-toggle')) return;
+  if(e.target.closest('button,select,input,textarea,a,.bt-image-slot,.bt-unicorn-frame,.bt-shader-backdrop,[data-media-slot].frame-img,#preview-panel,#preview-toggle')) return;
   if(e.button===0){
     e.preventDefault();
     if(window.__pipeAdvance && window.__pipeAdvance()) return;
@@ -3890,7 +3242,8 @@ function renderNav(){
   });
   syncNav();
 }
-applyStyleVariant(readStoredStyleVariant(), {navigate:false});
+refreshSlideList();
+renderNav();
 
 function slideUsesDarkChrome(el){
   const theme=document.documentElement.dataset.theme;
@@ -3898,18 +3251,14 @@ function slideUsesDarkChrome(el){
   if(el.classList.contains('xhs-slide')){
     if(theme === 'light') return false;
     if(theme === 'dark') return true;
-    if(theme === 'colorful') return el.classList.contains('xhs-indigo');
   }
   if(el.classList.contains('xhs2-slide')){
-    if(theme === 'light' || theme === 'colorful' || theme === 'vermilionPaper') return false;
+    if(theme === 'light') return false;
     return true;
   }
   if(el.classList.contains('xhs3-slide')){
     if(theme === 'light') return el.classList.contains('xhs3-ink');
-    if(theme === 'dark' || theme === 'acidIndigo') return true;
-    if(theme === 'vermilionPaper' || theme === 'colorful'){
-      return el.classList.contains('xhs3-ink') || el.classList.contains('xhs3-field') || el.classList.contains('xhs3-accent');
-    }
+    if(theme === 'dark') return true;
   }
   if(el.classList.contains('style1-slide')){
     const style=getComputedStyle(el);
@@ -3917,9 +3266,6 @@ function slideUsesDarkChrome(el){
     if(rgb) return (Number(rgb[1]) * .299 + Number(rgb[2]) * .587 + Number(rgb[3]) * .114) < 140;
     const mode=style.getPropertyValue('--st1-bg-mode').trim();
     if(mode) return mode !== 'light';
-  }
-  if(theme === 'colorful' && el.classList.contains('bt-slide')){
-    return ['BT01','BT02','BT03'].includes(el.dataset.layout);
   }
   if(theme === 'light' && el.classList.contains('report-slide')){
     if(['RP01','RP04','RP05','RP07','RP10','RP16'].includes(el.dataset.layout)) return false;
@@ -4293,19 +3639,10 @@ function toggleOverview(){
 addEventListener('resize', () => {
   if(overviewOn) scheduleOverviewFit();
 });
-addEventListener('swiss-style-variant-change', () => {
-  if(!overviewOn) return;
-  buildOverview();
-  fitOverviewThumbnails();
-  scrollOverviewToCurrent();
-});
 
 const DECK_NEXT_KEYS=new Set(['ArrowRight','PageDown','ArrowDown']);
 const DECK_PREV_KEYS=new Set(['ArrowLeft','PageUp','ArrowUp']);
 
-function isDeveloperModeActive(){
-  return document.body.classList.contains('preview-panel-open') && document.body.classList.contains('developer-mode');
-}
 
 function handleDeckKeyNavigation(e,{allowSpace=true}={}){
   if(e.key==='Escape'){e.preventDefault();toggleOverview();return;}
@@ -4339,7 +3676,6 @@ function isDeckTypingTarget(target){
 let tx=0,ty=0;
 addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY},{passive:true});
 addEventListener('touchend',e=>{
-  if(isDeveloperModeActive()) return;
   const dx=(e.changedTouches[0].clientX-tx);
   const dy=(e.changedTouches[0].clientY-ty);
   if(Math.abs(dx)>50&&Math.abs(dx)>Math.abs(dy)){
@@ -4368,40 +3704,22 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     options = JSON.parse(optionsEl.textContent || '{}');
   } catch (err) {
     console.warn('[preview] invalid options', err);
-    options = {};
   }
 
   const STORE = 'guizang-ppt-preview';
   const viewModel = window.__deckViewModel;
-  const root = document.documentElement;
   let deckSlides = [...document.querySelectorAll('#deck .slide')];
-  const bgImageField = document.getElementById('preview-bg-image-field');
-  const bgImageSelect = document.getElementById('preview-bg-image');
   const shaderField = document.getElementById('preview-shader-field');
   const shaderSelect = document.getElementById('preview-shader');
   const chartField = document.getElementById('preview-chart-field');
   const chartSelect = document.getElementById('preview-chart');
   const animationSelect = document.getElementById('preview-animation');
   const transitionSelect = document.getElementById('preview-transition');
-  const LIGHT_BACKGROUND_OPTIONS = [
-    {key: '', label: '无'},
-    {key: 'indigo-porcelain', label: '靛蓝瓷', src: 'assets/screenshot-backgrounds/style-a/indigo-porcelain.webp'},
-    {key: 'forest-ink', label: '森林墨', src: 'assets/screenshot-backgrounds/style-a/forest-ink.webp'},
-    {key: 'monocle-classic', label: '经典墨线', src: 'assets/screenshot-backgrounds/style-a/monocle-classic.webp'},
-    {key: 'dune', label: '沙丘', src: 'assets/screenshot-backgrounds/style-a/dune.webp'},
-    {key: 'kraft-paper', label: '牛皮纸', src: 'assets/screenshot-backgrounds/style-a/kraft-paper.webp'},
-  ];
 
-  const saved = {...readSaved(), ...(viewModel?.getState?.().tokens || {})};
-  const styleVariants = window.__getStyleVariants?.() || ['a'];
-  const styleLabels = {a:'风格 A', b:'风格 B', c:'风格 C'};
+  const saved = readSaved();
   const transitionModes = ['none', 'pixelReveal', 'fullscreenScroll', 'liquidMorph', 'sectionWrap'];
   const state = {
-    styleVariant: styleVariants.includes(saved.styleVariant) ? saved.styleVariant : (window.__getStyleVariant?.() || styleVariants[0]),
-    theme: pickValid(options.themes, saved.theme, options.current?.theme),
-    font: pickValid(options.fonts, saved.font, options.current?.font),
-    fontWeight: pickValid(options.fontWeights, saved.fontWeight, options.current?.fontWeight),
-    typeScale: pickValid(options.typeScales, saved.typeScale, options.current?.typeScale),
+    theme: pickTheme(saved.theme || options.current?.theme || document.documentElement.dataset.theme),
     pageTransition: transitionModes.includes(saved.pageTransition)
       ? saved.pageTransition
       : (transitionModes.includes(options.current?.pageTransition) ? options.current.pageTransition : 'none'),
@@ -4410,11 +3728,12 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
 
   const count = document.getElementById('preview-slide-count');
   refreshDeckSlides();
-
-  function refreshDeckSlides(){
-    deckSlides = window.__getVisibleSlides?.() || [...document.querySelectorAll('#deck .slide:not([hidden])')];
-    if(count) count.textContent = `${deckSlides.length} slides`;
-  }
+  fillThemeSelect();
+  applyTheme(state.theme);
+  syncAnimationControl();
+  applyStoredSlideControls();
+  renderShaderControl();
+  renderChartControl();
 
   function readSaved(){
     try {
@@ -4426,126 +3745,43 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
 
   function writeSaved(){
     localStorage.setItem(window.__previewStoreKey?.() || STORE, JSON.stringify(state));
-    viewModel?.setTokens?.(state);
   }
 
-  function pickValid(registry, preferred, fallback){
-    if(registry?.[preferred]) return preferred;
-    if(registry?.[fallback]) return fallback;
-    return Object.keys(registry || {})[0] || '';
+  function refreshDeckSlides(){
+    deckSlides = window.__getVisibleSlides?.() || [...document.querySelectorAll('#deck .slide:not([hidden])')];
+    if(count) count.textContent = `${deckSlides.length} slides`;
   }
 
-  function fillSelect(id, registry, selected, extraOptions = []){
-    const select = document.getElementById(id);
+  function pickTheme(value){
+    return options.themes?.[value] ? value : (document.documentElement.dataset.theme || 'dark');
+  }
+
+  function fillThemeSelect(){
+    const select = document.getElementById('preview-theme');
     if(!select) return;
     select.innerHTML = '';
-    extraOptions.forEach(item => {
-      const option = document.createElement('option');
-      option.value = item.value;
-      option.textContent = item.label;
-      select.appendChild(option);
-    });
-    Object.entries(registry || {}).forEach(([key, item]) => {
+    Object.entries(options.themes || {dark:{label:'深色背景'}, light:{label:'浅色背景'}}).forEach(([key, item]) => {
       const option = document.createElement('option');
       option.value = key;
       option.textContent = item.label || key;
       select.appendChild(option);
     });
-    select.value = selected;
-    select.disabled = select.options.length <= 1;
-  }
-
-  function applyVars(vars){
-    Object.entries(vars || {}).forEach(([name, value]) => {
-      if(value !== undefined) root.style.setProperty(name, value);
-    });
-  }
-
-  function clearRegistryVars(registry){
-    Object.values(registry || {}).forEach(item => {
-      Object.keys(item.vars || {}).forEach(name => root.style.removeProperty(name));
-    });
+    select.value = state.theme;
   }
 
   function applyTheme(key){
-    root.dataset.theme = key;
-    clearRegistryVars(options.themes);
-    applyVars(options.themes?.[key]?.vars);
-    window.__refreshThemeAwareUnicornScenes?.();
-    dispatchEvent(new CustomEvent('preview-theme-change', {detail: {theme: key}}));
-  }
-
-  function applyTypeScale(key){
-    applyVars(options.typeScales?.[key]?.vars);
-  }
-
-  function applyStylePreset(key){
-    const preset = options.stylePresets?.[key];
-    if(!preset) return;
-    if(preset.theme && options.themes?.[preset.theme]){
-      state.theme = preset.theme;
-      document.getElementById('preview-theme').value = state.theme;
-      applyTheme(state.theme);
-    }
-    if(preset.font && options.fonts?.[preset.font]){
-      state.font = preset.font;
-      document.getElementById('preview-font').value = state.font;
-      applyVars(options.fonts?.[state.font]?.vars);
-    }
-    if(preset.fontWeight && options.fontWeights?.[preset.fontWeight]){
-      state.fontWeight = preset.fontWeight;
-      document.getElementById('preview-font-weight').value = state.fontWeight;
-      applyVars(options.fontWeights?.[state.fontWeight]?.vars);
-    }
-    if(preset.typeScale && options.typeScales?.[preset.typeScale]){
-      state.typeScale = preset.typeScale;
-      document.getElementById('preview-type-scale').value = state.typeScale;
-      applyTypeScale(state.typeScale);
-    }
-  }
-
-  function applyAll(){
-    applyTheme(state.theme);
-    applyVars(options.fonts?.[state.font]?.vars);
-    applyVars(options.fontWeights?.[state.fontWeight]?.vars);
-    applyVars(options.typeScales?.[state.typeScale]?.vars);
+    state.theme = pickTheme(key);
+    document.documentElement.dataset.theme = state.theme;
+    const select = document.getElementById('preview-theme');
+    if(select) select.value = state.theme;
     window.__syncSlideTone?.();
+    window.__refreshThemeAwareUnicornScenes?.();
+    dispatchEvent(new CustomEvent('preview-theme-change', {detail: {theme: state.theme}}));
   }
 
-  fillSelect('preview-style', {}, state.styleVariant, styleVariants.map(key => ({value:key, label:styleLabels[key] || key})));
-  fillSelect('preview-theme', options.themes, state.theme);
-  fillSelect('preview-font', options.fonts, state.font);
-  fillSelect('preview-font-weight', options.fontWeights, state.fontWeight);
-  fillSelect('preview-type-scale', options.typeScales, state.typeScale);
-  applyAll();
-  syncAnimationControl();
-  applyStoredSlideControls();
-  renderShaderControl();
-  renderChartControl();
-  renderLightBackgroundControl();
-
-  const bindings = {
-    'preview-style': value => {
-      state.styleVariant = value;
-      applyStylePreset(value);
-      window.__setStyleVariant?.(value);
-      refreshDeckSlides();
-      renderShaderControl();
-      renderChartControl();
-    },
-    'preview-theme': value => { state.theme = value; applyTheme(value); },
-    'preview-font': value => { state.font = value; applyVars(options.fonts?.[value]?.vars); applyVars(options.fontWeights?.[state.fontWeight]?.vars); },
-    'preview-font-weight': value => { state.fontWeight = value; applyVars(options.fontWeights?.[value]?.vars); },
-    'preview-type-scale': value => { state.typeScale = value; applyTypeScale(value); },
-  };
-
-  Object.entries(bindings).forEach(([id, fn]) => {
-    const el = document.getElementById(id);
-    el?.addEventListener('change', () => {
-      fn(el.value);
-      window.__syncSlideTone?.();
-      writeSaved();
-    });
+  document.getElementById('preview-theme')?.addEventListener('change', event => {
+    applyTheme(event.target.value);
+    writeSaved();
   });
 
   shaderSelect?.addEventListener('change', () => {
@@ -4553,13 +3789,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     if(!frame) return;
     const option = parseShaderOptions(frame).find(item => item.key === shaderSelect.value);
     if(option) applyShaderBackdrop(frame, option);
-  });
-
-  bgImageSelect?.addEventListener('change', () => {
-    const slide = getCurrentSlide();
-    if(!slide) return;
-    const option = LIGHT_BACKGROUND_OPTIONS.find(item => item.key === bgImageSelect.value) || LIGHT_BACKGROUND_OPTIONS[0];
-    applyLightBackground(slide, option);
   });
 
   chartSelect?.addEventListener('change', () => {
@@ -4579,36 +3808,39 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     writeSaved();
   });
 
-  addEventListener('swiss-slide-change', () => {
-    refreshDeckSlides();
-    renderShaderControl();
-    renderChartControl();
-    renderLightBackgroundControl();
-  });
-  addEventListener('swiss-slide-reorder', () => {
-    refreshDeckSlides();
-    renderShaderControl();
-    renderChartControl();
-    renderLightBackgroundControl();
-  });
-  addEventListener('swiss-style-variant-change', e => {
-    state.styleVariant = e.detail?.variant || state.styleVariant;
-    const styleSelect = document.getElementById('preview-style');
-    if(styleSelect) styleSelect.value = state.styleVariant;
-    refreshDeckSlides();
-    renderShaderControl();
-    renderChartControl();
-    renderLightBackgroundControl();
-  });
-
-  addEventListener('preview-theme-change', () => {
-    renderLightBackgroundControl();
-  });
+  addEventListener('swiss-slide-change', refreshSlideControls);
+  addEventListener('swiss-slide-reorder', refreshSlideControls);
   addEventListener('swiss-entry-animation-change', syncAnimationControl);
+
+  function refreshSlideControls(){
+    refreshDeckSlides();
+    renderShaderControl();
+    renderChartControl();
+  }
+
   function syncAnimationControl(){
     if(animationSelect) animationSelect.value = window.__entryAnimationEnabled === false ? 'off' : 'on';
     if(transitionSelect) transitionSelect.value = state.pageTransition || 'none';
     window.__setPageTransition?.(state.pageTransition || 'none');
+  }
+
+  function applyStoredSlideControls(){
+    const vmState = viewModel?.getState?.() || {};
+    deckSlides.forEach(slide => {
+      const slideId = slide.dataset.vmSlideId;
+      const shaderKey = vmState.shader?.[slideId];
+      const shaderFrame = slide.querySelector('[data-shader-backdrop="true"]');
+      if(shaderKey && shaderFrame){
+        const option = parseShaderOptions(shaderFrame).find(item => item.key === shaderKey);
+        if(option) applyShaderBackdrop(shaderFrame, option, {persist:false});
+      }
+      const chartKey = vmState.chart?.[slideId];
+      const chartFrame = slide.querySelector('[data-chart-switch="true"]');
+      if(chartKey && chartFrame){
+        const option = parseChartOptions(chartFrame).find(item => item.key === chartKey);
+        if(option) applyChart(chartFrame, option, {persist:false});
+      }
+    });
   }
 
   function getCurrentShaderFrame(){
@@ -4645,32 +3877,9 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     shaderSelect.disabled = items.length <= 1;
   }
 
-  function applyStoredSlideControls(){
-    const vmState = viewModel?.getState?.() || {};
-    deckSlides.forEach(slide => {
-      const slideId = slide.dataset.vmSlideId;
-      const shaderKey = vmState.shader?.[slideId];
-      const shaderFrame = slide.querySelector('[data-shader-backdrop="true"]');
-      if(shaderKey && shaderFrame){
-        const option = parseShaderOptions(shaderFrame).find(item => item.key === shaderKey);
-        if(option) applyShaderBackdrop(shaderFrame, option, {persist:false});
-      }
-      const chartKey = vmState.chart?.[slideId];
-      const chartFrame = slide.querySelector('[data-chart-switch="true"]');
-      if(chartKey && chartFrame){
-        const option = parseChartOptions(chartFrame).find(item => item.key === chartKey);
-        if(option) applyChart(chartFrame, option, {persist:false});
-      }
-      const bgKey = vmState.background?.[slideId];
-      const bgOption = LIGHT_BACKGROUND_OPTIONS.find(item => item.key === bgKey);
-      if(bgOption) applyLightBackground(slide, bgOption, {persist:false});
-    });
-  }
-
   function applyShaderBackdrop(frame, option, opts = {}){
     window.__resetUnicornSceneFrame?.(frame);
     frame.dataset.shaderCurrent = option.key;
-
     frame.classList.add('bt-unicorn-frame');
     frame.dataset.unicornJsonFilePath = option.jsonFilePath || '';
     frame.dataset.unicornScale = option.scale || 1;
@@ -4721,7 +3930,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
   function applyChart(frame, option, opts = {}){
     frame.dataset.chartCurrent = option.key;
     frame.replaceChildren(renderChartOption(option));
-    window.__initEditableText?.(frame);
     if(opts.persist !== false) viewModel?.setChart?.(currentSlideId(), option.key);
   }
 
@@ -4731,7 +3939,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     title.className = 'chart-title';
     title.textContent = option.title || option.label || '';
     fragment.appendChild(title);
-
     const rows = normalizeChartRows(option.rows);
     if(option.type === 'line') fragment.appendChild(renderLineChart(rows));
     else if(option.type === 'cards') fragment.appendChild(renderMetricCards(rows));
@@ -4752,7 +3959,7 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     rows.forEach(row => {
       const item = document.createElement('div');
       item.className = `chart-row ${row.tone || ''}`.trim();
-      item.innerHTML = `<div class="chart-label"></div><div class="chart-track"><span></span></div><div class="chart-value"></div>`;
+      item.innerHTML = '<div class="chart-label"></div><div class="chart-track"><span></span></div><div class="chart-value"></div>';
       item.querySelector('.chart-label').textContent = row.label;
       item.querySelector('.chart-track span').style.width = `${(row.value / max) * 100}%`;
       item.querySelector('.chart-value').textContent = row.display || `${row.value}%`;
@@ -4808,12 +4015,7 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
   function setOpen(open){
     document.body.classList.toggle('preview-panel-open', open);
     toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-    if(open) window.__enableInlineTextEditing?.();
-    else {
-      window.__disableInlineTextEditing?.();
-      window.__setDeveloperMode?.(false);
-      window.__closeIconPicker?.();
-    }
+    if(!open) window.__closeIconPicker?.();
     requestAnimationFrame(() => {
       window.__layoutDeck?.();
       window.__fitOverviewThumbnails?.();
@@ -4832,8 +4034,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     localStorage.removeItem(STORE);
     Object.keys(localStorage).filter(key => key.startsWith(`${STORE}:`)).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('guizang-ppt-view-model');
-    localStorage.removeItem('guizang-ppt-dev-mode');
-    localStorage.removeItem('guizang-ppt-dev-adjustments');
     Object.keys(localStorage).filter(key => key.startsWith('guizang-ppt-current-slide:')).forEach(key => localStorage.removeItem(key));
     location.reload();
   });
@@ -4845,37 +4045,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
   function getCurrentSlide(){
     const index = window.__currentSlideIndex || 0;
     return deckSlides[index] || null;
-  }
-
-  function renderLightBackgroundControl(){
-    if(!bgImageField || !bgImageSelect) return;
-    if(state.theme !== 'light'){
-      bgImageField.classList.add('is-hidden');
-      return;
-    }
-    bgImageField.classList.remove('is-hidden');
-    if(!bgImageSelect.options.length){
-      LIGHT_BACKGROUND_OPTIONS.forEach(item => {
-        const option = document.createElement('option');
-        option.value = item.key;
-        option.textContent = item.label;
-        bgImageSelect.appendChild(option);
-      });
-    }
-    bgImageSelect.value = getCurrentSlide()?.dataset.lightBgImage || '';
-  }
-
-  function applyLightBackground(slide, option, opts = {}){
-    if(!slide) return;
-    if(!option?.key){
-      delete slide.dataset.lightBgImage;
-      slide.style.removeProperty('--light-bg-image');
-      if(opts.persist !== false) viewModel?.setBackground?.(slide.dataset.vmSlideId, '');
-      return;
-    }
-    slide.dataset.lightBgImage = option.key;
-    slide.style.setProperty('--light-bg-image', `url("${option.src}")`);
-    if(opts.persist !== false) viewModel?.setBackground?.(slide.dataset.vmSlideId, option.key);
   }
 })();
 </script>
@@ -5243,7 +4412,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     updateMediaSlotRatios();
     window.__syncDeckPageNumbers?.();
     window.__flushEditableTextState?.();
-    window.__flushDeveloperAdjustments?.();
     window.__flushIconState?.();
     window.__syncDeckViewModelFromDom?.();
     document.body.classList.remove('preview-panel-open');
@@ -5267,7 +4435,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
       updateMediaSlotRatios();
       window.__syncDeckPageNumbers?.();
       window.__flushEditableTextState?.();
-      window.__flushDeveloperAdjustments?.();
       window.__flushIconState?.();
       writeMediaState();
       window.__syncDeckViewModelFromDom?.();
@@ -5311,7 +4478,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
         await window.__initUnicornScenes?.(slideEl, {force:true});
         await waitForUnicornFrames(slideEl, 1800);
 
-        const textItems = collectPptxText(slideEl, PPT_W, PPT_H);
         document.body.classList.add('pptx-export-capturing');
         await nextFrame();
         const imageData = await captureSlideImage(slideEl, {
@@ -5324,7 +4490,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
 
         const pptSlide = pptx.addSlide();
         pptSlide.addImage({data: imageData, x: 0, y: 0, w: PPT_W, h: PPT_H});
-        textItems.forEach(item => pptSlide.addText(item.text, item.options));
       }
 
       restorePptxExportState(restoreState);
@@ -5347,42 +4512,10 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     updateMediaSlotRatios();
     window.__syncDeckPageNumbers?.();
     window.__flushEditableTextState?.();
-    window.__flushDeveloperAdjustments?.();
     window.__flushIconState?.();
     writeMediaState();
     window.__syncDeckViewModelFromDom?.();
-    const clone = document.documentElement.cloneNode(true);
-    clone.querySelector('#overview')?.remove();
-    clone.querySelector('#image-picker-input')?.remove();
-    clone.querySelector('#media-picker-input')?.remove();
-    clone.querySelector('#icon-picker-panel')?.remove();
-    clone.querySelector('body')?.classList.remove('developer-mode');
-    clone.querySelector('body')?.classList.remove('preview-panel-open');
-    clone.querySelectorAll('iframe[data-effect-src]').forEach(iframe => {
-      if(!iframe.getAttribute('src') && iframe.dataset.effectSrc) iframe.setAttribute('src', iframe.dataset.effectSrc);
-    });
-
-    const clonedImageState = clone.querySelector('#embedded-media-state') || clone.querySelector('#embedded-image-state');
-    if(clonedImageState) clonedImageState.textContent = safeJson(mediaState);
-
-    const clonedPreviewOptions = clone.querySelector('#preview-options');
-    if(clonedPreviewOptions){
-      try {
-        const options = JSON.parse(clonedPreviewOptions.textContent || '{}');
-        options.current = {...options.current, ...window.__getPreviewState?.()};
-        clonedPreviewOptions.textContent = safeJson(options);
-      } catch {}
-    }
-
-    clone.querySelectorAll('.bt-unicorn-frame').forEach(frame => {
-      frame.removeAttribute('data-unicorn-ready');
-    });
-    clone.querySelectorAll('.bt-unicorn-scene').forEach(scene => {
-      scene.innerHTML = '';
-      scene.removeAttribute('id');
-    });
-
-    const blob = new Blob(['<!DOCTYPE html>\n' + clone.outerHTML], {type: 'text/html;charset=utf-8'});
+    const blob = new Blob([buildCleanExportHtml()], {type: 'text/html;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const link = document.createElement('a');
     link.href = url;
@@ -5393,19 +4526,380 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
 
-  function waitForUnicornFrames(scope, timeout = 6000){
-    const frames = [...scope.querySelectorAll('.bt-unicorn-frame[data-unicorn-json-file-path],.bt-unicorn-frame[data-unicorn-project-id]')]
-      .filter(frame => !frame.closest('.bt-image-slot.has-user-image,.bt-image-slot.has-user-media'));
-    if(!frames.length) return Promise.resolve();
-    const started = Date.now();
-    return new Promise(resolve => {
-      const tick = () => {
-        const ready = frames.every(frame => frame.dataset.unicornReady === 'true' && frame.querySelector('canvas'));
-        if(ready || Date.now() - started > timeout) resolve();
-        else setTimeout(tick, 120);
-      };
-      tick();
+  function buildCleanExportHtml(){
+    const clean = document.implementation.createHTMLDocument(document.title || 'Presentation');
+    copyRootAttributes(clean.documentElement, document.documentElement);
+    clean.head.replaceChildren();
+    copyExportHead(clean);
+
+    const body = clean.body;
+    body.className = cleanBodyClass(document.body.className);
+    body.classList.add('exported-html');
+    body.style.cssText = document.body.style.cssText || '';
+
+    const deckClone = deck.cloneNode(true);
+    sanitizeDeckForExport(deckClone);
+    body.appendChild(deckClone);
+    appendExportRuntime(clean);
+
+    return '<!DOCTYPE html>\n' + clean.documentElement.outerHTML;
+  }
+
+  function copyRootAttributes(target, source){
+    [...source.attributes].forEach(attr => target.setAttribute(attr.name, attr.value));
+    target.classList.remove('preview-panel-open', 'overview-on');
+  }
+
+  function copyExportHead(clean){
+    [...document.head.children].forEach(node => {
+      if(node.matches?.('script')) return;
+      const copy = node.cloneNode(true);
+      if(copy.tagName === 'STYLE') copy.textContent = cleanCssForExport(copy.textContent || '');
+      clean.head.appendChild(copy);
     });
+    const exportStyle = clean.createElement('style');
+    exportStyle.textContent = `
+body.exported-html #deck{z-index:10}
+body.exported-html .bt-image-slot,
+body.exported-html .frame-img,
+body.exported-html .xhs3-media,
+body.exported-html .remix-icon-slot{cursor:default}
+body.exported-html .remix-icon-slot:focus-visible{outline:none}
+`.trim();
+    clean.head.appendChild(exportStyle);
+  }
+
+  function cleanCssForExport(css){
+    return css
+      .replace(/\/\*[\s\S]*?\*\//g, '')
+      .split('}')
+      .map(chunk => {
+        const selector = chunk.split('{')[0] || '';
+        return /#preview|\.preview|#overview|#nav|#hint|#icon-picker-panel|\.icon-picker|#image-picker-input|#media-picker-input|\.page-transition|pptx-export-capturing/.test(selector)
+          ? ''
+          : chunk + '}';
+      })
+      .join('\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  }
+
+  function cleanBodyClass(value){
+    return (value || '')
+      .split(/\s+/)
+      .filter(name => name && ![
+        'preview-panel-open',
+        'overview-on',
+        'pptx-export-capturing',
+      ].includes(name))
+      .join(' ');
+  }
+
+  function sanitizeDeckForExport(deckClone){
+    const visibleIds = new Set((window.__getVisibleSlides?.() || [...deck.querySelectorAll('.slide:not([hidden])')])
+      .map(slide => slide.dataset.vmSlideId || slide.id || slide.dataset.layout)
+      .filter(Boolean));
+
+    [...deckClone.querySelectorAll('.slide')].forEach(slide => {
+      const key = slide.dataset.vmSlideId || slide.id || slide.dataset.layout;
+      if(visibleIds.size && key && !visibleIds.has(key)){
+        slide.remove();
+        return;
+      }
+      slide.hidden = false;
+      slide.removeAttribute('aria-hidden');
+    });
+
+    const slides = [...deckClone.querySelectorAll('.slide')];
+    slides.forEach((slide, index) => slide.classList.toggle('active', index === 0));
+
+    deckClone.removeAttribute('style');
+    deckClone.querySelectorAll('script,template').forEach(el => el.remove());
+    deckClone.querySelectorAll('[contenteditable]').forEach(el => el.removeAttribute('contenteditable'));
+    deckClone.querySelectorAll('.is-drag-over,.is-active').forEach(el => el.classList.remove('is-drag-over', 'is-active'));
+
+    deckClone.querySelectorAll('*').forEach(el => {
+      [
+        'data-editable-id',
+        'data-editable-skip',
+        'data-sync-text',
+        'data-media-slot',
+        'data-image-slot',
+        'data-media-kind',
+        'data-remix-icon',
+        'data-vm-slide-id',
+        'data-slide-key',
+        'data-anim',
+        'data-animate',
+        'data-chart-switch',
+        'data-chart-options',
+        'data-chart-current',
+      ].forEach(name => el.removeAttribute(name));
+      if(el.hasAttribute('role') && ['button', 'textbox'].includes(el.getAttribute('role'))) el.removeAttribute('role');
+      el.removeAttribute('tabindex');
+      if(el.getAttribute('aria-label') === '替换图片或视频' || el.getAttribute('aria-label') === '替换图标') el.removeAttribute('aria-label');
+      if(el.getAttribute('title') === '点击或拖拽替换图片或视频') el.removeAttribute('title');
+    });
+
+    deckClone.querySelectorAll('[data-icon-slot]').forEach(icon => {
+      icon.removeAttribute('data-icon-slot');
+      if(icon.tagName !== 'BUTTON') return;
+      const span = document.createElement('span');
+      [...icon.attributes].forEach(attr => {
+        if(attr.name !== 'type') span.setAttribute(attr.name, attr.value);
+      });
+      span.innerHTML = icon.innerHTML;
+      icon.replaceWith(span);
+    });
+
+    deckClone.querySelectorAll('iframe[data-effect-src]').forEach(iframe => {
+      if(!iframe.getAttribute('src') && iframe.dataset.effectSrc) iframe.setAttribute('src', iframe.dataset.effectSrc);
+    });
+    deckClone.querySelectorAll('.bt-unicorn-frame').forEach(frame => {
+      frame.removeAttribute('data-unicorn-ready');
+    });
+    deckClone.querySelectorAll('.bt-unicorn-scene').forEach(scene => {
+      scene.innerHTML = '';
+      scene.removeAttribute('id');
+    });
+  }
+
+  function appendExportRuntime(clean){
+    const sceneMap = clean.createElement('script');
+    sceneMap.id = 'unicorn-scene-json-map';
+    sceneMap.type = 'application/json';
+    sceneMap.textContent = document.getElementById('unicorn-scene-json-map')?.textContent || '{}';
+    clean.body.appendChild(sceneMap);
+    const script = clean.createElement('script');
+    script.textContent = `(${cleanExportRuntime.toString()})();\n(${staticUnicornExportRuntime.toString()})();`;
+    clean.body.appendChild(script);
+  }
+
+  function cleanExportRuntime(){
+    const deck = document.getElementById('deck');
+    const slides = [...deck.querySelectorAll('.slide')];
+    let idx = 0;
+    let deckW = innerWidth;
+    function layout(){
+      deckW = Math.max(320, innerWidth);
+      document.documentElement.style.setProperty('--deck-w', deckW + 'px');
+      deck.style.width = (slides.length * deckW) + 'px';
+      deck.style.height = innerHeight + 'px';
+      deck.style.transform = 'translateX(' + (-idx * deckW) + 'px)';
+    }
+
+    function go(next){
+      idx = Math.max(0, Math.min(slides.length - 1, next));
+      window.__currentSlideIndex = idx;
+      slides.forEach((slide, index) => slide.classList.toggle('active', index === idx));
+      layout();
+      syncActiveMedia();
+      dispatchEvent(new CustomEvent('swiss-slide-change', {detail: {index: idx, slide: slides[idx]}}));
+    }
+
+    function syncActiveMedia(){
+      slides.forEach((slide, index) => {
+        const active = index === idx && !document.hidden;
+        slide.querySelectorAll('video').forEach(video => {
+          if(active) video.play?.().catch(() => {});
+          else video.pause?.();
+        });
+        slide.querySelectorAll('iframe').forEach(iframe => {
+          if(!iframe.dataset.effectSrc) iframe.dataset.effectSrc = iframe.getAttribute('src') || '';
+          if(active){
+            if(!iframe.getAttribute('src') && iframe.dataset.effectSrc) iframe.setAttribute('src', iframe.dataset.effectSrc);
+          } else if(iframe.getAttribute('src')){
+            iframe.removeAttribute('src');
+          }
+        });
+      });
+    }
+
+    addEventListener('resize', layout);
+    addEventListener('visibilitychange', syncActiveMedia);
+    addEventListener('keydown', event => {
+      if(event.defaultPrevented || event.target?.closest?.('input,textarea,select')) return;
+      if(['ArrowRight','PageDown',' '].includes(event.key)){ event.preventDefault(); go(idx + 1); }
+      else if(['ArrowLeft','PageUp'].includes(event.key)){ event.preventDefault(); go(idx - 1); }
+      else if(event.key === 'Home'){ event.preventDefault(); go(0); }
+      else if(event.key === 'End'){ event.preventDefault(); go(slides.length - 1); }
+    });
+    deck.addEventListener('mousedown', event => {
+      if(event.target.closest('button,input,textarea,select,a')) return;
+      if(event.button === 0){ event.preventDefault(); go(idx + 1); }
+      else if(event.button === 2){ event.preventDefault(); go(idx - 1); }
+    });
+    deck.addEventListener('contextmenu', event => event.preventDefault());
+
+    layout();
+    go(0);
+  }
+
+  function staticUnicornExportRuntime(){
+    const DEFAULT_SDK_URL = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.12/dist/unicornStudio.umd.js';
+    let sdkPromise = null;
+
+    window.__initUnicornScenes = initUnicornScenes;
+    window.__resetUnicornSceneFrame = resetFrame;
+    window.__syncUnicornSceneActivity = syncUnicornSceneActivity;
+    window.__refreshThemeAwareUnicornScenes = refreshThemeAwareScenes;
+
+    addEventListener('swiss-slide-change', e => {
+      const { index, slide } = e.detail;
+      syncUnicornSceneActivity(slide);
+      setTimeout(() => {
+        if((window.__currentSlideIndex || 0) === index) initUnicornScenes(slide);
+      }, 80);
+    });
+    syncUnicornSceneActivity(getCurrentSlide());
+    initUnicornScenes(getCurrentSlide());
+
+    function initUnicornScenes(scope = getCurrentSlide(), options = {}){
+      const root = scope instanceof Element ? scope : document;
+      const selector = '.bt-unicorn-frame[data-unicorn-project-id],.bt-unicorn-frame[data-unicorn-json-file-path]';
+      const frames = [
+        ...(root.matches?.(selector) ? [root] : []),
+        ...Array.from(root.querySelectorAll(selector)),
+      ];
+      const activeSlide = getCurrentSlide();
+      const pending = frames.filter(frame => {
+        if(frame.dataset.unicornReady || frame.closest('.bt-image-slot.has-user-image,.bt-image-slot.has-user-media')) return false;
+        return options.force || activeSlide.contains(frame) || frame === activeSlide;
+      });
+      if(!pending.length) return Promise.resolve([]);
+      const sdkUrl = pending[0].dataset.unicornSdkUrl || DEFAULT_SDK_URL;
+      return loadSdk(sdkUrl).then(() => Promise.allSettled(pending.map(initFrame))).catch(error => {
+        console.warn('[unicorn] failed to load scene runtime', error);
+        return [];
+      });
+    }
+
+    function getCurrentSlide(){
+      const slides = document.querySelectorAll('#deck .slide');
+      return slides[window.__currentSlideIndex || 0] || document;
+    }
+
+    function loadSdk(sdkUrl){
+      if(window.UnicornStudio?.addScene) return Promise.resolve();
+      if(sdkPromise) return sdkPromise;
+      sdkPromise = new Promise((resolve, reject) => {
+        const existing = document.querySelector(`script[src="${sdkUrl}"]`);
+        const script = existing || document.createElement('script');
+        script.addEventListener('load', resolve, {once:true});
+        script.addEventListener('error', reject, {once:true});
+        if(!existing){
+          script.src = sdkUrl;
+          script.async = true;
+          document.head.appendChild(script);
+        }
+      }).then(() => {
+        if(!window.UnicornStudio?.addScene) throw new Error('UnicornStudio.addScene not found');
+      });
+      return sdkPromise;
+    }
+
+    function initFrame(frame){
+      const scene = frame.querySelector('.bt-unicorn-scene');
+      if(!scene || frame.dataset.unicornReady) return;
+      const elementId = scene.id || `unicorn-${Math.random().toString(36).slice(2, 11)}`;
+      scene.id = elementId;
+      frame.dataset.unicornReady = 'true';
+      const config = {
+        elementId,
+        scale: Number(frame.dataset.unicornScale || 1),
+        dpi: Number(frame.dataset.unicornDpi || 1.5),
+        lazyLoad: false,
+        production: true,
+        altText: 'Shader scene',
+        ariaLabel: 'Shader scene',
+      };
+      const inlineFilePath = createInlineSceneUrl(frame);
+      if(inlineFilePath || frame.dataset.unicornJsonFilePath){
+        config.filePath = inlineFilePath || frame.dataset.unicornJsonFilePath;
+      } else {
+        config.projectId = frame.dataset.unicornProjectId;
+      }
+      return window.UnicornStudio.addScene(config).then(sceneInstance => {
+        frame.__unicornScene = sceneInstance;
+      }).catch(error => {
+        frame.removeAttribute('data-unicorn-ready');
+        console.warn('[unicorn] failed to initialize scene', error);
+      });
+    }
+
+    function resetFrame(frame){
+      if(!frame) return;
+      frame.__unicornScene?.destroy?.();
+      frame.__unicornScene = null;
+      frame.removeAttribute('data-unicorn-ready');
+      const scene = frame.querySelector('.bt-unicorn-scene');
+      if(scene){
+        scene.innerHTML = '';
+        scene.removeAttribute('id');
+      }
+    }
+
+    function syncUnicornSceneActivity(activeSlide = getCurrentSlide()){
+      document.querySelectorAll('.bt-unicorn-frame[data-unicorn-ready]').forEach(frame => {
+        if(activeSlide && activeSlide.contains(frame)) return;
+        resetFrame(frame);
+      });
+    }
+
+    function refreshThemeAwareScenes(){
+      document.querySelectorAll('.bt-unicorn-frame[data-unicorn-theme-color]').forEach(resetFrame);
+      initUnicornScenes(getCurrentSlide());
+    }
+
+    function createInlineSceneUrl(frame){
+      const jsonFilePath = frame.dataset.unicornJsonFilePath;
+      if(!jsonFilePath) return '';
+      window.__unicornSceneUrls ||= {};
+      let sceneMap = {};
+      try {
+        sceneMap = JSON.parse(document.getElementById('unicorn-scene-json-map')?.textContent || '{}') || {};
+      } catch {}
+      const source = adaptThemeColor(sceneMap[jsonFilePath], frame);
+      if(!source) return '';
+      const cacheKey = frame.dataset.unicornThemeColor ? `${jsonFilePath}|${readThemeColor().join(',')}` : jsonFilePath;
+      if(window.__unicornSceneUrls[cacheKey]) return window.__unicornSceneUrls[cacheKey];
+      const blob = new Blob([source], {type:'application/json'});
+      window.__unicornSceneUrls[cacheKey] = URL.createObjectURL(blob);
+      return window.__unicornSceneUrls[cacheKey];
+    }
+
+    function adaptThemeColor(source, frame){
+      if(!source || frame.dataset.unicornThemeColor !== 'focus') return source;
+      const color = readThemeColor();
+      return source.replace(
+        /vec3\(0,\s*0\.5058823529411764,\s*0\.9686274509803922\)/g,
+        `vec3(${color[0].toFixed(6)}, ${color[1].toFixed(6)}, ${color[2].toFixed(6)})`,
+      );
+    }
+
+    function readThemeColor(){
+      const style = getComputedStyle(document.documentElement);
+      return parseCssColor(style.getPropertyValue('--theme-focus').trim())
+        || parseCssColor(style.getPropertyValue('--focus-mark').trim())
+        || [0, 0.505882, 0.968627];
+    }
+
+    function parseCssColor(value){
+      const hex = value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+      if(hex){
+        const raw = hex[1].length === 3 ? hex[1].split('').map(x => x + x).join('') : hex[1];
+        const n = parseInt(raw, 16);
+        return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+      }
+      const rgb = value.match(/^rgba?\(([^)]+)\)$/i);
+      if(rgb){
+        const parts = rgb[1].split(',').map(part => Number.parseFloat(part));
+        if(parts.length >= 3 && parts.every(Number.isFinite)){
+          return parts.slice(0, 3).map(part => Math.max(0, Math.min(255, part)) / 255);
+        }
+      }
+      return null;
+    }
   }
 
   function captureSlideImage(slideEl, options){
@@ -5414,6 +4908,21 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
       setTimeout(() => reject(new Error('Slide image capture timed out')), 20000);
     });
     return Promise.race([image, timeout]);
+  }
+
+  function waitForUnicornFrames(scope, timeout = 6000){
+    const frames = [...scope.querySelectorAll('.bt-unicorn-frame[data-unicorn-json-file-path],.bt-unicorn-frame[data-unicorn-project-id]')]
+      .filter(frame => !frame.closest('.bt-image-slot.has-user-image,.bt-image-slot.has-user-media'));
+    if(!frames.length) return Promise.resolve();
+    const startedAt = performance.now();
+    return new Promise(resolve => {
+      const tick = () => {
+        const ready = frames.every(frame => frame.dataset.unicornReady || frame.querySelector('canvas'));
+        if(ready || performance.now() - startedAt > timeout) resolve();
+        else requestAnimationFrame(tick);
+      };
+      tick();
+    });
   }
 
   function loadExportScript(src, isReady){
@@ -5433,46 +4942,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     });
   }
 
-  function collectPptxText(slide, pptW, pptH){
-    const slideRect = slide.getBoundingClientRect();
-    return [...slide.querySelectorAll('[data-editable-text="true"]')]
-      .map(el => pptxTextItem(el, slideRect, pptW, pptH))
-      .filter(Boolean);
-  }
-
-  function pptxTextItem(el, slideRect, pptW, pptH){
-    const text = (el.innerText || '').replace(/[ \t]+\n/g, '\n').replace(/\n{3,}/g, '\n\n').trim();
-    if(!text) return null;
-    const style = getComputedStyle(el);
-    if(style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity) === 0) return null;
-    const rect = el.getBoundingClientRect();
-    if(rect.width <= 0 || rect.height <= 0) return null;
-    const x = (rect.left - slideRect.left) / slideRect.width * pptW;
-    const y = (rect.top - slideRect.top) / slideRect.height * pptH;
-    const w = rect.width / slideRect.width * pptW;
-    const h = rect.height / slideRect.height * pptH;
-    if(x >= pptW || y >= pptH || x + w <= 0 || y + h <= 0) return null;
-    const fontSize = Math.max(4, parseFloat(style.fontSize || '16') / slideRect.height * pptH * 72);
-    return {
-      text,
-      options: {
-        x: Math.max(0, x),
-        y: Math.max(0, y),
-        w: Math.min(pptW, w),
-        h: Math.min(pptH, h + 0.05),
-        margin: 0,
-        fontFace: getFontFace(style.fontFamily),
-        fontSize,
-        color: cssColorToHex(style.color) || '111111',
-        bold: Number(style.fontWeight) >= 600 || style.fontWeight === 'bold',
-        italic: style.fontStyle === 'italic',
-        align: normalizeTextAlign(style.textAlign),
-        valign: 'top',
-        breakLine: false,
-      },
-    };
-  }
-
   function restorePptxExportState(state){
     if(!state) return;
     go(state.index, {animate:false});
@@ -5487,23 +4956,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
   function getCaptureBackground(slide){
     const value = getComputedStyle(slide).backgroundColor;
     return value && value !== 'rgba(0, 0, 0, 0)' ? value : getComputedStyle(document.documentElement).getPropertyValue('--paper').trim() || '#fff';
-  }
-
-  function cssColorToHex(value){
-    const match = value.match(/rgba?\(([^)]+)\)/);
-    if(!match) return value?.replace('#', '').slice(0, 6).toUpperCase() || null;
-    const parts = match[1].split(',').map(part => Number.parseFloat(part));
-    if(parts.length > 3 && parts[3] < 0.05) return null;
-    return parts.slice(0, 3).map(n => Math.max(0, Math.min(255, Math.round(n))).toString(16).padStart(2, '0')).join('').toUpperCase();
-  }
-
-  function getFontFace(fontFamily){
-    return (fontFamily || '').split(',')[0].replaceAll('"', '').replaceAll("'", '').trim() || undefined;
-  }
-
-  function normalizeTextAlign(value){
-    if(value === 'center' || value === 'right') return value;
-    return 'left';
   }
 
   function nextFrame(){
@@ -5618,123 +5070,44 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
 })();
 </script>
 <script>
-/* =============== Inline Text Editor =============== */
+/* =============== Text State =============== */
 (function(){
   const deck = document.getElementById('deck');
   if(!deck) return;
   const stateEl = document.getElementById('embedded-text-state');
   const textState = readTextState();
-  const editableCounters = new Map();
-  let editableEnabled = false;
+  const textCounters = new Map();
 
-  window.__initEditableText = scope => {
-    applyTextState(scope);
-    if(editableEnabled) initEditableText(scope);
-  };
-  window.__enableInlineTextEditing = () => {
-    editableEnabled = true;
-    document.body.classList.add('text-editing-enabled');
-    initEditableText(deck);
-  };
-  window.__disableInlineTextEditing = () => {
-    editableEnabled = false;
-    document.body.classList.remove('text-editing-enabled');
-    deck.querySelectorAll('[data-editable-text="true"]').forEach(el => {
-      el.contentEditable = 'false';
-      delete el.dataset.editableText;
-    });
-  };
-  window.__flushEditableTextState = flushTextState;
-  window.__disableInlineTextEditing();
+  window.__initEditableText = scope => applyTextState(scope);
+  window.__flushEditableTextState = () => {};
   applyTextState(deck);
 
-  deck.addEventListener('mousedown', e => {
-    const editable = e.target.closest('[contenteditable="true"]');
-    if(!editable) return;
-    if(e.button !== 0){
-      e.preventDefault();
-      editable.blur();
-      return;
-    }
-    e.stopPropagation();
-  }, true);
-  deck.addEventListener('click', e => {
-    if(e.button === 0 && e.target.closest('[contenteditable="true"]')) e.stopPropagation();
-  }, true);
-  addEventListener('keydown', e => {
-    const editable = e.target?.closest?.('[contenteditable="true"]');
-    if(!editable) return;
-    if(e.key === 'Escape'){
-      e.preventDefault();
-      editable.blur();
-      e.stopPropagation();
-      return;
-    }
-    e.stopPropagation();
-  }, true);
-  deck.addEventListener('input', e => {
-    const el = e.target.closest('[data-editable-text="true"]');
-    if(!el?.dataset.editableId) return;
-    textState[el.dataset.editableId] = el.innerHTML;
-    syncLinkedText(el);
-    writeTextState();
-  }, true);
-
   function applyTextState(scope = deck){
-    prepareTextElements(scope, false);
+    prepareTextElements(scope);
   }
 
-  function initEditableText(scope = deck){
-    prepareTextElements(scope, true);
-  }
-
-  function prepareTextElements(scope = deck, makeEditable = false){
+  function prepareTextElements(scope = deck){
     const root = scope instanceof Element ? scope : deck;
     const candidates = [
-      ...(isEditableCandidate(root) ? [root] : []),
+      ...(isTextCandidate(root) ? [root] : []),
       ...root.querySelectorAll('*'),
     ];
     candidates.forEach(el => {
       if(el !== root && !root.contains(el)) return;
       if(el !== root && el.parentElement?.closest('[data-editable-id]')) return;
-      if(!el.dataset.editableId && !isEditableCandidate(el)) return;
-      if(!el.dataset.editableId) el.dataset.editableId = nextEditableId(el);
-      if(makeEditable){
-        el.contentEditable = 'true';
-        el.spellcheck = false;
-        el.dataset.editableText = 'true';
-      }
+      if(!el.dataset.editableId && !isTextCandidate(el)) return;
+      if(!el.dataset.editableId) el.dataset.editableId = nextTextId(el);
       const synced = el.dataset.syncText ? textState[`sync:${el.dataset.syncText}`] : undefined;
       if(synced !== undefined) el.innerHTML = synced;
       else if(textState[el.dataset.editableId] !== undefined) el.innerHTML = textState[el.dataset.editableId];
     });
   }
 
-  function flushTextState(){
-    if(!editableEnabled) return;
-    deck.querySelectorAll('[data-editable-text="true"][data-editable-id]').forEach(el => {
-      textState[el.dataset.editableId] = el.innerHTML;
-      if(el.dataset.syncText) textState[`sync:${el.dataset.syncText}`] = el.innerHTML;
-    });
-    writeTextState();
-  }
-
-  function syncLinkedText(source){
-    const syncKey = source.dataset.syncText;
-    if(!syncKey) return;
-    textState[`sync:${syncKey}`] = source.innerHTML;
-    deck.querySelectorAll('[data-sync-text]').forEach(el => {
-      if(el === source || el.dataset.syncText !== syncKey) return;
-      el.innerHTML = source.innerHTML;
-      if(el.dataset.editableId) textState[el.dataset.editableId] = el.innerHTML;
-    });
-  }
-
-  function nextEditableId(el){
+  function nextTextId(el){
     const slide = el.closest('.slide');
     const slideKey = slide?.dataset.vmSlideKey || slide?.dataset.vmLayout || slide?.dataset.vmSlideId || 'deck';
-    const count = (editableCounters.get(slideKey) || 0) + 1;
-    editableCounters.set(slideKey, count);
+    const count = (textCounters.get(slideKey) || 0) + 1;
+    textCounters.set(slideKey, count);
     return `text:${slideKey}:${count}`;
   }
 
@@ -5746,713 +5119,14 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
     }
   }
 
-  function writeTextState(){
-    if(stateEl) stateEl.textContent = JSON.stringify(textState).replace(/</g, '\\u003c');
-    window.__deckViewModel?.setTextState?.(textState);
-  }
-
-  function isEditableCandidate(el){
+  function isTextCandidate(el){
     if(!(el instanceof HTMLElement)) return false;
     if(el.hasAttribute('data-editable-skip')) return false;
-    if(el.parentElement?.closest('[data-editable-text="true"],[data-editable-id]')) return false;
+    if(el.parentElement?.closest('[data-editable-id]')) return false;
     if(el.closest('.bt-image-slot,.bt-unicorn-frame,.bt-shader-backdrop,#nav,#preview-panel,#preview-toggle')) return false;
     if(['SCRIPT','STYLE','CANVAS','SVG','PATH','BUTTON','INPUT','SELECT','TEXTAREA','VIDEO','IMG'].includes(el.tagName)) return false;
     if(!el.textContent?.trim()) return false;
     return [...el.children].every(child => ['BR','SPAN','B','I','EM','STRONG','SMALL'].includes(child.tagName));
-  }
-})();
-</script>
-<script>
-/* =============== Developer Text Adjustment Mode =============== */
-(function(){
-  const deck = document.getElementById('deck');
-  const stateEl = document.getElementById('embedded-dev-state');
-  const toggle = document.getElementById('preview-dev-mode');
-  const panel = document.getElementById('preview-dev-panel');
-  const selectedLabel = document.getElementById('preview-dev-selected');
-  const scopeSelect = document.getElementById('preview-dev-scope');
-  const sizeSelect = document.getElementById('preview-dev-font-size');
-  const textMarkSelect = document.getElementById('preview-dev-text-mark');
-  const bgColorSelect = document.getElementById('preview-dev-bg-color');
-  const colorSelect = document.getElementById('preview-dev-color');
-  const paddingSelect = document.getElementById('preview-dev-padding');
-  const marginSelect = document.getElementById('preview-dev-margin');
-  const gapSelect = document.getElementById('preview-dev-gap');
-  const log = document.getElementById('preview-dev-log');
-  const copyButton = document.getElementById('preview-dev-copy');
-  const clearButton = document.getElementById('preview-dev-clear');
-  if(!deck || !stateEl || !toggle || !panel || !scopeSelect || !sizeSelect || !textMarkSelect || !bgColorSelect || !colorSelect || !paddingSelect || !marginSelect || !gapSelect || !log) return;
-
-  const STORE = 'guizang-ppt-dev-adjustments';
-  const MODE_STORE = 'guizang-ppt-dev-mode';
-  const deckSignature = window.__deckViewModel?.model?.state?.__deckSignature || '';
-  const FONT_SIZE_TOKENS = [
-    ['', '继承'],
-    ['--fs-01', '01 · Caption'],
-    ['--fs-02', '02 · Body Small'],
-    ['--fs-03', '03 · Body'],
-    ['--fs-04', '04 · Lead'],
-    ['--fs-05', '05 · Subtitle'],
-    ['--fs-06', '06 · H4'],
-    ['--fs-07', '07 · Large'],
-    ['--fs-08', '08 · H3'],
-    ['--fs-09', '09 · H2'],
-    ['--fs-10', '10 · H1'],
-    ['--fs-11', '11 · Display'],
-    ['--fs-12', '12 · Number Large'],
-    ['--fs-caption', 'Alias · Caption'],
-    ['--fs-body-sm', 'Alias · Body Small'],
-    ['--fs-body', 'Alias · Body'],
-    ['--fs-lead', 'Alias · Lead'],
-    ['--fs-subtitle', 'Alias · Subtitle'],
-    ['--fs-h4', 'Alias · H4'],
-    ['--fs-h3', 'Alias · H3'],
-    ['--fs-h2', 'Alias · H2'],
-    ['--fs-h1', 'Alias · H1'],
-    ['--fs-display', 'Alias · Display'],
-    ['--fs-number-md', 'Alias · Number Md'],
-    ['--fs-number-lg', 'Alias · Number Lg'],
-  ];
-  const COLOR_TOKENS = [
-    ['', '继承'],
-    ['transparent', '透明'],
-    ['--paper', 'Paper'],
-    ['--ink', 'Ink'],
-    ['--surface-bg', 'Surface Bg'],
-    ['--surface-fg', 'Surface Fg'],
-    ['--inverse-bg', 'Inverse Bg'],
-    ['--inverse-fg', 'Inverse Fg'],
-    ['--theme-bg', 'Theme Bg'],
-    ['--theme-fg', 'Theme Fg'],
-    ['--theme-panel-bg', 'Panel Bg'],
-    ['--theme-panel-fg', 'Panel Fg'],
-    ['--text-primary', 'Text Primary'],
-    ['--text-secondary', 'Text Secondary'],
-    ['--text-helper', 'Text Helper'],
-    ['--focus-mark', 'Focus Mark'],
-    ['--focus-bg', 'Focus Bg'],
-    ['--focus-fg', 'Focus Fg'],
-    ['--border-subtle', 'Border Subtle'],
-    ['--border-strong', 'Border Strong'],
-    ['--grey-1', 'Grey 1'],
-    ['--grey-2', 'Grey 2'],
-    ['--grey-3', 'Grey 3'],
-    ['--accent', 'Accent'],
-    ['--accent-bright', 'Accent Bright'],
-    ['--accent-on', 'Accent On'],
-  ];
-  const SPACE_TOKENS = [
-    ['', '继承'],
-    ['0', '0'],
-    ['--sp-3', 'SP 3'],
-    ['--sp-4', 'SP 4'],
-    ['--sp-5', 'SP 5'],
-    ['--sp-6', 'SP 6'],
-    ['--sp-7', 'SP 7'],
-    ['--sp-8', 'SP 8'],
-    ['--sp-9', 'SP 9'],
-    ['--sp-10', 'SP 10'],
-    ['--sp-11', 'SP 11'],
-    ['--sp-12', 'SP 12'],
-    ['--sp-13', 'SP 13'],
-  ];
-  const TEXT_MARK_OPTIONS = [
-    ['', '无'],
-    ['block', '色块 · 37页'],
-    ['underline', '下划底色 · 85页'],
-  ];
-  const STYLE_FIELDS = [
-    {key: 'backgroundColorToken', mapKey: 'backgroundColor', element: bgColorSelect, css: 'background-color', dataset: 'devBackgroundColorToken'},
-    {key: 'colorToken', mapKey: 'color', element: colorSelect, css: 'color', dataset: 'devColorToken'},
-    {key: 'paddingToken', mapKey: 'padding', element: paddingSelect, css: 'padding', dataset: 'devPaddingToken'},
-    {key: 'marginToken', mapKey: 'margin', element: marginSelect, css: 'margin', dataset: 'devMarginToken'},
-    {key: 'gapToken', mapKey: 'gap', element: gapSelect, css: 'gap', dataset: 'devGapToken'},
-  ];
-  const COLOR_SELECTS = [bgColorSelect, colorSelect];
-  const SPACE_SELECTS = [paddingSelect, marginSelect, gapSelect];
-
-  let selected = null;
-  let state = normalizeState({...readJson(stateEl, {}), ...readSaved()});
-
-  window.__flushDeveloperAdjustments = flushDeveloperAdjustments;
-
-  fillSelectOptions(sizeSelect, FONT_SIZE_TOKENS);
-  fillSelectOptions(textMarkSelect, TEXT_MARK_OPTIONS);
-  fillSelectOptions(bgColorSelect, colorTokenOptions());
-  fillSelectOptions(colorSelect, colorTokenOptions());
-  fillSelectOptions(paddingSelect, SPACE_TOKENS);
-  fillSelectOptions(marginSelect, SPACE_TOKENS);
-  fillSelectOptions(gapSelect, SPACE_TOKENS);
-  renderSpaceTokenControls();
-  refreshColorOptionSwatches();
-  initDeveloperTargets();
-  applyDeveloperAdjustments();
-  window.__setDeveloperMode = setDevMode;
-  setDevMode(false);
-  renderLog();
-
-  toggle.addEventListener('change', () => setDevMode(toggle.checked));
-  addEventListener('preview-theme-change', () => {
-    refreshColorOptionSwatches();
-    applyDeveloperAdjustments();
-    renderSelection();
-    renderLog();
-  });
-  deck.addEventListener('click', e => {
-    if(!toggle.checked) return;
-    const fragmentEl = e.target.closest('[data-dev-text-fragment="true"][data-dev-element-id]');
-    if(fragmentEl){
-      e.preventDefault();
-      e.stopPropagation();
-      return selectTarget(fragmentEl);
-    }
-    const textEl = e.target.closest('[data-editable-text="true"][data-editable-id]');
-    if(textEl) return selectTarget(textEl);
-    const styleEl = e.target.closest('[data-dev-style-target="true"][data-dev-element-id]');
-    if(!styleEl) return;
-    e.preventDefault();
-    e.stopPropagation();
-    selectTarget(styleEl);
-  }, true);
-  deck.addEventListener('focusin', e => {
-    const el = e.target.closest?.('[data-editable-text="true"][data-editable-id]');
-    if(el && toggle.checked) selectTarget(el);
-  }, true);
-  deck.addEventListener('input', e => {
-    const el = e.target.closest('[data-editable-text="true"][data-editable-id]');
-    if(!el || !toggle.checked) return;
-    recordTargetChange(el);
-  }, true);
-  scopeSelect.addEventListener('change', () => {
-    if(!selected) return;
-    recordTargetChange(selected, scopePatch());
-    applyDeveloperAdjustments();
-  });
-  sizeSelect.addEventListener('change', () => {
-    if(!selected) return;
-    applyFontSizeToken(selected, sizeSelect.value);
-    recordTargetChange(selected, {...scopePatch(), fontSizeToken: sizeSelect.value || null});
-  });
-  textMarkSelect.addEventListener('change', () => {
-    if(!selected || !isTextLikeTarget(selected)) return;
-    applyTextMark(selected, textMarkSelect.value);
-    recordTargetChange(selected, {...scopePatch(), textMarkStyle: textMarkSelect.value || null});
-  });
-  STYLE_FIELDS.forEach(field => {
-    field.element.addEventListener('change', () => {
-      if(!selected) return;
-      applyStyleToken(selected, field, field.element.value);
-      recordTargetChange(selected, {...scopePatch(), [field.key]: field.element.value || null});
-      if(COLOR_SELECTS.includes(field.element)) syncColorPalette(field.element);
-      if(SPACE_SELECTS.includes(field.element)) syncSpaceTokenControl(field.element);
-    });
-  });
-  copyButton?.addEventListener('click', copyLog);
-  clearButton?.addEventListener('click', () => {
-    Object.keys(state.changes).forEach(id => {
-      const el = findAdjustable(id);
-      if(el){
-        applyFontSizeToken(el, '');
-        applyTextMark(el, '');
-        STYLE_FIELDS.forEach(field => applyStyleToken(el, field, ''));
-      }
-    });
-    state = normalizeState({});
-    selected = null;
-    document.querySelectorAll('.dev-selected').forEach(el => el.classList.remove('dev-selected'));
-    writeState();
-    renderSelection();
-    renderLog();
-  });
-
-  function setDevMode(on){
-    toggle.checked = on;
-    panel.hidden = !on;
-    document.body.classList.toggle('developer-mode', on);
-    localStorage.setItem(MODE_STORE, on ? '1' : '0');
-    if(!on){
-      document.querySelectorAll('.dev-selected').forEach(el => el.classList.remove('dev-selected'));
-      selected = null;
-      renderSelection();
-    }
-  }
-
-  function initDeveloperTargets(){
-    const counters = new Map();
-    const fragmentCounters = new Map();
-    deck.querySelectorAll('.slide div').forEach(el => {
-      if(!isDeveloperStyleTarget(el)) return;
-      const slide = el.closest('.slide');
-      const slideKey = slide?.dataset.vmSlideKey || slide?.dataset.vmLayout || slide?.dataset.vmSlideId || 'deck';
-      const count = (counters.get(slideKey) || 0) + 1;
-      counters.set(slideKey, count);
-      el.dataset.devStyleTarget = 'true';
-      el.dataset.devElementId = `element:${slideKey}:${count}`;
-    });
-    deck.querySelectorAll('[data-editable-text="true"][data-editable-id] span,[data-editable-text="true"][data-editable-id] em,[data-editable-text="true"][data-editable-id] strong,[data-editable-text="true"][data-editable-id] small,[data-editable-text="true"][data-editable-id] b,[data-editable-text="true"][data-editable-id] i').forEach(el => {
-      const owner = el.closest('[data-editable-text="true"][data-editable-id]');
-      if(!owner || el.parentElement?.closest('[data-dev-text-fragment="true"]')) return;
-      const ownerId = owner.dataset.editableId;
-      const count = (fragmentCounters.get(ownerId) || 0) + 1;
-      fragmentCounters.set(ownerId, count);
-      el.dataset.devTextFragment = 'true';
-      el.dataset.devElementId = `fragment:${ownerId}:${count}`;
-    });
-  }
-
-  function isDeveloperStyleTarget(el){
-    if(!(el instanceof HTMLElement)) return false;
-    if(el.tagName !== 'DIV') return false;
-    if(el.dataset.editableText === 'true') return false;
-    if(el.closest('[data-editable-text="true"],.bt-image-slot,.bt-unicorn-frame,.bt-shader-backdrop,#nav,#preview-panel,#preview-toggle,#overview,#icon-picker-panel')) return false;
-    return true;
-  }
-
-  function fillSelectOptions(select, options){
-    select.innerHTML = '';
-    options.forEach(([value, label]) => {
-      const option = document.createElement('option');
-      option.value = value;
-      option.textContent = value ? `${label} (${value})` : label;
-      select.appendChild(option);
-    });
-  }
-
-  function refreshColorOptionSwatches(){
-    COLOR_SELECTS.forEach(select => {
-      const selectedValue = select.value;
-      const tokens = colorTokenOptions(selectedValue);
-      fillSelectOptions(select, tokens);
-      if(selectedValue && [...select.options].some(option => option.value === selectedValue)){
-        select.value = selectedValue;
-      }
-      [...select.options].forEach(option => {
-        const value = option.value;
-        option.textContent = value ? `${optionLabel(value, tokens)} (${value})` : optionLabel(value, tokens);
-        option.style.background = '';
-        option.style.color = '';
-      });
-      renderColorPalette(select);
-    });
-  }
-
-  function renderColorPalette(select){
-    const palette = ensureColorPalette(select);
-    palette.innerHTML = '';
-    colorTokenOptions(select.value).forEach(([value, label]) => {
-      const button = document.createElement('button');
-      const swatch = document.createElement('span');
-      button.type = 'button';
-      button.className = `preview-color-swatch${value ? '' : ' is-empty'}`;
-      button.dataset.value = value;
-      button.title = value ? `${label} (${value})` : label;
-      if(value) swatch.style.backgroundColor = resolveColorToken(value);
-      button.appendChild(swatch);
-      button.addEventListener('click', () => {
-        select.value = value;
-        select.dispatchEvent(new Event('change', {bubbles: true}));
-        syncColorPalette(select);
-      });
-      palette.appendChild(button);
-    });
-    syncColorPalette(select);
-  }
-
-  function colorTokenOptions(extraValue = ''){
-    const tokens = [...COLOR_TOKENS];
-    const seen = new Set(tokens.map(([value]) => value));
-    Object.entries(currentThemeVars()).forEach(([name, value]) => {
-      if(seen.has(name) || !isColorToken(name, value)) return;
-      seen.add(name);
-      tokens.push([name, tokenLabel(name)]);
-    });
-    if(extraValue && !seen.has(extraValue)){
-      tokens.push([extraValue, tokenLabel(extraValue)]);
-    }
-    return tokens;
-  }
-
-  function currentThemeVars(){
-    const options = readPreviewOptions();
-    return options.themes?.[currentTheme()]?.vars || {};
-  }
-
-  function readPreviewOptions(){
-    try {
-      return JSON.parse(document.getElementById('preview-options')?.textContent || '{}') || {};
-    } catch {
-      return {};
-    }
-  }
-
-  function isColorToken(name, value){
-    if(!name.startsWith('--') || /-(?:rgb|mode|opacity)$/.test(name)) return false;
-    const raw = String(value || '').trim();
-    if(!raw || /gradient\(|url\(/i.test(raw) || /^\d+(?:\.\d+)?$/.test(raw) || /^\d+\s*,/.test(raw)) return false;
-    return /^(#|rgb\(|rgba\(|hsl\(|hsla\(|oklch\(|lab\(|lch\(|color\(|color-mix\(|var\()/i.test(raw);
-  }
-
-  function tokenLabel(token){
-    const existing = optionLabel(token, COLOR_TOKENS);
-    if(existing !== token) return existing;
-    return token
-      .replace(/^--theme-/, 'Theme · ')
-      .replace(/^--report-/, 'Report · ')
-      .replace(/^--bt-/, 'BT · ')
-      .replace(/^--/, '')
-      .split('-')
-      .filter(Boolean)
-      .map(part => part.toUpperCase() === part ? part : part.charAt(0).toUpperCase() + part.slice(1))
-      .join(' ');
-  }
-
-  function ensureColorPalette(select){
-    const next = select.nextElementSibling;
-    if(next?.classList.contains('preview-color-palette')) return next;
-    const palette = document.createElement('div');
-    palette.className = 'preview-color-palette';
-    palette.dataset.colorPaletteFor = select.id;
-    select.insertAdjacentElement('afterend', palette);
-    return palette;
-  }
-
-  function syncColorPalette(select){
-    const palette = select.nextElementSibling?.classList.contains('preview-color-palette') ? select.nextElementSibling : null;
-    if(!palette) return;
-    palette.querySelectorAll('.preview-color-swatch').forEach(button => {
-      button.classList.toggle('is-active', button.dataset.value === select.value);
-    });
-  }
-
-  function renderSpaceTokenControls(){
-    SPACE_SELECTS.forEach(select => {
-      const grid = ensureTokenGrid(select);
-      grid.innerHTML = '';
-      SPACE_TOKENS.forEach(([value, label]) => {
-        const button = document.createElement('button');
-        button.type = 'button';
-        button.className = `preview-token-chip${value ? '' : ' is-empty'}`;
-        button.dataset.value = value;
-        button.title = value ? `${label} · ${displayTokenValue(value)}` : label;
-        button.textContent = tokenChipLabel(value, label);
-        button.addEventListener('click', () => {
-          select.value = value;
-          select.dispatchEvent(new Event('change', {bubbles: true}));
-          syncSpaceTokenControl(select);
-        });
-        grid.appendChild(button);
-      });
-      syncSpaceTokenControl(select);
-    });
-  }
-
-  function ensureTokenGrid(select){
-    const next = select.nextElementSibling;
-    if(next?.classList.contains('preview-token-grid')) return next;
-    const grid = document.createElement('div');
-    grid.className = 'preview-token-grid';
-    grid.dataset.tokenGridFor = select.id;
-    select.insertAdjacentElement('afterend', grid);
-    return grid;
-  }
-
-  function syncSpaceTokenControl(select){
-    const grid = select.nextElementSibling?.classList.contains('preview-token-grid') ? select.nextElementSibling : null;
-    if(grid){
-      grid.querySelectorAll('.preview-token-chip').forEach(button => {
-        button.classList.toggle('is-active', button.dataset.value === select.value);
-        button.disabled = select.disabled;
-      });
-    }
-    const meta = document.querySelector(`[data-token-meta-for="${select.id}"]`);
-    if(meta) meta.textContent = displayTokenValue(select.value);
-  }
-
-  function tokenChipLabel(value, label){
-    if(!value) return 'Auto';
-    if(value === '0') return '0';
-    return displayTokenValue(value).replace('px', '');
-  }
-
-  function displayTokenValue(value){
-    if(!value) return '继承';
-    if(value === '0') return '0';
-    const resolved = value.startsWith('--') ? getComputedStyle(document.documentElement).getPropertyValue(value).trim() : '';
-    return resolved || value.replace('--sp-', 'SP ');
-  }
-
-  function optionLabel(value, options){
-    return options.find(([item]) => item === value)?.[1] || value || '继承';
-  }
-
-  function selectTarget(el){
-    if(selected === el) return renderSelection();
-    document.querySelectorAll('.dev-selected').forEach(item => item.classList.remove('dev-selected'));
-    selected = el;
-    selected.classList.add('dev-selected');
-    renderSelection();
-  }
-
-  function renderSelection(){
-    if(!selected){
-      selectedLabel.textContent = '未选择元素';
-      scopeSelect.value = 'global';
-      scopeSelect.disabled = true;
-      sizeSelect.value = '';
-      sizeSelect.disabled = true;
-      textMarkSelect.value = '';
-      textMarkSelect.disabled = true;
-      STYLE_FIELDS.forEach(field => {
-        field.element.value = '';
-        field.element.disabled = true;
-        if(COLOR_SELECTS.includes(field.element)) syncColorPalette(field.element);
-        if(SPACE_SELECTS.includes(field.element)) syncSpaceTokenControl(field.element);
-      });
-      return;
-    }
-    const info = inspectTarget(selected);
-    const change = state.changes[info.id] || {};
-    selectedLabel.textContent = `${info.slide} / ${info.layout} / ${info.type} / ${info.id}`;
-    scopeSelect.disabled = false;
-    scopeSelect.value = change.scope === 'theme' ? 'theme' : 'global';
-    sizeSelect.disabled = false;
-    sizeSelect.value = selected.dataset.devFontSizeToken || change.fontSizeToken || '';
-    textMarkSelect.disabled = !isTextLikeTarget(selected);
-    textMarkSelect.value = selected.dataset.devTextMark || change.textMarkStyle || '';
-    STYLE_FIELDS.forEach(field => {
-      field.element.disabled = false;
-      field.element.value = selected.dataset[field.dataset] || change[field.key] || '';
-      if(COLOR_SELECTS.includes(field.element)) syncColorPalette(field.element);
-      if(SPACE_SELECTS.includes(field.element)) syncSpaceTokenControl(field.element);
-    });
-  }
-
-  function recordTargetChange(el, patch = {}){
-    const info = inspectTarget(el);
-    const current = state.changes[info.id] || {};
-    const next = {
-      ...current,
-      ...info,
-      ...patch,
-      updatedAt: new Date().toISOString(),
-    };
-    if(isTextTarget(el)){
-      next.html = el.innerHTML;
-      next.text = (el.innerText || '').replace(/\s+/g, ' ').trim();
-    }
-    state.changes[info.id] = next;
-    writeState();
-    renderSelection();
-    renderLog();
-  }
-
-  function inspectTarget(el){
-    const slide = el.closest('.slide');
-    return {
-      id: targetId(el),
-      type: isTextTarget(el) ? 'text' : (isTextFragmentTarget(el) ? 'text-fragment' : 'element'),
-      tag: el.tagName.toLowerCase(),
-      className: cleanClassName(el),
-      slide: slide ? Number(slide.dataset.vmIndex || 0) + 1 : null,
-      slideId: slide?.dataset.vmSlideId || '',
-      slideKey: slide?.dataset.vmSlideKey || '',
-      layout: slide?.dataset.layout || slide?.dataset.vmLayout || '',
-    };
-  }
-
-  function targetId(el){
-    return el.dataset.editableId || el.dataset.devElementId;
-  }
-
-  function isTextTarget(el){
-    return el?.dataset?.editableText === 'true';
-  }
-
-  function isTextFragmentTarget(el){
-    return el?.dataset?.devTextFragment === 'true';
-  }
-
-  function isTextLikeTarget(el){
-    return isTextTarget(el) || isTextFragmentTarget(el);
-  }
-
-  function cleanClassName(el){
-    return [...el.classList].filter(name => !['dev-selected','dev-text-mark-block','dev-text-mark-underline'].includes(name)).join(' ');
-  }
-
-  function applyDeveloperAdjustments(){
-    Object.entries(state.changes).forEach(([id, change]) => {
-      const el = findAdjustable(id);
-      if(!el) return;
-      applyFontSizeToken(el, '');
-      applyTextMark(el, '');
-      STYLE_FIELDS.forEach(field => applyStyleToken(el, field, ''));
-      if(!changeMatchesCurrentScope(change)) return;
-      if(change.fontSizeToken !== undefined) applyFontSizeToken(el, change.fontSizeToken || '');
-      if(change.textMarkStyle !== undefined) applyTextMark(el, change.textMarkStyle || '');
-      STYLE_FIELDS.forEach(field => {
-        if(change[field.key] !== undefined) applyStyleToken(el, field, change[field.key] || '');
-      });
-    });
-  }
-
-  function changeMatchesCurrentScope(change){
-    return change?.scope !== 'theme' || change.theme === currentTheme();
-  }
-
-  function applyFontSizeToken(el, token){
-    if(token){
-      el.style.setProperty('font-size', `var(${token})`, 'important');
-      el.dataset.devFontSizeToken = token;
-    }else{
-      el.style.removeProperty('font-size');
-      delete el.dataset.devFontSizeToken;
-    }
-  }
-
-  function applyStyleToken(el, field, token){
-    if(token){
-      el.style.setProperty(field.css, cssTokenValue(token), 'important');
-      el.dataset[field.dataset] = token;
-    }else{
-      el.style.removeProperty(field.css);
-      delete el.dataset[field.dataset];
-    }
-  }
-
-  function applyTextMark(el, mark){
-    el.classList.remove('dev-text-mark-block', 'dev-text-mark-underline');
-    delete el.dataset.devTextMark;
-    if(!mark) return;
-    el.dataset.devTextMark = mark;
-    el.classList.add(`dev-text-mark-${mark}`);
-  }
-
-  function cssTokenValue(token){
-    return token.startsWith('--') ? `var(${token})` : token;
-  }
-
-  function resolveColorToken(token){
-    if(token === 'transparent') return 'transparent';
-    const probe = document.createElement('span');
-    probe.style.position = 'fixed';
-    probe.style.pointerEvents = 'none';
-    probe.style.opacity = '0';
-    probe.style.color = cssTokenValue(token);
-    document.body.appendChild(probe);
-    const color = getComputedStyle(probe).color || 'transparent';
-    probe.remove();
-    return color;
-  }
-
-  function scopePatch(){
-    const scope = scopeSelect.value === 'theme' ? 'theme' : 'global';
-    return scope === 'theme'
-      ? {scope, theme: currentTheme()}
-      : {scope, theme: null};
-  }
-
-  function currentTheme(){
-    return window.__getPreviewState?.().theme || document.documentElement.dataset.theme || '';
-  }
-
-  function flushDeveloperAdjustments(){
-    if(selected) recordTargetChange(selected);
-    writeState();
-  }
-
-  function renderLog(){
-    const changes = Object.values(state.changes)
-      .sort((a, b) => (a.slide || 0) - (b.slide || 0) || String(a.id).localeCompare(String(b.id)));
-    const payload = {
-      version: 1,
-      note: 'Guizang PPT developer adjustments',
-    };
-    assignNonEmpty(payload, 'changes', Object.fromEntries(changes.map(compactChangeForLog).filter(([, value]) => Object.keys(value).length)));
-    log.value = JSON.stringify(payload, null, 2);
-  }
-
-  function compactChangeForLog(item){
-    const record = {};
-    ['html','fontSizeToken','textMarkStyle','backgroundColorToken','colorToken','paddingToken','marginToken','gapToken'].forEach(key => {
-      if(hasLogValue(item[key])) record[key] = item[key];
-    });
-    if(Object.keys(record).length && item.scope === 'theme'){
-      record.scope = item.scope;
-      record.theme = item.theme;
-    }
-    return [item.id, record];
-  }
-
-  function assignNonEmpty(target, key, value){
-    if(Array.isArray(value) ? value.length : Object.keys(value).length) target[key] = value;
-  }
-
-  function hasLogValue(value){
-    return value !== undefined && value !== null && value !== '';
-  }
-
-  function writeState(){
-    state.__deckSignature = deckSignature;
-    stateEl.textContent = safeJson(state);
-    try {
-      localStorage.setItem(STORE, JSON.stringify(state));
-    } catch (error) {
-      console.warn('[developer mode] state could not be persisted', error);
-    }
-  }
-
-  function copyLog(){
-    flushDeveloperAdjustments();
-    if(navigator.clipboard?.writeText){
-      navigator.clipboard.writeText(log.value).then(() => {
-        copyButton.textContent = '已复制';
-        setTimeout(() => copyButton.textContent = '复制记录', 900);
-      });
-      return;
-    }
-    log.focus();
-    log.select();
-    document.execCommand('copy');
-  }
-
-  function findAdjustable(id){
-    const value = selectorValue(id);
-    return deck.querySelector(`[data-editable-id="${value}"],[data-dev-element-id="${value}"]`);
-  }
-
-  function readSaved(){
-    try {
-      const saved = JSON.parse(localStorage.getItem(STORE) || '{}') || {};
-      return saved.__deckSignature === deckSignature ? saved : {};
-    } catch {
-      return {};
-    }
-  }
-
-  function normalizeState(value){
-    return {
-      version: 1,
-      __deckSignature: deckSignature,
-      changes: value?.changes && typeof value.changes === 'object' ? value.changes : {},
-    };
-  }
-
-  function readJson(el, fallback){
-    try {
-      return JSON.parse(el?.textContent || '') || fallback;
-    } catch {
-      return fallback;
-    }
-  }
-
-  function safeJson(data){
-    return JSON.stringify(data).replace(/</g, '\\u003c');
-  }
-
-  function selectorValue(value){
-    if(window.CSS?.escape) return CSS.escape(value);
-    return String(value).replace(/["\\]/g, '\\$&');
   }
 })();
 </script>
@@ -6466,7 +5140,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
   syncDeckPageNumbers();
   addEventListener('swiss-slide-change', syncDeckPageNumbers);
   addEventListener('swiss-slide-reorder', syncDeckPageNumbers);
-  addEventListener('swiss-style-variant-change', syncDeckPageNumbers);
 
   function syncDeckPageNumbers(){
     const slides = window.__getVisibleSlides?.() || [...deck.querySelectorAll('.slide:not([hidden])')];
@@ -6490,176 +5163,6 @@ go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false});
 
   function pad(value, minLength){
     return String(value).padStart(Math.max(minLength, String(value).length), '0');
-  }
-})();
-</script>
-<script>
-/* =============== Static Unicorn Scene Runtime =============== */
-(function(){
-  const DEFAULT_SDK_URL = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.12/dist/unicornStudio.umd.js';
-  let sdkPromise = null;
-
-  window.__initUnicornScenes = initUnicornScenes;
-  window.__resetUnicornSceneFrame = resetFrame;
-  window.__syncUnicornSceneActivity = syncUnicornSceneActivity;
-  window.__refreshThemeAwareUnicornScenes = refreshThemeAwareScenes;
-  addEventListener('swiss-slide-change', e => {
-    const { index, slide } = e.detail;
-    syncUnicornSceneActivity(slide);
-    setTimeout(() => {
-      if((window.__currentSlideIndex || 0) === index) initUnicornScenes(slide);
-    }, 80);
-  });
-  syncUnicornSceneActivity(getCurrentSlide());
-  initUnicornScenes(getCurrentSlide());
-
-  function initUnicornScenes(scope = getCurrentSlide(), options = {}){
-    const root = scope instanceof Element ? scope : document;
-    const selector = '.bt-unicorn-frame[data-unicorn-project-id],.bt-unicorn-frame[data-unicorn-json-file-path]';
-    const frames = [
-      ...(root.matches?.(selector) ? [root] : []),
-      ...Array.from(root.querySelectorAll(selector)),
-    ];
-    const activeSlide = getCurrentSlide();
-    const pending = frames.filter(frame => {
-      if(frame.dataset.unicornReady || frame.closest('.bt-image-slot.has-user-image,.bt-image-slot.has-user-media')) return false;
-      return options.force || activeSlide.contains(frame) || frame === activeSlide;
-    });
-    if(!pending.length) return Promise.resolve([]);
-    const sdkUrl = pending[0].dataset.unicornSdkUrl || DEFAULT_SDK_URL;
-    return loadSdk(sdkUrl).then(() => {
-      return Promise.allSettled(pending.map(initFrame));
-    }).catch(error => {
-      console.warn('[unicorn] failed to load scene runtime', error);
-      return [];
-    });
-  }
-
-  function getCurrentSlide(){
-    const slides = document.querySelectorAll('#deck .slide');
-    return slides[window.__currentSlideIndex || 0] || document;
-  }
-
-  function loadSdk(sdkUrl){
-    if(window.UnicornStudio?.addScene) return Promise.resolve();
-    if(sdkPromise) return sdkPromise;
-    sdkPromise = new Promise((resolve, reject) => {
-      const existing = document.querySelector(`script[src="${sdkUrl}"]`);
-      const script = existing || document.createElement('script');
-      script.addEventListener('load', resolve, {once:true});
-      script.addEventListener('error', reject, {once:true});
-      if(!existing){
-        script.src = sdkUrl;
-        script.async = true;
-        document.head.appendChild(script);
-      }
-    }).then(() => {
-      if(!window.UnicornStudio?.addScene) throw new Error('UnicornStudio.addScene not found');
-    });
-    return sdkPromise;
-  }
-
-  function initFrame(frame){
-    const scene = frame.querySelector('.bt-unicorn-scene');
-    if(!scene || frame.dataset.unicornReady) return;
-    const elementId = scene.id || `unicorn-${Math.random().toString(36).slice(2, 11)}`;
-    scene.id = elementId;
-    frame.dataset.unicornReady = 'true';
-    const config = {
-      elementId,
-      scale: Number(frame.dataset.unicornScale || 1),
-      dpi: Number(frame.dataset.unicornDpi || 1.5),
-      lazyLoad: false,
-      production: true,
-      altText: 'Image placeholder scene',
-      ariaLabel: 'Image placeholder scene',
-    };
-    const inlineFilePath = createInlineSceneUrl(frame);
-    if(inlineFilePath || frame.dataset.unicornJsonFilePath){
-      config.filePath = inlineFilePath || frame.dataset.unicornJsonFilePath;
-    } else {
-      config.projectId = frame.dataset.unicornProjectId;
-    }
-    return window.UnicornStudio.addScene(config).then(sceneInstance => {
-      frame.__unicornScene = sceneInstance;
-    }).catch(error => {
-      frame.removeAttribute('data-unicorn-ready');
-      console.warn('[unicorn] failed to initialize scene', error);
-    });
-  }
-
-  function resetFrame(frame){
-    if(!frame) return;
-    frame.__unicornScene?.destroy?.();
-    frame.__unicornScene = null;
-    frame.removeAttribute('data-unicorn-ready');
-    const scene = frame.querySelector('.bt-unicorn-scene');
-    if(scene){
-      scene.innerHTML = '';
-      scene.removeAttribute('id');
-    }
-  }
-
-  function syncUnicornSceneActivity(activeSlide = getCurrentSlide()){
-    document.querySelectorAll('.bt-unicorn-frame[data-unicorn-ready]').forEach(frame => {
-      if(activeSlide && activeSlide.contains(frame)) return;
-      resetFrame(frame);
-    });
-  }
-
-  function refreshThemeAwareScenes(){
-    document.querySelectorAll('.bt-unicorn-frame[data-unicorn-theme-color]').forEach(resetFrame);
-    initUnicornScenes(getCurrentSlide());
-  }
-
-  function createInlineSceneUrl(frame){
-    const jsonFilePath = frame.dataset.unicornJsonFilePath;
-    if(!jsonFilePath) return '';
-    window.__unicornSceneUrls ||= {};
-    let sceneMap = {};
-    try {
-      sceneMap = JSON.parse(document.getElementById('unicorn-scene-json-map')?.textContent || '{}') || {};
-    } catch {}
-    const source = adaptThemeColor(sceneMap[jsonFilePath], frame);
-    if(!source) return '';
-    const cacheKey = frame.dataset.unicornThemeColor ? `${jsonFilePath}|${readThemeColor().join(',')}` : jsonFilePath;
-    if(window.__unicornSceneUrls[cacheKey]) return window.__unicornSceneUrls[cacheKey];
-    const blob = new Blob([source], {type:'application/json'});
-    window.__unicornSceneUrls[cacheKey] = URL.createObjectURL(blob);
-    return window.__unicornSceneUrls[cacheKey];
-  }
-
-  function adaptThemeColor(source, frame){
-    if(!source || frame.dataset.unicornThemeColor !== 'focus') return source;
-    const color = readThemeColor();
-    return source.replace(
-      /vec3\(0,\s*0\.5058823529411764,\s*0\.9686274509803922\)/g,
-      `vec3(${color[0].toFixed(6)}, ${color[1].toFixed(6)}, ${color[2].toFixed(6)})`,
-    );
-  }
-
-  function readThemeColor(){
-    const style = getComputedStyle(document.documentElement);
-    return parseCssColor(style.getPropertyValue('--theme-focus').trim())
-      || parseCssColor(style.getPropertyValue('--focus-mark').trim())
-      || [0, 0.505882, 0.968627];
-  }
-
-  function parseCssColor(value){
-    const hex = value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
-    if(hex){
-      const raw = hex[1].length === 3 ? hex[1].split('').map(x => x + x).join('') : hex[1];
-      const n = parseInt(raw, 16);
-      return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
-    }
-    const rgb = value.match(/^rgba?\(([^)]+)\)$/i);
-    if(rgb){
-      const parts = rgb[1].split(',').map(part => Number.parseFloat(part));
-      if(parts.length >= 3 && parts.every(Number.isFinite)){
-        return parts.slice(0, 3).map(part => Math.max(0, Math.min(255, part)) / 255);
-      }
-    }
-    return null;
   }
 })();
 </script>
@@ -6963,8 +5466,8 @@ if(gsapRuntime){
         ':scope > header',
         ':scope > footer',
         ':scope [data-media-slot]',
-        ':scope [data-chart-switch="true"]',
         ':scope [data-shader-backdrop="true"]',
+        ':scope [data-chart-switch="true"]',
         ':scope [data-icon-slot]',
         ':scope [data-editable-id]',
         ':scope h1',
@@ -7838,6 +6341,175 @@ if(gsapRuntime){
   addEventListener('swiss-low-power-change', ()=>syncAsciiActivity());
   addEventListener('visibilitychange', ()=>syncAsciiActivity());
   syncAsciiActivity();
+})();
+</script>
+<script>
+/* =============== Static Unicorn Scene Runtime =============== */
+(function(){
+  const DEFAULT_SDK_URL = 'https://cdn.jsdelivr.net/gh/hiunicornstudio/unicornstudio.js@v2.1.12/dist/unicornStudio.umd.js';
+  let sdkPromise = null;
+
+  window.__initUnicornScenes = initUnicornScenes;
+  window.__resetUnicornSceneFrame = resetFrame;
+  window.__syncUnicornSceneActivity = syncUnicornSceneActivity;
+  window.__refreshThemeAwareUnicornScenes = refreshThemeAwareScenes;
+
+  addEventListener('swiss-slide-change', e => {
+    const { index, slide } = e.detail;
+    syncUnicornSceneActivity(slide);
+    setTimeout(() => {
+      if((window.__currentSlideIndex || 0) === index) initUnicornScenes(slide);
+    }, 80);
+  });
+  syncUnicornSceneActivity(getCurrentSlide());
+  initUnicornScenes(getCurrentSlide());
+
+  function initUnicornScenes(scope = getCurrentSlide(), options = {}){
+    const root = scope instanceof Element ? scope : document;
+    const selector = '.bt-unicorn-frame[data-unicorn-project-id],.bt-unicorn-frame[data-unicorn-json-file-path]';
+    const frames = [
+      ...(root.matches?.(selector) ? [root] : []),
+      ...Array.from(root.querySelectorAll(selector)),
+    ];
+    const activeSlide = getCurrentSlide();
+    const pending = frames.filter(frame => {
+      if(frame.dataset.unicornReady || frame.closest('.bt-image-slot.has-user-image,.bt-image-slot.has-user-media')) return false;
+      return options.force || activeSlide.contains(frame) || frame === activeSlide;
+    });
+    if(!pending.length) return Promise.resolve([]);
+    const sdkUrl = pending[0].dataset.unicornSdkUrl || DEFAULT_SDK_URL;
+    return loadSdk(sdkUrl).then(() => Promise.allSettled(pending.map(initFrame))).catch(error => {
+      console.warn('[unicorn] failed to load scene runtime', error);
+      return [];
+    });
+  }
+
+  function getCurrentSlide(){
+    const slides = document.querySelectorAll('#deck .slide');
+    return slides[window.__currentSlideIndex || 0] || document;
+  }
+
+  function loadSdk(sdkUrl){
+    if(window.UnicornStudio?.addScene) return Promise.resolve();
+    if(sdkPromise) return sdkPromise;
+    sdkPromise = new Promise((resolve, reject) => {
+      const existing = document.querySelector(`script[src="${sdkUrl}"]`);
+      const script = existing || document.createElement('script');
+      script.addEventListener('load', resolve, {once:true});
+      script.addEventListener('error', reject, {once:true});
+      if(!existing){
+        script.src = sdkUrl;
+        script.async = true;
+        document.head.appendChild(script);
+      }
+    }).then(() => {
+      if(!window.UnicornStudio?.addScene) throw new Error('UnicornStudio.addScene not found');
+    });
+    return sdkPromise;
+  }
+
+  function initFrame(frame){
+    const scene = frame.querySelector('.bt-unicorn-scene');
+    if(!scene || frame.dataset.unicornReady) return;
+    const elementId = scene.id || `unicorn-${Math.random().toString(36).slice(2, 11)}`;
+    scene.id = elementId;
+    frame.dataset.unicornReady = 'true';
+    const config = {
+      elementId,
+      scale: Number(frame.dataset.unicornScale || 1),
+      dpi: Number(frame.dataset.unicornDpi || 1.5),
+      lazyLoad: false,
+      production: true,
+      altText: 'Shader scene',
+      ariaLabel: 'Shader scene',
+    };
+    const inlineFilePath = createInlineSceneUrl(frame);
+    if(inlineFilePath || frame.dataset.unicornJsonFilePath){
+      config.filePath = inlineFilePath || frame.dataset.unicornJsonFilePath;
+    } else {
+      config.projectId = frame.dataset.unicornProjectId;
+    }
+    return window.UnicornStudio.addScene(config).then(sceneInstance => {
+      frame.__unicornScene = sceneInstance;
+    }).catch(error => {
+      frame.removeAttribute('data-unicorn-ready');
+      console.warn('[unicorn] failed to initialize scene', error);
+    });
+  }
+
+  function resetFrame(frame){
+    if(!frame) return;
+    frame.__unicornScene?.destroy?.();
+    frame.__unicornScene = null;
+    frame.removeAttribute('data-unicorn-ready');
+    const scene = frame.querySelector('.bt-unicorn-scene');
+    if(scene){
+      scene.innerHTML = '';
+      scene.removeAttribute('id');
+    }
+  }
+
+  function syncUnicornSceneActivity(activeSlide = getCurrentSlide()){
+    document.querySelectorAll('.bt-unicorn-frame[data-unicorn-ready]').forEach(frame => {
+      if(activeSlide && activeSlide.contains(frame)) return;
+      resetFrame(frame);
+    });
+  }
+
+  function refreshThemeAwareScenes(){
+    document.querySelectorAll('.bt-unicorn-frame[data-unicorn-theme-color]').forEach(resetFrame);
+    initUnicornScenes(getCurrentSlide());
+  }
+
+  function createInlineSceneUrl(frame){
+    const jsonFilePath = frame.dataset.unicornJsonFilePath;
+    if(!jsonFilePath) return '';
+    window.__unicornSceneUrls ||= {};
+    let sceneMap = {};
+    try {
+      sceneMap = JSON.parse(document.getElementById('unicorn-scene-json-map')?.textContent || '{}') || {};
+    } catch {}
+    const source = adaptThemeColor(sceneMap[jsonFilePath], frame);
+    if(!source) return '';
+    const cacheKey = frame.dataset.unicornThemeColor ? `${jsonFilePath}|${readThemeColor().join(',')}` : jsonFilePath;
+    if(window.__unicornSceneUrls[cacheKey]) return window.__unicornSceneUrls[cacheKey];
+    const blob = new Blob([source], {type:'application/json'});
+    window.__unicornSceneUrls[cacheKey] = URL.createObjectURL(blob);
+    return window.__unicornSceneUrls[cacheKey];
+  }
+
+  function adaptThemeColor(source, frame){
+    if(!source || frame.dataset.unicornThemeColor !== 'focus') return source;
+    const color = readThemeColor();
+    return source.replace(
+      /vec3\(0,\s*0\.5058823529411764,\s*0\.9686274509803922\)/g,
+      `vec3(${color[0].toFixed(6)}, ${color[1].toFixed(6)}, ${color[2].toFixed(6)})`,
+    );
+  }
+
+  function readThemeColor(){
+    const style = getComputedStyle(document.documentElement);
+    return parseCssColor(style.getPropertyValue('--theme-focus').trim())
+      || parseCssColor(style.getPropertyValue('--focus-mark').trim())
+      || [0, 0.505882, 0.968627];
+  }
+
+  function parseCssColor(value){
+    const hex = value.match(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i);
+    if(hex){
+      const raw = hex[1].length === 3 ? hex[1].split('').map(x => x + x).join('') : hex[1];
+      const n = parseInt(raw, 16);
+      return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255];
+    }
+    const rgb = value.match(/^rgba?\(([^)]+)\)$/i);
+    if(rgb){
+      const parts = rgb[1].split(',').map(part => Number.parseFloat(part));
+      if(parts.length >= 3 && parts.every(Number.isFinite)){
+        return parts.slice(0, 3).map(part => Math.max(0, Math.min(255, part)) / 255);
+      }
+    }
+    return null;
+  }
 })();
 </script>
 </body>

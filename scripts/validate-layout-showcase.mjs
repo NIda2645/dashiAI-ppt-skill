@@ -6,13 +6,14 @@ const showcaseFile = 'examples/component-decks/all-layouts-showcase.jsx';
 
 const options = readFileSync(optionsFile, 'utf8');
 const showcase = readFileSync(showcaseFile, 'utf8');
+const layoutBlock = options.match(/export const LAYOUT_OPTIONS = \{[\s\S]*?\n\};/)?.[0] || '';
 
-const registeredLayouts = [...options.matchAll(/^\s*([a-z]\w*):\s*\{[\s\S]*?dataLayout:\s*'([^']+)'/gm)]
+const registeredLayouts = [...layoutBlock.matchAll(/^\s*([a-z]\w*):\s*\{[\s\S]*?dataLayout:\s*'([^']+)'/gm)]
   .map((match) => ({ key: match[1], dataLayout: match[2] }));
-const canonicalLayouts = [...options.matchAll(/^\s*(s\d{2}):\s*\{[\s\S]*?dataLayout:\s*'S(\d{2})'/gm)]
+const canonicalLayouts = [...layoutBlock.matchAll(/^\s*(s\d{2}):\s*\{[\s\S]*?dataLayout:\s*'S(\d{2})'/gm)]
   .map((match) => ({ key: match[1], dataLayout: `S${match[2]}` }))
   .filter((layout) => layout.key === layout.dataLayout.toLowerCase());
-const magazineLayouts = [...options.matchAll(/^\s*(a\d{2}):\s*\{[\s\S]*?dataLayout:\s*'A(\d{2})'/gm)]
+const magazineLayouts = [...layoutBlock.matchAll(/^\s*(a\d{2}):\s*\{[\s\S]*?dataLayout:\s*'A(\d{2})'/gm)]
   .map((match) => ({ key: match[1], dataLayout: `A${match[2]}` }))
   .filter((layout) => layout.key === layout.dataLayout.toLowerCase());
 
@@ -25,7 +26,7 @@ const extraRegistered = showcaseKeys.filter((key) => !registeredKeys.includes(ke
 const duplicateRegistered = showcaseKeys.filter((key, index) => showcaseKeys.indexOf(key) !== index);
 const expectedKeys = canonicalLayouts.map((layout) => layout.key);
 const expectedMagazineKeys = magazineLayouts.map((layout) => layout.key);
-const requiredExtensionKeys = ['s08Map'].filter((key) => new RegExp(`^\\s*${key}:\\s*\\{`, 'm').test(options));
+const requiredExtensionKeys = ['s08Map'].filter((key) => new RegExp(`^\\s*${key}:\\s*\\{`, 'm').test(layoutBlock));
 
 const missing = expectedKeys.filter((key) => !showcaseCanonicalKeys.includes(key));
 const extra = showcaseCanonicalKeys.filter((key) => !expectedKeys.includes(key));

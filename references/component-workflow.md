@@ -4,12 +4,10 @@
 
 ## 注册表
 
-token 选项在 `src/tokens/`,页面版式登记在 `src/options.jsx`:
+页面版式登记在 `src/options.jsx`:
 
-- `THEME_OPTIONS`: deck 级主题色,一个 deck 只选一个
-- `FONT_OPTIONS`: deck 级字体组合,一个 deck 只选一个
+- `THEME_OPTIONS`: 只保留 `dark` / `light`,用于选择浅色或深色预览基线
 - `LAYOUT_OPTIONS`: 页级版式,每页从中选一个
-- `TYPE_SCALE_OPTIONS`、`SPACING_OPTIONS`: 组合层 token,用于后续组件化扩展
 
 ## Deck 配置
 
@@ -18,19 +16,17 @@ import React from 'react';
 import { slide } from '../../src/options.jsx';
 
 export default {
-  style: 'swiss',
-  theme: 'ikb',
-  fontSet: 'inter',
+  theme: 'dark',
   title: 'Deck 标题',
   slides: [
-    slide('cover', {
+    slide('page01', {
       title: '封面标题',
       kicker: 'SECTION LABEL',
       lead: '一段副标题。',
     }),
-    slide('s02', {
+    slide('page02', {
       page: '02 / 05',
-      title: '时间线标题',
+      title: '正文标题',
       kicker: 'FLOW',
       nodes: [],
       metrics: [],
@@ -49,18 +45,6 @@ npm run showcase:update
 
 ## 新增选项
 
-新增主题:
-
-1. 在 `src/tokens/themes.js` 的 `THEME_OPTIONS` 加 key。
-2. 写完整 CSS 变量,尤其是 `--surface-*`、`--inverse-*` 和 `--focus-*`。
-3. 用至少一份示例 deck 验证可读性。
-
-新增字体组合:
-
-1. 在 `src/tokens/fonts.js` 的 `FONT_OPTIONS` 加 key。
-2. 同时提供 `--sans`、`--sans-zh`、`--mono`。
-3. 检查中文标题和数字页。
-
 新增版式:
 
 1. 按一个布局一个文件在对应组件目录写组件。
@@ -75,24 +59,20 @@ npm run showcase:update
 2. 从该目录 `index.jsx` 导出。
 3. 布局 preset 通过对应目录的 `primitives.jsx` 或直接 import 复用,不要复制一份同类实现。
 
-原始电子杂志布局使用 `a01` 到 `a10` 作为 key,输出 `A01` 到 `A10`。
+当前对外布局池只有 `page01` 到 `page74`、`page76` 到 `page80`。旧的 `bt`、`report`、`xhs`、`xhs2`、`xhs3`、`style1`、`style2` layout key 只作为兼容别名。
 
-原始 Swiss 正文布局使用 `s01` 到 `s22` 作为 canonical key。旧示例里的 `timeline`、`sixCells`、`kpiTower`、`hBar`、`imageHero` 只是兼容别名。
-
-Style B / Swiss 还保留原项目登记扩展 `s08Map`:它仍使用 `data-layout="S08"`,用于地点、路线、人物住所、城市关系等地图页。新增 Style B 能力前先读 `themes-swiss.md`、`swiss-layout-lock.md`、`layouts-swiss.md`;涉及图片或截图时读 `image-prompts.md` 和 `screenshot-framing.md`。
+历史 Style A / Swiss 参考资料仍保留在 `references/`,只作为追溯来源。新增布局以当前 `pageXX` 登记方式为准;涉及图片或截图时读 `image-prompts.md` 和 `screenshot-framing.md`。
 
 ## Subagent 测试
 
 测试不能只换颜色。每个 subagent 需要生成不同内容主题和页面组合:
 
-- AI/技术复盘:偏 `timeline`、`kpiTower`、`hBar`
-- 城市/生态报告:偏 `imageHero`、`sixCells`、`timeline`
-- 零售/消费简报:偏 `hBar`、`kpiTower`、`imageHero`
-- 全量布局回归:运行 `npm run showcase:update`,检查 `output/all-components-showcase/ppt/index.html` 的 A01-A10、22 个 canonical Swiss 布局和 Style B 登记扩展
+- AI/技术复盘:偏流程、指标、风险、行动页
+- 城市/生态报告:偏图片、地图感、观察、总结页
+- 零售/消费简报:偏排行榜、指标、对比、应用页
+- 全量布局回归:运行 `npm run showcase:update`,检查 `output/all-components-showcase/ppt/index.html` 覆盖全部已登记逻辑页
 
 比较结果时看:
 
 - 内容是否匹配所选版式
-- 主题色是否服务内容语气
-- 字体组合是否影响密度和可读性
 - 页面组合是否有节奏,而不是只是换色

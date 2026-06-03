@@ -118,7 +118,7 @@ layouts.md 使用的所有类（`h-hero` / `h-xl` / `h-sub` / `h-md` / `lead` / 
 
 ### ⚠️ 主题节奏规划（必读 · 生成前必做)
 
-**核心机制**:每页 `<section>` 必须带 `light` / `dark` / `hero light` / `hero dark` 之一。JS 根据 class 推断主题,决定 body 加不加 `light-bg`,从而切换暗/亮两张 WebGL canvas 哪张在前。不带主题或写自定义名 = fallback 出错。
+**核心机制**:每页 `<section>` 必须带 `light` / `dark` / `hero light` / `hero dark` 之一。JS 根据 class 推断浅色/深色预览基线,从而切换对应的全局背景层。不带主题或写自定义名 = fallback 出错。
 
 #### 按布局的主题默认值
 

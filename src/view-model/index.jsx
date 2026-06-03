@@ -19,54 +19,28 @@ export function isSlideModel(value) {
 }
 
 export function buildDeckViewModel(deck, registries) {
-  if (deck.style && deck.style !== 'swiss') {
-    throw new Error('Only style "swiss" is supported by the component workflow.');
-  }
-
   const theme = registries.resolveOption(registries.themes, deck.theme, registries.defaultTheme, 'theme');
-  const font = registries.resolveOption(registries.fonts, deck.fontSet, registries.defaultFont, 'fontSet');
-  const fontWeight = registries.resolveOption(registries.fontWeights, deck.fontWeight, registries.defaultFontWeight, 'fontWeight');
-  const typeScale = registries.resolveOption(registries.typeScales, deck.typeScale, registries.defaultTypeScale, 'typeScale');
-  const spacing = registries.resolveOption(registries.spacings, deck.spacing, registries.defaultSpacing, 'spacing');
   const model = normalizeDeckModel(deck);
-  const slideKeys = createSlideKeys(model.slides);
-  const slides = model.slides.map((slide, index) => buildSlideViewModel(slide, index, registries.layouts, slideKeys[index]));
+  const layoutAliases = registries.layoutAliases || {};
+  const slideKeys = createSlideKeys(model.slides, layoutAliases);
+  const slides = model.slides.map((slide, index) => buildSlideViewModel(slide, index, registries.layouts, slideKeys[index], layoutAliases));
   const state = {
     slideOrder: slides.map((slide) => slide.id),
-    text: normalizeTextState(model.text, slides),
+    text: normalizeTextState(model.text, slides, layoutAliases),
     media: model.media || {},
     chart: model.chart || {},
     icon: model.icon || {},
     shader: model.shader || {},
-    background: model.background || {},
   };
 
   return {
     model,
-    styleVariant: model.styleVariant || 'a',
-    stylePresets: model.stylePresets || {},
-    tokens: {
-      theme,
-      font,
-      fontWeight,
-      typeScale,
-      spacing,
-    },
+    theme,
     slides,
     options: {
       themes: serializeOptions(registries.themes),
-      fonts: serializeOptions(registries.fonts),
-      fontWeights: serializeOptions(registries.fontWeights),
-      typeScales: serializeOptions(registries.typeScales),
-      spacings: serializeOptions(registries.spacings),
-      stylePresets: model.stylePresets || {},
       current: {
         theme: theme.key,
-        font: font.key,
-        fontWeight: fontWeight.key,
-        typeScale: typeScale.key,
-        spacing: spacing.key,
-        styleVariant: model.styleVariant || 'a',
       },
     },
     state,
@@ -90,24 +64,13 @@ export function serializeDeckViewModel(viewModel) {
   return {
     version: 1,
     title: viewModel.model.title,
-    style: viewModel.model.style,
-    styleVariant: viewModel.styleVariant,
-    stylePresets: viewModel.stylePresets,
-    tokens: {
-      theme: viewModel.tokens.theme.key,
-      font: viewModel.tokens.font.key,
-      fontWeight: viewModel.tokens.fontWeight.key,
-      typeScale: viewModel.tokens.typeScale.key,
-      spacing: viewModel.tokens.spacing.key,
-    },
+    theme: viewModel.theme.key,
     slides: viewModel.slides.map((slide) => ({
       id: slide.id,
       key: slide.key,
       layout: slide.layout,
       dataLayout: slide.dataLayout,
       label: slide.label,
-      styleVariant: slide.styleVariant,
-      styleVariantLabel: slide.styleVariantLabel,
       logicalIndex: slide.logicalIndex,
       props: toJson(slide.sourceProps),
       copy: toJson(slide.copy),
@@ -123,7 +86,6 @@ export function serializeDeckViewModel(viewModel) {
       chart: viewModel.state.chart || {},
       icon: viewModel.state.icon || {},
       shader: viewModel.state.shader || {},
-      background: viewModel.state.background || {},
     },
   };
 }
@@ -147,21 +109,13 @@ function createJsonSerializer() {
 
 function normalizeDeckModel(deck) {
   return {
-    style: deck.style || 'swiss',
-    styleVariant: deck.styleVariant || 'a',
-    stylePresets: deck.stylePresets || {},
     title: deck.title || 'Untitled Deck',
     theme: deck.theme,
-    fontSet: deck.fontSet,
-    fontWeight: deck.fontWeight,
-    typeScale: deck.typeScale,
-    spacing: deck.spacing,
     text: deck.text || {},
     media: deck.media || {},
     chart: deck.chart || {},
     icon: deck.icon || {},
     shader: deck.shader || {},
-    background: deck.background || {},
     slides: (deck.slides || []).map((slide, index) => normalizeSlideModel(slide, index)),
   };
 }
@@ -195,7 +149,7 @@ function normalizeSlideModel(slide, index) {
   };
 }
 
-function buildSlideViewModel(slide, index, layoutOptions, slideKey) {
+function buildSlideViewModel(slide, index, layoutOptions, slideKey, layoutAliases = {}) {
   if (slide.legacy) {
     return {
       id: slide.id,
@@ -212,7 +166,8 @@ function buildSlideViewModel(slide, index, layoutOptions, slideKey) {
       },
     };
   }
-  const option = layoutOptions[slide.layout];
+  const resolvedLayout = layoutAliases[slide.layout] || slide.layout;
+  const option = layoutOptions[resolvedLayout];
   if (!option) {
     throw new Error(`Unknown layout "${slide.layout}". Choose one of: ${Object.keys(layoutOptions).join(', ')}`);
   }
@@ -220,7 +175,7 @@ function buildSlideViewModel(slide, index, layoutOptions, slideKey) {
     id: slide.id,
     key: slideKey,
     index,
-    layout: slide.layout,
+    layout: resolvedLayout,
     label: option.label,
     dataLayout: option.dataLayout,
     component: option.component,
@@ -231,18 +186,14 @@ function buildSlideViewModel(slide, index, layoutOptions, slideKey) {
     chart: slide.chart || {},
     icon: slide.icon || {},
     shader: slide.shader || {},
-    styleVariant: slide.styleVariant,
-    styleVariantLabel: slide.styleVariantLabel,
     logicalIndex: slide.logicalIndex,
     context: {
       id: slide.id,
       key: slideKey,
       index,
-      layout: slide.layout,
+      layout: resolvedLayout,
       label: option.label,
       dataLayout: option.dataLayout,
-      styleVariant: slide.styleVariant,
-      styleVariantLabel: slide.styleVariantLabel,
       logicalIndex: slide.logicalIndex,
       copy: slide.copy || {},
       media: slide.media || {},
@@ -254,24 +205,24 @@ function buildSlideViewModel(slide, index, layoutOptions, slideKey) {
   };
 }
 
-function createSlideKeys(slides) {
+function createSlideKeys(slides, layoutAliases = {}) {
   const totals = new Map();
   slides.forEach((slide) => {
-    const base = slide.layout || slide.id;
+    const base = layoutAliases[slide.layout] || slide.layout || slide.id;
     totals.set(base, (totals.get(base) || 0) + 1);
   });
 
   const seen = new Map();
   return slides.map((slide) => {
     if (slide.key || slide.slideKey) return slide.key || slide.slideKey;
-    const base = slide.layout || slide.id;
+    const base = layoutAliases[slide.layout] || slide.layout || slide.id;
     const count = (seen.get(base) || 0) + 1;
     seen.set(base, count);
     return totals.get(base) > 1 ? `${base}-${count}` : base;
   });
 }
 
-function normalizeTextState(text, slides) {
+function normalizeTextState(text, slides, layoutAliases = {}) {
   const entries = Object.entries(text || {});
   const firstLegacySlot = new Map();
   entries.forEach(([key]) => {
@@ -297,6 +248,9 @@ function normalizeTextState(text, slides) {
     if (!parsed) return [key, value];
     if (stableKeys.has(parsed.target)) return [key, value];
 
+    const aliasKey = resolveLayoutAliasKey(parsed.target, layoutAliases, layoutToKeys);
+    if (aliasKey) return [`text:${aliasKey}:${parsed.slot}`, value];
+
     const targetKey = keyById.get(parsed.target) || resolveLegacyLayoutKey(parsed.target, layoutToKeys);
     if (!targetKey) return [key, value];
 
@@ -320,6 +274,14 @@ function parseTextKey(key) {
 function resolveLegacyLayoutKey(target, layoutToKeys) {
   const layout = target.replace(/-\d+$/, '');
   const keys = layoutToKeys.get(layout);
+  return keys?.length === 1 ? keys[0] : null;
+}
+
+function resolveLayoutAliasKey(target, layoutAliases, layoutToKeys) {
+  const layout = target.replace(/-\d+$/, '');
+  const resolved = layoutAliases[layout];
+  if (!resolved) return null;
+  const keys = layoutToKeys.get(resolved);
   return keys?.length === 1 ? keys[0] : null;
 }
 

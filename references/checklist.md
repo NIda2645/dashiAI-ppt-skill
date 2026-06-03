@@ -180,7 +180,7 @@ node <SKILL_ROOT>/scripts/validate-swiss-deck.mjs path/to/index.html
 - 图片容器只用 `.frame-img`;**不要** `border-radius` / `box-shadow`
 - UI / 信息图 / 流程图若是用户原始截图或文字密集图,使用 `.fit-contain`;若已按槽位重生成,必须用对应比例类铺满容器,例如 `.frame-img.r-21x9`,不能再用固定短高度把图片缩小
 - 多图同组必须统一槽位、比例、高度,不要混用
-- 用户原始截图要先读 `references/screenshot-framing.md`:优先用 `assets/screenshot-backgrounds/` 内置主题背景 + 程序化缩放/留边/对齐,不要为了比例统一就重画截图内容
+- 用户原始截图要先读 `references/screenshot-framing.md`:只做程序化缩放/留边/对齐,不要依赖内置浅色背景图片,也不要为了比例统一就重画截图内容
 - 截图背景必须跟随当前主题色,且可裁成 `21:9` / `16:10` / `4:3` / `1:1`;背景里不能有标题、页脚、边框、logo、人物或明显主体
 - GPT-M 2.0 提示词必须写明:Swiss Style、单一 accent、直角、无渐变/阴影/圆角、无页眉页脚标题角标
 
@@ -294,12 +294,12 @@ CSS 里 `.frame-img img` 已经预设 `object-position:top`，只裁底。
 
 **现象**:所有 light 页面背景都像蒙了一层灰,甚至 hero light 也灰。
 
-**根因**:JS 根据 slide 的主题切换两张 canvas 的 opacity。如果整个 deck 开场是 hero dark,而没有任何机制能把 bg 切到 light,body 永远不加 `light-bg` 类,`canvas#bg-dark` 一直在上面。
+**根因**:JS 根据 slide 的主题切换浅色/深色背景基线。如果整个 deck 开场是 hero dark,而后续页面没有明确的 light 标记,背景基线会一直保持深色。
 
 **做法**:
 - 模板里 `go()` 函数已改为从 `classList` 推断主题(`light` / `dark`),所以 **slide 必须明确带 `light` 或 `dark` 类**。不要漏写,更不要用其他自定义主题名
 - hero 页用 `hero light` / `hero dark`,正文页用 `light` / `dark`。只写 `hero` 不带主题色是坏的
-- 一个 deck 里必须至少有一个 **非 hero 的 light 页**,确保 body 有机会加 `light-bg`
+- 一个 deck 里必须至少有一个 **非 hero 的 light 页**,确保浅色背景基线有机会生效
 
 ### 2b-2. 整个 deck 全是 light,没有节奏
 
@@ -438,7 +438,7 @@ Hero Cover → Act Divider (hero) → 3-4 pages non-hero → Act Divider (hero)
 
 如果页面文字非常少（hero question），遮罩可以再薄些；如果正文密集，必须加厚遮罩确保可读。
 
-### 11. Light hero 的 shader 不能有强中心点
+### 11. Light hero 的 WebGL 背景不能有强中心点
 
 **现象**：Spiral Vortex、径向涟漪在 light 主题下太显眼，像 Windows 98 屏保。
 
@@ -446,7 +446,7 @@ Hero Cover → Act Divider (hero) → 3-4 pages non-hero → Act Divider (hero)
 
 ### 12. Dark hero 允许更多视觉冲击
 
-Dark hero 可以用 Holographic Dispersion（钛金色散）等带中心结构的 shader，因为黑底能容纳更多视觉信息。
+Dark hero 可以用 Holographic Dispersion（钛金色散）等带中心结构的 WebGL 背景，因为黑底能容纳更多视觉信息。
 
 ### 13. 左文右图的对齐
 
