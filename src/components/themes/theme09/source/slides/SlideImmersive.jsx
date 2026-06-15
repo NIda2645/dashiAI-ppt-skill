@@ -1,5 +1,6 @@
 import { useDeckStyles, deckTheme, SlideShell } from './DeckKit.jsx';
 import ImageStrip from './ImageStrip.jsx';
+import UnicornBackground, { UNICORN_BACKGROUND_CONTROL, createUnicornSceneControl } from '../../../unicorn-background.jsx';
 /* ============================================================================
    SlideImmersive — 全幅图景（图片领衔满幅 · 渐隐压暗 + 浮层文字板 + 可选缩略轨）
    独立组件：仅靠 props 控制内容与样式；render 时自注入 DeckKit 基座样式。
@@ -25,6 +26,8 @@ import ImageStrip from './ImageStrip.jsx';
    组件内部以 { ...defaultProps, ...props } 合并，外部传同名 props 逐项覆盖。 */
 export const defaultProps = {
   imgCount: 1,
+  backgroundMode: 'unicorn',
+  unicornScene: 'moving',
   textPos: '左下',
   showScrim: true,
   showRail: true,
@@ -46,9 +49,10 @@ function SlideImmersive(props){
 
   const {
     imgCount, textPos, showScrim, showRail, tagCount, focus, badge,
-    kicker, title, titleEN, paragraph, tags,
+    kicker, title, titleEN, paragraph, tags, backgroundMode, unicornScene,
   } = { ...defaultProps, ...props };
 
+  const useUnicorn = backgroundMode === 'unicorn';
   const nImg = Math.max(1, Math.min(imgCount, 4));
   const tg = tags.slice(0, Math.max(0, Math.min(tagCount, tags.length)));
   const hasRail = showRail && nImg > 1;
@@ -65,7 +69,9 @@ function SlideImmersive(props){
     <SlideShell pad={false} style={{position:'relative'}}>
       {/* 主图：满幅裁切铺满（cover） */}
       <div style={{position:'absolute', inset:0, background:'#03081e'}}>
-        <CoverSlot idPrefix="immersive-main" placeholder="满幅意象 / full-bleed image" accent={ACC} />
+        {useUnicorn
+          ? <UnicornBackground scene={unicornScene} accent={ACC} />
+          : <CoverSlot idPrefix="immersive-main" placeholder="满幅意象 / full-bleed image" accent={ACC} />}
       </div>
 
       {/* 渐隐压暗 */}
@@ -198,6 +204,8 @@ function CoverSlot({ idPrefix, placeholder, accent }){
 
 /* ── 模板参数 schema（自描述 · 迁移即带控件；Tweaks 由此自动生成） ── */
 export const slideSpec = { defaults: defaultProps, slot:'immersive', name:'全幅图景 · Immersive', controls:[
+  UNICORN_BACKGROUND_CONTROL,
+  createUnicornSceneControl(defaultProps.unicornScene),
   { prop:'imgCount', type:'slider', label:'图片槽数量', default:1, min:1, max:4, step:1 },
   { prop:'textPos', type:'radio', label:'图片位置', default:'左下', options:['左下','右下','居中'] },
   { prop:'tagCount', type:'slider', label:'数量', default:2, min:0, max:4, step:1, desc:'浮板标签数' },

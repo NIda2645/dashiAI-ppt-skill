@@ -32,15 +32,28 @@ const theme03AccentListeners = new Set();
 const rawPages = sourcePages.map(entry => ({
   ...entry,
   Component: withTheme03Base(entry.Component),
-  controls: [
-    THEME03_FORCE_DARK_CONTROL,
-    THEME03_GLOBAL_ACCENT_CONTROL,
-    ...(entry.controls || []).filter(control => control.key !== 'forceDark' && control.key !== 'accent'),
-  ],
+  controls: withTheme03Controls(entry.controls || []),
   defaultProps: { ...(entry.defaultProps || entry.defaults || {}), forceDark: true, accent: 'blue' },
 }));
 
 export const runtimePages = normalizeRuntimePages(rawPages, { themeKey: 'theme03', layoutPrefix: 'THEME03' });
+
+function withTheme03Controls(controls) {
+  const filtered = controls.filter(control => control.key !== 'forceDark' && control.key !== 'accent');
+  const backgroundControls = filtered.filter(control => control.key === 'backgroundMode' || control.key === 'unicornScene');
+  const rest = filtered.filter(control => control.key !== 'backgroundMode' && control.key !== 'unicornScene');
+  if (backgroundControls.length) return [
+    ...backgroundControls,
+    THEME03_FORCE_DARK_CONTROL,
+    THEME03_GLOBAL_ACCENT_CONTROL,
+    ...rest,
+  ];
+  return [
+    THEME03_FORCE_DARK_CONTROL,
+    THEME03_GLOBAL_ACCENT_CONTROL,
+    ...filtered,
+  ];
+}
 
 function withTheme03Base(Component) {
   return function Theme03Page(props = {}) {

@@ -9864,6 +9864,52 @@ export const pages = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "copy",
         "label": "可见文案",
         "type": "list",
@@ -9956,6 +10002,8 @@ export const pages = [
         "min": 0,
         "max": 1,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "整屏 cover 背景图片槽(0=霓虹渐变底)"
       },
       {
@@ -10064,6 +10112,8 @@ export const pages = [
       "hlStyle": "glass",
       "hlTilt": 2,
       "mediaCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "accentTone": "green",
       "lineCount": 4,
       "showMasthead": true,
@@ -10081,6 +10131,52 @@ export const pages = [
     "label": "图背章节页",
     "bgClass": "",
     "controls": [
+      {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "automations",
+        "def": "automations",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
       {
         "key": "copy",
         "label": "可见文案",
@@ -10124,6 +10220,8 @@ export const pages = [
         "min": 0,
         "max": 1,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "整屏背景图片槽(0=霓虹渐变底)"
       },
       {
@@ -10229,6 +10327,8 @@ export const pages = [
         "lead": "镜头拉近到一线——机房、团队、发布会与签约桌，看资本如何在真实场景里落地。"
       },
       "mediaCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "automations",
       "partNumber": 4,
       "accentTone": "pink",
       "textAlign": "left",
@@ -12121,6 +12221,52 @@ export const pages = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "hlStyle",
         "label": "高亮样式",
         "type": "radio",
@@ -12163,6 +12309,8 @@ export const pages = [
         "min": 0,
         "max": 1,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "整屏 cover 背景图(0=渐变底)"
       },
       {
@@ -12259,6 +12407,8 @@ export const pages = [
       "hlStyle": "glass",
       "hlTilt": 2,
       "mediaCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "textAlign": "left",
       "accentTone": "blue",
       "statCount": 3,

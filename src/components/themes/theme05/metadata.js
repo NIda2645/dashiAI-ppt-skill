@@ -15564,6 +15564,52 @@ export const pages = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "goey",
+        "def": "goey",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "imageCount",
         "label": "图片槽数量",
         "type": "slider",
@@ -15571,6 +15617,8 @@ export const pages = [
         "min": 0,
         "max": 3,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "全幅图片槽数量（0–3）。1 张铺满整幅；多张按比例自适应分列；为 0 时显示色谱占位。"
       },
       {
@@ -15678,6 +15726,8 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "backgroundMode": "unicorn",
+      "unicornScene": "goey",
       "imageCount": 1,
       "panelPosition": "tl",
       "panelTheme": "ink",

@@ -214,11 +214,85 @@ export const pages = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "automations",
+        "def": "automations",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "forceDark",
         "label": "全局深色",
         "type": "toggle",
         "default": true,
         "desc": "复刻 Claude Design 右上角深浅配色切换。"
+      },
+      {
+        "key": "accent",
+        "label": "强调色",
+        "type": "select",
+        "default": "blue",
+        "options": [
+          {
+            "value": "blue",
+            "label": "电光蓝"
+          },
+          {
+            "value": "lime",
+            "label": "荧光绿"
+          }
+        ],
+        "desc": "theme03 全局强调色，作用于该主题所有页面。"
+      },
+      {
+        "key": "imageCount",
+        "label": "背景图",
+        "type": "slider",
+        "default": 1,
+        "min": 0,
+        "max": 1,
+        "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media"
       },
       {
         "key": "showEyebrow",
@@ -243,22 +317,6 @@ export const pages = [
         ]
       },
       {
-        "key": "accent",
-        "label": "强调色",
-        "type": "select",
-        "default": "lime",
-        "options": [
-          {
-            "value": "blue",
-            "label": "电光蓝"
-          },
-          {
-            "value": "lime",
-            "label": "荧光绿"
-          }
-        ]
-      },
-      {
         "key": "showFrame",
         "label": "描边边框",
         "type": "toggle",
@@ -275,12 +333,98 @@ export const pages = [
         "label": "页脚信息",
         "type": "toggle",
         "default": true
+      },
+      {
+        "key": "showDecor",
+        "label": "装饰图片",
+        "type": "toggle",
+        "default": false
+      },
+      {
+        "key": "decorSrc",
+        "label": "装饰元素",
+        "type": "icons",
+        "options": [
+          {
+            "value": "assets/3d/01.png",
+            "label": "胜利手势",
+            "image": "assets/3d/01.png"
+          },
+          {
+            "value": "assets/3d/02.png",
+            "label": "YES 按键",
+            "image": "assets/3d/02.png"
+          },
+          {
+            "value": "assets/3d/03.png",
+            "label": "404 方块",
+            "image": "assets/3d/03.png"
+          },
+          {
+            "value": "assets/3d/04.png",
+            "label": "8-bit 幽灵",
+            "image": "assets/3d/04.png"
+          },
+          {
+            "value": "assets/3d/05.png",
+            "label": "YES 气泡",
+            "image": "assets/3d/05.png"
+          },
+          {
+            "value": "assets/3d/06.png",
+            "label": "掌机图表",
+            "image": "assets/3d/06.png"
+          },
+          {
+            "value": "assets/3d/07.png",
+            "label": "像素显示器",
+            "image": "assets/3d/07.png"
+          },
+          {
+            "value": "assets/3d/08.png",
+            "label": "复古电脑",
+            "image": "assets/3d/08.png"
+          },
+          {
+            "value": "assets/3d/09.png",
+            "label": "拍立得",
+            "image": "assets/3d/09.png"
+          },
+          {
+            "value": "assets/3d/10.png",
+            "label": "奖杯",
+            "image": "assets/3d/10.png"
+          },
+          {
+            "value": "assets/3d/11.png",
+            "label": "文件夹",
+            "image": "assets/3d/11.png"
+          },
+          {
+            "value": "assets/3d/12.png",
+            "label": "番茄箱",
+            "image": "assets/3d/12.png"
+          }
+        ]
+      },
+      {
+        "key": "decorScale",
+        "label": "图片大小",
+        "type": "slider",
+        "default": 1,
+        "min": 0.6,
+        "max": 1.6,
+        "step": 0.05
       }
     ],
     "defaultProps": {
       "showEyebrow": true,
       "theme": "light",
-      "accent": "lime",
+      "accent": "blue",
+      "backgroundMode": "unicorn",
+      "unicornScene": "automations",
+      "imageCount": 1,
+      "imageCaption": "背景图 / DROP IMAGE",
       "showFrame": true,
       "showFigure": true,
       "showMeta": true,
@@ -327,6 +471,9 @@ export const pages = [
         "口径 · 公开市场数据",
         "样本 · 2,400+"
       ],
+      "showDecor": false,
+      "decorSrc": null,
+      "decorScale": 1,
       "forceDark": true
     }
   },
@@ -447,11 +594,74 @@ export const pages = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "forceDark",
         "label": "全局深色",
         "type": "toggle",
         "default": true,
         "desc": "复刻 Claude Design 右上角深浅配色切换。"
+      },
+      {
+        "key": "accent",
+        "label": "强调色",
+        "type": "select",
+        "default": "blue",
+        "options": [
+          {
+            "value": "blue",
+            "label": "电光蓝"
+          },
+          {
+            "value": "lime",
+            "label": "荧光绿"
+          }
+        ],
+        "desc": "theme03 全局强调色，作用于该主题所有页面。"
       },
       {
         "key": "showEyebrow",
@@ -485,22 +695,6 @@ export const pages = [
         "step": 1
       },
       {
-        "key": "accent",
-        "label": "强调色",
-        "type": "select",
-        "default": "blue",
-        "options": [
-          {
-            "value": "blue",
-            "label": "电光蓝"
-          },
-          {
-            "value": "lime",
-            "label": "荧光绿"
-          }
-        ]
-      },
-      {
         "key": "showFigure",
         "label": "核心数字",
         "type": "toggle",
@@ -511,12 +705,96 @@ export const pages = [
         "label": "底部数据",
         "type": "toggle",
         "default": true
+      },
+      {
+        "key": "showDecor",
+        "label": "装饰图片",
+        "type": "toggle",
+        "default": false
+      },
+      {
+        "key": "decorSrc",
+        "label": "装饰元素",
+        "type": "icons",
+        "options": [
+          {
+            "value": "assets/3d/01.png",
+            "label": "胜利手势",
+            "image": "assets/3d/01.png"
+          },
+          {
+            "value": "assets/3d/02.png",
+            "label": "YES 按键",
+            "image": "assets/3d/02.png"
+          },
+          {
+            "value": "assets/3d/03.png",
+            "label": "404 方块",
+            "image": "assets/3d/03.png"
+          },
+          {
+            "value": "assets/3d/04.png",
+            "label": "8-bit 幽灵",
+            "image": "assets/3d/04.png"
+          },
+          {
+            "value": "assets/3d/05.png",
+            "label": "YES 气泡",
+            "image": "assets/3d/05.png"
+          },
+          {
+            "value": "assets/3d/06.png",
+            "label": "掌机图表",
+            "image": "assets/3d/06.png"
+          },
+          {
+            "value": "assets/3d/07.png",
+            "label": "像素显示器",
+            "image": "assets/3d/07.png"
+          },
+          {
+            "value": "assets/3d/08.png",
+            "label": "复古电脑",
+            "image": "assets/3d/08.png"
+          },
+          {
+            "value": "assets/3d/09.png",
+            "label": "拍立得",
+            "image": "assets/3d/09.png"
+          },
+          {
+            "value": "assets/3d/10.png",
+            "label": "奖杯",
+            "image": "assets/3d/10.png"
+          },
+          {
+            "value": "assets/3d/11.png",
+            "label": "文件夹",
+            "image": "assets/3d/11.png"
+          },
+          {
+            "value": "assets/3d/12.png",
+            "label": "番茄箱",
+            "image": "assets/3d/12.png"
+          }
+        ]
+      },
+      {
+        "key": "decorScale",
+        "label": "图片大小",
+        "type": "slider",
+        "default": 1,
+        "min": 0.6,
+        "max": 1.6,
+        "step": 0.05
       }
     ],
     "defaultProps": {
       "showEyebrow": true,
       "theme": "light",
       "imageCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "accent": "blue",
       "showFigure": true,
       "showMeta": true,
@@ -545,6 +823,9 @@ export const pages = [
           "k": "头部厂商样本"
         }
       ],
+      "showDecor": false,
+      "decorSrc": null,
+      "decorScale": 1,
       "forceDark": true
     }
   },
@@ -9927,11 +10208,74 @@ export const pages = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "goey",
+        "def": "goey",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "forceDark",
         "label": "全局深色",
         "type": "toggle",
         "default": true,
         "desc": "复刻 Claude Design 右上角深浅配色切换。"
+      },
+      {
+        "key": "accent",
+        "label": "强调色",
+        "type": "select",
+        "default": "blue",
+        "options": [
+          {
+            "value": "blue",
+            "label": "电光蓝"
+          },
+          {
+            "value": "lime",
+            "label": "荧光绿"
+          }
+        ],
+        "desc": "theme03 全局强调色，作用于该主题所有页面。"
       },
       {
         "key": "showEyebrow",
@@ -9977,22 +10321,6 @@ export const pages = [
         ]
       },
       {
-        "key": "accent",
-        "label": "强调色",
-        "type": "select",
-        "default": "lime",
-        "options": [
-          {
-            "value": "blue",
-            "label": "电光蓝"
-          },
-          {
-            "value": "lime",
-            "label": "荧光绿"
-          }
-        ]
-      },
-      {
         "key": "theme",
         "label": "主题",
         "type": "select",
@@ -10007,15 +10335,99 @@ export const pages = [
             "label": "浅色"
           }
         ]
+      },
+      {
+        "key": "showDecor",
+        "label": "装饰图片",
+        "type": "toggle",
+        "default": false
+      },
+      {
+        "key": "decorSrc",
+        "label": "装饰元素",
+        "type": "icons",
+        "options": [
+          {
+            "value": "assets/3d/01.png",
+            "label": "胜利手势",
+            "image": "assets/3d/01.png"
+          },
+          {
+            "value": "assets/3d/02.png",
+            "label": "YES 按键",
+            "image": "assets/3d/02.png"
+          },
+          {
+            "value": "assets/3d/03.png",
+            "label": "404 方块",
+            "image": "assets/3d/03.png"
+          },
+          {
+            "value": "assets/3d/04.png",
+            "label": "8-bit 幽灵",
+            "image": "assets/3d/04.png"
+          },
+          {
+            "value": "assets/3d/05.png",
+            "label": "YES 气泡",
+            "image": "assets/3d/05.png"
+          },
+          {
+            "value": "assets/3d/06.png",
+            "label": "掌机图表",
+            "image": "assets/3d/06.png"
+          },
+          {
+            "value": "assets/3d/07.png",
+            "label": "像素显示器",
+            "image": "assets/3d/07.png"
+          },
+          {
+            "value": "assets/3d/08.png",
+            "label": "复古电脑",
+            "image": "assets/3d/08.png"
+          },
+          {
+            "value": "assets/3d/09.png",
+            "label": "拍立得",
+            "image": "assets/3d/09.png"
+          },
+          {
+            "value": "assets/3d/10.png",
+            "label": "奖杯",
+            "image": "assets/3d/10.png"
+          },
+          {
+            "value": "assets/3d/11.png",
+            "label": "文件夹",
+            "image": "assets/3d/11.png"
+          },
+          {
+            "value": "assets/3d/12.png",
+            "label": "番茄箱",
+            "image": "assets/3d/12.png"
+          }
+        ]
+      },
+      {
+        "key": "decorScale",
+        "label": "图片大小",
+        "type": "slider",
+        "default": 1,
+        "min": 0.6,
+        "max": 1.6,
+        "step": 0.05
       }
     ],
     "defaultProps": {
       "showEyebrow": true,
       "imageCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "goey",
       "showFigure": true,
       "showMeta": true,
       "align": "left",
-      "accent": "lime",
+      "accent": "blue",
       "theme": "dark",
       "copy": {
         "t001": "全幅主视觉 / DROP HERO IMAGE",
@@ -10042,6 +10454,9 @@ export const pages = [
           "k": "通用大模型占 AI 大额融资"
         }
       ],
+      "showDecor": false,
+      "decorSrc": null,
+      "decorScale": 1,
       "forceDark": true
     }
   },

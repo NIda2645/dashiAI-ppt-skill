@@ -84,7 +84,6 @@ export const GENERATED_THEME_PACKS = [
     "pageCount": 86
   }
 ];
-
 export const GENERATED_THEME_PAGES = [
   {
     "key": "theme01_page001",
@@ -3960,6 +3959,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "imageSlotCount",
         "label": "图片数量",
         "type": "number",
@@ -4102,6 +4147,8 @@ export const GENERATED_THEME_PAGES = [
       "caption": "满版图片 · 资本下注的下一个战场",
       "imageSlotCount": 1,
       "imageFit": "cover",
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "plate": "bottom-left",
       "statCount": 3,
       "highlight": true,
@@ -5393,6 +5440,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "imageSlotCount",
         "label": "图片数量",
         "type": "number",
@@ -5535,6 +5628,8 @@ export const GENERATED_THEME_PAGES = [
       "caption": "满版图片 · 退出窗口开启，估值迎来定价时刻",
       "imageSlotCount": 1,
       "imageFit": "cover",
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "plate": "bottom-right",
       "statCount": 3,
       "highlight": true,
@@ -8584,6 +8679,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "automations",
+        "def": "automations",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "imageSlotCount",
         "label": "图片数量",
         "type": "number",
@@ -8703,6 +8844,8 @@ export const GENERATED_THEME_PAGES = [
       "caption": "满版图片 · 数据中心，资本的新战场",
       "imageSlotCount": 1,
       "imageFit": "cover",
+      "backgroundMode": "unicorn",
+      "unicornScene": "automations",
       "statCount": 3,
       "highlight": true,
       "highlightIndex": 1,
@@ -8720,6 +8863,52 @@ export const GENERATED_THEME_PAGES = [
     "label": "杂志封面 · 算力军备竞赛",
     "bgClass": "",
     "controls": [
+      {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
       {
         "key": "imageSlotCount",
         "label": "图片数量",
@@ -8857,6 +9046,8 @@ export const GENERATED_THEME_PAGES = [
       "caption": "杂志封面 · 算力成为这场竞赛最确定的底层资产",
       "imageSlotCount": 1,
       "imageFit": "cover",
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "titleLineCount": 3,
       "noteCount": 3,
       "showBigStat": true,
@@ -12368,6 +12559,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "goey",
+        "def": "goey",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "scheme",
         "label": "配色方案",
         "type": "enum",
@@ -12526,6 +12763,8 @@ export const GENERATED_THEME_PAGES = [
       "caption": "主视觉 · 替换为产业大图",
       "imageCount": 1,
       "fit": "cover",
+      "backgroundMode": "unicorn",
+      "unicornScene": "goey",
       "titlePos": "bottom",
       "showQuote": true,
       "showFrame": true,
@@ -16456,6 +16695,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "scheme",
         "label": "配色方案",
         "type": "enum",
@@ -16623,6 +16908,8 @@ export const GENERATED_THEME_PAGES = [
       "caption": "Anthropic · Claude 系列",
       "imageCount": 1,
       "fit": "cover",
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "titlePos": "bottom",
       "metaCount": 3,
       "showQuote": true,
@@ -25723,11 +26010,85 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "automations",
+        "def": "automations",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "forceDark",
         "label": "全局深色",
         "type": "toggle",
         "default": true,
         "desc": "复刻 Claude Design 右上角深浅配色切换。"
+      },
+      {
+        "key": "accent",
+        "label": "强调色",
+        "type": "select",
+        "default": "blue",
+        "options": [
+          {
+            "value": "blue",
+            "label": "电光蓝"
+          },
+          {
+            "value": "lime",
+            "label": "荧光绿"
+          }
+        ],
+        "desc": "theme03 全局强调色，作用于该主题所有页面。"
+      },
+      {
+        "key": "imageCount",
+        "label": "背景图",
+        "type": "slider",
+        "default": 1,
+        "min": 0,
+        "max": 1,
+        "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media"
       },
       {
         "key": "showEyebrow",
@@ -25752,22 +26113,6 @@ export const GENERATED_THEME_PAGES = [
         ]
       },
       {
-        "key": "accent",
-        "label": "强调色",
-        "type": "select",
-        "default": "lime",
-        "options": [
-          {
-            "value": "blue",
-            "label": "电光蓝"
-          },
-          {
-            "value": "lime",
-            "label": "荧光绿"
-          }
-        ]
-      },
-      {
         "key": "showFrame",
         "label": "描边边框",
         "type": "toggle",
@@ -25784,12 +26129,98 @@ export const GENERATED_THEME_PAGES = [
         "label": "页脚信息",
         "type": "toggle",
         "default": true
+      },
+      {
+        "key": "showDecor",
+        "label": "装饰图片",
+        "type": "toggle",
+        "default": false
+      },
+      {
+        "key": "decorSrc",
+        "label": "装饰元素",
+        "type": "icons",
+        "options": [
+          {
+            "value": "assets/3d/01.png",
+            "label": "胜利手势",
+            "image": "assets/3d/01.png"
+          },
+          {
+            "value": "assets/3d/02.png",
+            "label": "YES 按键",
+            "image": "assets/3d/02.png"
+          },
+          {
+            "value": "assets/3d/03.png",
+            "label": "404 方块",
+            "image": "assets/3d/03.png"
+          },
+          {
+            "value": "assets/3d/04.png",
+            "label": "8-bit 幽灵",
+            "image": "assets/3d/04.png"
+          },
+          {
+            "value": "assets/3d/05.png",
+            "label": "YES 气泡",
+            "image": "assets/3d/05.png"
+          },
+          {
+            "value": "assets/3d/06.png",
+            "label": "掌机图表",
+            "image": "assets/3d/06.png"
+          },
+          {
+            "value": "assets/3d/07.png",
+            "label": "像素显示器",
+            "image": "assets/3d/07.png"
+          },
+          {
+            "value": "assets/3d/08.png",
+            "label": "复古电脑",
+            "image": "assets/3d/08.png"
+          },
+          {
+            "value": "assets/3d/09.png",
+            "label": "拍立得",
+            "image": "assets/3d/09.png"
+          },
+          {
+            "value": "assets/3d/10.png",
+            "label": "奖杯",
+            "image": "assets/3d/10.png"
+          },
+          {
+            "value": "assets/3d/11.png",
+            "label": "文件夹",
+            "image": "assets/3d/11.png"
+          },
+          {
+            "value": "assets/3d/12.png",
+            "label": "番茄箱",
+            "image": "assets/3d/12.png"
+          }
+        ]
+      },
+      {
+        "key": "decorScale",
+        "label": "图片大小",
+        "type": "slider",
+        "default": 1,
+        "min": 0.6,
+        "max": 1.6,
+        "step": 0.05
       }
     ],
     "defaultProps": {
       "showEyebrow": true,
       "theme": "light",
-      "accent": "lime",
+      "accent": "blue",
+      "backgroundMode": "unicorn",
+      "unicornScene": "automations",
+      "imageCount": 1,
+      "imageCaption": "背景图 / DROP IMAGE",
       "showFrame": true,
       "showFigure": true,
       "showMeta": true,
@@ -25836,6 +26267,9 @@ export const GENERATED_THEME_PAGES = [
         "口径 · 公开市场数据",
         "样本 · 2,400+"
       ],
+      "showDecor": false,
+      "decorSrc": null,
+      "decorScale": 1,
       "forceDark": true
     }
   },
@@ -25956,11 +26390,74 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "forceDark",
         "label": "全局深色",
         "type": "toggle",
         "default": true,
         "desc": "复刻 Claude Design 右上角深浅配色切换。"
+      },
+      {
+        "key": "accent",
+        "label": "强调色",
+        "type": "select",
+        "default": "blue",
+        "options": [
+          {
+            "value": "blue",
+            "label": "电光蓝"
+          },
+          {
+            "value": "lime",
+            "label": "荧光绿"
+          }
+        ],
+        "desc": "theme03 全局强调色，作用于该主题所有页面。"
       },
       {
         "key": "showEyebrow",
@@ -25994,22 +26491,6 @@ export const GENERATED_THEME_PAGES = [
         "step": 1
       },
       {
-        "key": "accent",
-        "label": "强调色",
-        "type": "select",
-        "default": "blue",
-        "options": [
-          {
-            "value": "blue",
-            "label": "电光蓝"
-          },
-          {
-            "value": "lime",
-            "label": "荧光绿"
-          }
-        ]
-      },
-      {
         "key": "showFigure",
         "label": "核心数字",
         "type": "toggle",
@@ -26020,12 +26501,96 @@ export const GENERATED_THEME_PAGES = [
         "label": "底部数据",
         "type": "toggle",
         "default": true
+      },
+      {
+        "key": "showDecor",
+        "label": "装饰图片",
+        "type": "toggle",
+        "default": false
+      },
+      {
+        "key": "decorSrc",
+        "label": "装饰元素",
+        "type": "icons",
+        "options": [
+          {
+            "value": "assets/3d/01.png",
+            "label": "胜利手势",
+            "image": "assets/3d/01.png"
+          },
+          {
+            "value": "assets/3d/02.png",
+            "label": "YES 按键",
+            "image": "assets/3d/02.png"
+          },
+          {
+            "value": "assets/3d/03.png",
+            "label": "404 方块",
+            "image": "assets/3d/03.png"
+          },
+          {
+            "value": "assets/3d/04.png",
+            "label": "8-bit 幽灵",
+            "image": "assets/3d/04.png"
+          },
+          {
+            "value": "assets/3d/05.png",
+            "label": "YES 气泡",
+            "image": "assets/3d/05.png"
+          },
+          {
+            "value": "assets/3d/06.png",
+            "label": "掌机图表",
+            "image": "assets/3d/06.png"
+          },
+          {
+            "value": "assets/3d/07.png",
+            "label": "像素显示器",
+            "image": "assets/3d/07.png"
+          },
+          {
+            "value": "assets/3d/08.png",
+            "label": "复古电脑",
+            "image": "assets/3d/08.png"
+          },
+          {
+            "value": "assets/3d/09.png",
+            "label": "拍立得",
+            "image": "assets/3d/09.png"
+          },
+          {
+            "value": "assets/3d/10.png",
+            "label": "奖杯",
+            "image": "assets/3d/10.png"
+          },
+          {
+            "value": "assets/3d/11.png",
+            "label": "文件夹",
+            "image": "assets/3d/11.png"
+          },
+          {
+            "value": "assets/3d/12.png",
+            "label": "番茄箱",
+            "image": "assets/3d/12.png"
+          }
+        ]
+      },
+      {
+        "key": "decorScale",
+        "label": "图片大小",
+        "type": "slider",
+        "default": 1,
+        "min": 0.6,
+        "max": 1.6,
+        "step": 0.05
       }
     ],
     "defaultProps": {
       "showEyebrow": true,
       "theme": "light",
       "imageCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "accent": "blue",
       "showFigure": true,
       "showMeta": true,
@@ -26054,6 +26619,9 @@ export const GENERATED_THEME_PAGES = [
           "k": "头部厂商样本"
         }
       ],
+      "showDecor": false,
+      "decorSrc": null,
+      "decorScale": 1,
       "forceDark": true
     }
   },
@@ -35436,11 +36004,74 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "goey",
+        "def": "goey",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "forceDark",
         "label": "全局深色",
         "type": "toggle",
         "default": true,
         "desc": "复刻 Claude Design 右上角深浅配色切换。"
+      },
+      {
+        "key": "accent",
+        "label": "强调色",
+        "type": "select",
+        "default": "blue",
+        "options": [
+          {
+            "value": "blue",
+            "label": "电光蓝"
+          },
+          {
+            "value": "lime",
+            "label": "荧光绿"
+          }
+        ],
+        "desc": "theme03 全局强调色，作用于该主题所有页面。"
       },
       {
         "key": "showEyebrow",
@@ -35486,22 +36117,6 @@ export const GENERATED_THEME_PAGES = [
         ]
       },
       {
-        "key": "accent",
-        "label": "强调色",
-        "type": "select",
-        "default": "lime",
-        "options": [
-          {
-            "value": "blue",
-            "label": "电光蓝"
-          },
-          {
-            "value": "lime",
-            "label": "荧光绿"
-          }
-        ]
-      },
-      {
         "key": "theme",
         "label": "主题",
         "type": "select",
@@ -35516,15 +36131,99 @@ export const GENERATED_THEME_PAGES = [
             "label": "浅色"
           }
         ]
+      },
+      {
+        "key": "showDecor",
+        "label": "装饰图片",
+        "type": "toggle",
+        "default": false
+      },
+      {
+        "key": "decorSrc",
+        "label": "装饰元素",
+        "type": "icons",
+        "options": [
+          {
+            "value": "assets/3d/01.png",
+            "label": "胜利手势",
+            "image": "assets/3d/01.png"
+          },
+          {
+            "value": "assets/3d/02.png",
+            "label": "YES 按键",
+            "image": "assets/3d/02.png"
+          },
+          {
+            "value": "assets/3d/03.png",
+            "label": "404 方块",
+            "image": "assets/3d/03.png"
+          },
+          {
+            "value": "assets/3d/04.png",
+            "label": "8-bit 幽灵",
+            "image": "assets/3d/04.png"
+          },
+          {
+            "value": "assets/3d/05.png",
+            "label": "YES 气泡",
+            "image": "assets/3d/05.png"
+          },
+          {
+            "value": "assets/3d/06.png",
+            "label": "掌机图表",
+            "image": "assets/3d/06.png"
+          },
+          {
+            "value": "assets/3d/07.png",
+            "label": "像素显示器",
+            "image": "assets/3d/07.png"
+          },
+          {
+            "value": "assets/3d/08.png",
+            "label": "复古电脑",
+            "image": "assets/3d/08.png"
+          },
+          {
+            "value": "assets/3d/09.png",
+            "label": "拍立得",
+            "image": "assets/3d/09.png"
+          },
+          {
+            "value": "assets/3d/10.png",
+            "label": "奖杯",
+            "image": "assets/3d/10.png"
+          },
+          {
+            "value": "assets/3d/11.png",
+            "label": "文件夹",
+            "image": "assets/3d/11.png"
+          },
+          {
+            "value": "assets/3d/12.png",
+            "label": "番茄箱",
+            "image": "assets/3d/12.png"
+          }
+        ]
+      },
+      {
+        "key": "decorScale",
+        "label": "图片大小",
+        "type": "slider",
+        "default": 1,
+        "min": 0.6,
+        "max": 1.6,
+        "step": 0.05
       }
     ],
     "defaultProps": {
       "showEyebrow": true,
       "imageCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "goey",
       "showFigure": true,
       "showMeta": true,
       "align": "left",
-      "accent": "lime",
+      "accent": "blue",
       "theme": "dark",
       "copy": {
         "t001": "全幅主视觉 / DROP HERO IMAGE",
@@ -35551,6 +36250,9 @@ export const GENERATED_THEME_PAGES = [
           "k": "通用大模型占 AI 大额融资"
         }
       ],
+      "showDecor": false,
+      "decorSrc": null,
+      "decorScale": 1,
       "forceDark": true
     }
   },
@@ -46196,6 +46898,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "copy",
         "label": "可见文案",
         "type": "list",
@@ -46288,6 +47036,8 @@ export const GENERATED_THEME_PAGES = [
         "min": 0,
         "max": 1,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "整屏 cover 背景图片槽(0=霓虹渐变底)"
       },
       {
@@ -46396,6 +47146,8 @@ export const GENERATED_THEME_PAGES = [
       "hlStyle": "glass",
       "hlTilt": 2,
       "mediaCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "accentTone": "green",
       "lineCount": 4,
       "showMasthead": true,
@@ -46413,6 +47165,52 @@ export const GENERATED_THEME_PAGES = [
     "label": "图背章节页",
     "bgClass": "",
     "controls": [
+      {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "automations",
+        "def": "automations",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
       {
         "key": "copy",
         "label": "可见文案",
@@ -46456,6 +47254,8 @@ export const GENERATED_THEME_PAGES = [
         "min": 0,
         "max": 1,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "整屏背景图片槽(0=霓虹渐变底)"
       },
       {
@@ -46561,6 +47361,8 @@ export const GENERATED_THEME_PAGES = [
         "lead": "镜头拉近到一线——机房、团队、发布会与签约桌，看资本如何在真实场景里落地。"
       },
       "mediaCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "automations",
       "partNumber": 4,
       "accentTone": "pink",
       "textAlign": "left",
@@ -48453,6 +49255,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "hlStyle",
         "label": "高亮样式",
         "type": "radio",
@@ -48495,6 +49343,8 @@ export const GENERATED_THEME_PAGES = [
         "min": 0,
         "max": 1,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "整屏 cover 背景图(0=渐变底)"
       },
       {
@@ -48591,6 +49441,8 @@ export const GENERATED_THEME_PAGES = [
       "hlStyle": "glass",
       "hlTilt": 2,
       "mediaCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "textAlign": "left",
       "accentTone": "blue",
       "statCount": 3,
@@ -67701,6 +68553,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "goey",
+        "def": "goey",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "imageCount",
         "label": "图片槽数量",
         "type": "slider",
@@ -67708,6 +68606,8 @@ export const GENERATED_THEME_PAGES = [
         "min": 0,
         "max": 3,
         "step": 1,
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "media",
         "desc": "全幅图片槽数量（0–3）。1 张铺满整幅；多张按比例自适应分列；为 0 时显示色谱占位。"
       },
       {
@@ -67815,6 +68715,8 @@ export const GENERATED_THEME_PAGES = [
       }
     ],
     "defaultProps": {
+      "backgroundMode": "unicorn",
+      "unicornScene": "goey",
       "imageCount": 1,
       "panelPosition": "tl",
       "panelTheme": "ink",
@@ -107088,6 +107990,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "bg-deep",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "imgCount",
         "prop": "imgCount",
         "label": "图片槽数量",
@@ -107144,6 +108092,8 @@ export const GENERATED_THEME_PAGES = [
     ],
     "defaultProps": {
       "imgCount": 3,
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "textPos": "left",
       "showMasthead": true,
       "tagCount": 3,
@@ -115208,6 +116158,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "bg-night",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "imgCount",
         "prop": "imgCount",
         "label": "图片槽数量",
@@ -115265,6 +116261,8 @@ export const GENERATED_THEME_PAGES = [
     ],
     "defaultProps": {
       "imgCount": 1,
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "textPos": "左下",
       "showScrim": true,
       "showRail": true,
@@ -118728,6 +119726,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "automations",
+        "def": "automations",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "tone",
         "label": "页面底色",
         "type": "radio",
@@ -118780,6 +119824,8 @@ export const GENERATED_THEME_PAGES = [
       "textSide": "left",
       "showQuote": true,
       "showCreds": true,
+      "backgroundMode": "unicorn",
+      "unicornScene": "automations",
       "idPrefix": "profile",
       "tone": "dark"
     }
@@ -120876,6 +121922,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "goey",
+        "def": "goey",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "tone",
         "label": "页面底色",
         "type": "radio",
@@ -120943,6 +122035,8 @@ export const GENERATED_THEME_PAGES = [
       "scrim": 58,
       "showInset": true,
       "showNote": true,
+      "backgroundMode": "unicorn",
+      "unicornScene": "goey",
       "idPrefix": "inset",
       "tone": "dark"
     }
@@ -123165,6 +124259,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "textPos",
         "label": "文字位置",
         "type": "radio",
@@ -123222,6 +124362,8 @@ export const GENERATED_THEME_PAGES = [
       "showTicker": true,
       "tickerCount": 3,
       "showOverline": true,
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "idPrefix": "showcase"
     }
   },
@@ -123234,6 +124376,52 @@ export const GENERATED_THEME_PAGES = [
     "label": "主视觉海报",
     "bgClass": "",
     "controls": [
+      {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
       {
         "key": "headlinePos",
         "label": "标题位置",
@@ -123293,6 +124481,8 @@ export const GENERATED_THEME_PAGES = [
       "showKicker": true,
       "showFooter": true,
       "showRule": true,
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "idPrefix": "poster"
     }
   },
@@ -124761,6 +125951,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "automations",
+        "def": "automations",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "surface",
         "label": "背景基调",
         "type": "select",
@@ -124844,6 +126080,8 @@ export const GENERATED_THEME_PAGES = [
     "defaultProps": {
       "surface": "ink",
       "images": [],
+      "backgroundMode": "unicorn",
+      "unicornScene": "automations",
       "showScrim": true,
       "showStatus": true,
       "showLede": true,
@@ -125702,6 +126940,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "moving",
+        "def": "moving",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "surface",
         "label": "背景基调",
         "type": "select",
@@ -125796,6 +127080,8 @@ export const GENERATED_THEME_PAGES = [
       "surface": "ember",
       "imageCount": 1,
       "images": [],
+      "backgroundMode": "unicorn",
+      "unicornScene": "moving",
       "overlayPosition": "left",
       "showCaption": true,
       "showOverlayStat": true,
@@ -133543,6 +134829,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "goey",
+        "def": "goey",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "surface",
         "label": "背景基调",
         "type": "select",
@@ -133626,6 +134958,8 @@ export const GENERATED_THEME_PAGES = [
     "defaultProps": {
       "surface": "ember",
       "images": [],
+      "backgroundMode": "unicorn",
+      "unicornScene": "goey",
       "showScrim": true,
       "showTag": true,
       "showSub": true,
@@ -135117,6 +136451,52 @@ export const GENERATED_THEME_PAGES = [
     "bgClass": "",
     "controls": [
       {
+        "key": "backgroundMode",
+        "label": "背景替换",
+        "type": "segment",
+        "default": "unicorn",
+        "def": "unicorn",
+        "options": [
+          {
+            "value": "unicorn",
+            "label": "动态"
+          },
+          {
+            "value": "media",
+            "label": "上传"
+          }
+        ],
+        "desc": "动态 shader 或自定义背景媒体"
+      },
+      {
+        "key": "unicornScene",
+        "label": "动态场景",
+        "type": "segment",
+        "default": "tech",
+        "def": "tech",
+        "options": [
+          {
+            "value": "tech",
+            "label": "科技"
+          },
+          {
+            "value": "automations",
+            "label": "自动化"
+          },
+          {
+            "value": "moving",
+            "label": "流动"
+          },
+          {
+            "value": "goey",
+            "label": "黏球"
+          }
+        ],
+        "dependsOn": "backgroundMode",
+        "dependsOnValue": "unicorn",
+        "desc": "选择固定 Unicorn shader 场景"
+      },
+      {
         "key": "surface",
         "label": "背景基调",
         "type": "select",
@@ -135207,6 +136587,8 @@ export const GENERATED_THEME_PAGES = [
     "defaultProps": {
       "surface": "ink",
       "images": [],
+      "backgroundMode": "unicorn",
+      "unicornScene": "tech",
       "showMast": true,
       "showIssue": true,
       "showDeck": true,

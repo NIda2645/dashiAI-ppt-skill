@@ -165,7 +165,8 @@ function replaceTheme05Text(node, replacements) {
     if (p.showVerdict) headers.push(COPY.headers[3]);
 
     return (
-      <div className="pulse-slide pulse-meter" style={{ "--pulse-accent": accent }}>
+      <div className="pulse-slide pulse-meter pulse-meter--no-motion" style={{ "--pulse-accent": accent }}>
+        <style>{`.pulse-meter--no-motion,.pulse-meter--no-motion *,.pulse-meter--no-motion *::before,.pulse-meter--no-motion *::after{transition:none!important;animation:none!important;}`}</style>
         <div className="pulse-pagehead">
           <div className="pulse-pagehead__l">
             <div className="pulse-eyebrow pulse-pagehead__eyebrow">{COPY.eyebrow}</div>

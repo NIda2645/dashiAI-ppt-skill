@@ -144,6 +144,7 @@ function createMediaApi(slide, baseProps) {
       undo: () => updateList(key, index, previousValue),
     });
     window.__deckViewModel?.setProps?.(slideId, nextProps);
+    window.__markOverviewThumbDirty?.(slide);
     renderImportedThemeSlide(slide, nextProps);
     window.__initEditableText?.(slide);
     window.__syncActiveEffects?.(slide);

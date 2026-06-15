@@ -33,6 +33,9 @@ const THEME03_DECOR_DEFAULTS = {
   decorScale: 1,
 };
 
+const REMOVED_CONTROL_TYPES = new Set(['text', 'string', 'input', 'url', 'email', 'textarea', 'multiline']);
+const THEME04_REMOVED_CONTROL_TYPES = new Set(['text', 'string', 'input', 'url', 'email', 'textarea', 'multiline', 'list', 'array', 'object', 'section']);
+
 export const THEME_PAGES = GENERATED_THEME_PAGES.map(applyThemePageDefaults);
 export const THEME_PACK_OPTIONS = Object.fromEntries(
   GENERATED_THEME_PACKS.map(theme => [
@@ -45,9 +48,14 @@ export const THEME_PACK_OPTIONS = Object.fromEntries(
 );
 
 const PAGES_BY_KEY = new Map(THEME_PAGES.map(page => [page.key, page]));
-const REMOVED_CONTROL_TYPES = new Set(['text', 'string', 'input', 'url', 'email', 'textarea', 'multiline']);
 
 function applyThemePageDefaults(page) {
+  if (page.themeKey === 'theme04') {
+    return {
+      ...page,
+      controls: (page.controls || []).filter(control => !THEME04_REMOVED_CONTROL_TYPES.has(String(control?.type || '').toLowerCase())),
+    };
+  }
   if (page.themeKey !== 'theme03') return page;
   const theme03InjectedKeys = new Set(['accent', 'showDecor', 'decorSrc', 'decorScale']);
   return {

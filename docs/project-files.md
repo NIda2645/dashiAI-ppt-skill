@@ -34,6 +34,7 @@
 |   |-- update-project-docs.mjs - 本地命令脚本。
 |   |-- validate-goal-copy.mjs - 本地命令脚本。
 |   |-- validate-layout-showcase.mjs - 本地命令脚本。
+|   |-- validate-overview-performance.mjs - 本地命令脚本。
 |   `-- validate-swiss-deck.mjs - 本地命令脚本。
 |-- src/
 |   |-- components/
@@ -1161,7 +1162,8 @@
 |   |   |   |-- client-runtime.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   |   |-- generated-metadata.js - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   |   |-- index.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
-|   |   |   `-- runtime-helpers.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
+|   |   |   |-- runtime-helpers.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
+|   |   |   `-- unicorn-background.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   `-- index.jsx - 项目源码或配置文件。
 |   |-- view-model/
 |   |   |-- context.jsx - Deck ViewModel 构建层和 React Context。

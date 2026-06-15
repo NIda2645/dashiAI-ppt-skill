@@ -1,5 +1,6 @@
 import React from 'react';
 import './PulseImageFrame.jsx';
+import UnicornBackground, { UNICORN_BACKGROUND_CONTROL, createUnicornSceneControl } from '../../../../unicorn-background.jsx';
 const window = globalThis.__theme05Window || (globalThis.__theme05Window = {});
 globalThis.React = React;
 function withTheme05Copy(Component) {
@@ -105,7 +106,10 @@ function replaceTheme05Text(node, replacements) {
   function clampAR(v) { return Math.max(0.55, Math.min(1.9, v || 1.5)); }
 
   const controls = [
+    UNICORN_BACKGROUND_CONTROL,
+    createUnicornSceneControl('goey'),
     { key: "imageCount", type: "slider", label: "图片槽数量", default: 1, min: 0, max: 3, step: 1,
+      dependsOn: "backgroundMode", dependsOnValue: "media",
       description: "全幅图片槽数量（0–3）。1 张铺满整幅；多张按比例自适应分列；为 0 时显示色谱占位。" },
     { key: "panelPosition", type: "radio", label: "标题位置", default: "tl",
       options: [{ value: "tl", label: "左上" }, { value: "tr", label: "右上" }, { value: "bl", label: "左下" }],
@@ -128,7 +132,7 @@ function replaceTheme05Text(node, replacements) {
     { key: "showSheetLabel", type: "toggle", label: "页码标签", default: true,
       description: "角上的页码 / 章节标签。" },
   ];
-  const defaults = controls.reduce((o, c) => { o[c.key] = c.default; return o; }, {});
+  const defaults = controls.reduce((o, c) => { o[c.key] = c.default ?? c.def; return o; }, {});
 
   function PulsePlate(props) {
     const p = Object.assign({}, defaults, props);
@@ -137,7 +141,8 @@ function replaceTheme05Text(node, replacements) {
 
     const nImg = Math.max(0, Math.min(3, p.imageCount));
     const images = p.images || [];
-    const hasMedia = nImg > 0 && Frame;
+    const useUnicorn = p.backgroundMode === 'unicorn';
+    const hasMedia = !useUnicorn && nImg > 0 && Frame;
     const nTick = Math.max(1, Math.min(COPY.ticker.length, p.tickerCount));
     const ticker = COPY.ticker.slice(0, nTick);
     const tickerOn = p.showTicker && p.panelPosition !== "bl";
@@ -149,7 +154,9 @@ function replaceTheme05Text(node, replacements) {
     return (
       <div className="pulse-slide pulse-plate" style={{ "--pulse-accent": accent }}>
         <div className="pulse-plate__media">
-          {hasMedia ? (
+          {useUnicorn ? (
+            <UnicornBackground scene={p.unicornScene} accent={accent} />
+          ) : hasMedia ? (
             Array.from({ length: nImg }).map((_, i) => {
               const im = images[i] || {};
               const grow = clampAR(im.ar);
@@ -169,7 +176,7 @@ function replaceTheme05Text(node, replacements) {
           )}
         </div>
 
-        {p.showScrim && hasMedia && <div className={"pulse-plate__scrim pulse-plate__scrim--" + p.panelPosition} aria-hidden="true" />}
+        {p.showScrim && (useUnicorn || hasMedia) && <div className={"pulse-plate__scrim pulse-plate__scrim--" + p.panelPosition} aria-hidden="true" />}
 
         <div className={panelCls} style={panelStyle}>
           <div className="pulse-eyebrow pulse-plate__eyebrow" style={p.panelTheme === "color" ? null : { color: accent }}>{COPY.eyebrow}</div>
