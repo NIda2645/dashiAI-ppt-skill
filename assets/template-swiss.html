@@ -4024,9 +4024,16 @@ refreshRailCatalog();
 
   window.__exportDeckPptx = async function(){
     if(window.__deckExportLocked) return;
+    if(isCodexInAppBrowser()){
+      const message = 'codex 自带浏览器不支持导出，需要复制地址到浏览器再进行操作';
+      window.__codexExportBlockedMessage = message;
+      alert(message);
+      return;
+    }
     const button = document.getElementById('preview-export-pptx');
     const buttonLabel = button?.textContent;
     let exportUi = null;
+    let progressPoll = null;
     try {
       exportUi = beginDeckExport('PPTX');
       if(button){
@@ -4039,8 +4046,10 @@ refreshRailCatalog();
       window.__syncDeckViewModelFromDom?.();
       throwIfDeckExportCancelled(exportUi);
 
-      const slides = await materializeExportSlides(exportUi, 'PPTX');
-      updateDeckExport(exportUi, 0, slides.length || 1, '正在生成可编辑 PPTX...');
+      const slides = window.__getVisibleSlides?.() || [...document.querySelectorAll('#deck > .slide:not([hidden])')];
+      const progressId = createEditablePptxProgressId();
+      progressPoll = beginEditablePptxProgressPolling(exportUi, progressId);
+      updateDeckExport(exportUi, 1, 100, '提交可编辑 PPTX 生成任务...');
       const response = await fetch('/api/export-editable-pptx', {
         method: 'POST',
         headers: {'content-type': 'application/json'},
@@ -4048,9 +4057,12 @@ refreshRailCatalog();
           title: document.title || 'Presentation',
           fileName: getDeckFileName(),
           sourcePath: location.pathname + location.search,
+          progressId,
           snapshot: buildEditablePptxExportSnapshot(),
         }),
       });
+      progressPoll.stop();
+      progressPoll = null;
       throwIfDeckExportCancelled(exportUi);
       if(!response.ok){
         let detail = '';
@@ -4070,6 +4082,7 @@ refreshRailCatalog();
       console.error('[export pptx]', error);
       alert('可编辑 PPTX 导出失败，请确认当前预览服务支持服务端导出。');
     } finally {
+      progressPoll?.stop?.();
       document.body.classList.remove('pptx-export-capturing');
       endDeckExport(exportUi);
       if(button){
@@ -4079,6 +4092,45 @@ refreshRailCatalog();
       window.__syncActiveEffects?.();
     }
   };
+
+  function createEditablePptxProgressId(){
+    const random = Math.random().toString(36).slice(2, 10);
+    return `pptx-${Date.now().toString(36)}-${random}`;
+  }
+
+  function isCodexInAppBrowser(){
+    const ua = String(navigator.userAgent || '');
+    const brands = (navigator.userAgentData?.brands || [])
+      .map(item => `${item.brand || ''} ${item.version || ''}`)
+      .join(' ');
+    return /\b(CodexBrowser|OpenAI Codex|Codex Desktop|ChatGPT-Codex)\b/i.test(`${ua} ${brands}`);
+  }
+
+  function beginEditablePptxProgressPolling(exportUi, progressId){
+    let stopped = false;
+    const read = async () => {
+      if(stopped || !progressId) return;
+      try {
+        const response = await fetch(`/api/export-editable-pptx-progress?id=${encodeURIComponent(progressId)}`, {
+          cache: 'no-store',
+          credentials: 'same-origin',
+        });
+        if(!response.ok) return;
+        const progress = await response.json();
+        const percent = Math.max(1, Math.min(99, Number(progress?.percent || 0)));
+        const detail = progress?.detail || '正在生成可编辑 PPTX';
+        updateDeckExport(exportUi, percent, 100, detail);
+      } catch {}
+    };
+    const timer = setInterval(read, 500);
+    read();
+    return {
+      stop(){
+        stopped = true;
+        clearInterval(timer);
+      },
+    };
+  }
 
   function buildEditablePptxExportSnapshot(){
     return {
@@ -4108,6 +4160,7 @@ refreshRailCatalog();
       const slideRect = slide.getBoundingClientRect();
       if(!slideRect.width || !slideRect.height) return;
       slide.querySelectorAll('canvas').forEach((canvas, canvasIndex) => {
+        if(canvas.closest('.bt-unicorn-frame')) return;
         const style = getComputedStyle(canvas);
         const rect = canvas.getBoundingClientRect();
         if(style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity || 1) <= 0.01) return;

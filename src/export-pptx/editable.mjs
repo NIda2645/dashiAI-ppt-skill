@@ -12,6 +12,7 @@ export async function exportEditablePptxFromPage(page, options = {}) {
   const outFile = path.resolve(options.outFile || 'editable-export.pptx');
   const reportFile = options.reportFile ? path.resolve(options.reportFile) : null;
   const title = options.title || 'Editable Deck Export';
+  await emitProgress(options.onProgress, { stage: 'collecting', detail: '采集页面结构', percent: 14 });
   const deck = await collectEditableDeck(page, options);
 
   const pptx = new PptxGenJS();
@@ -25,7 +26,13 @@ export async function exportEditablePptxFromPage(page, options = {}) {
   const totals = { textObjects: 0, shapeObjects: 0, imageObjects: 0 };
   const slideSummaries = [];
 
-  for (const slideData of deck.slides) {
+  for (let slideIndex = 0; slideIndex < deck.slides.length; slideIndex += 1) {
+    const slideData = deck.slides[slideIndex];
+    await emitProgress(options.onProgress, {
+      stage: 'rendering',
+      detail: `生成 PPTX 对象 ${slideIndex + 1}/${deck.slides.length}`,
+      percent: 68 + Math.round((slideIndex / Math.max(1, deck.slides.length)) * 20),
+    });
     const slide = pptx.addSlide();
     slide.background = { color: 'FFFFFF' };
     const before = { ...totals };
@@ -49,6 +56,7 @@ export async function exportEditablePptxFromPage(page, options = {}) {
   }
 
   mkdirSync(path.dirname(outFile), { recursive: true });
+  await emitProgress(options.onProgress, { stage: 'saving', detail: '保存 PPTX 文件', percent: 92 });
   await pptx.writeFile({ fileName: outFile });
 
   const report = {
@@ -64,6 +72,7 @@ export async function exportEditablePptxFromPage(page, options = {}) {
     mkdirSync(path.dirname(reportFile), { recursive: true });
     writeFileSync(reportFile, JSON.stringify(report, null, 2) + '\n');
   }
+  await emitProgress(options.onProgress, { stage: 'ready', detail: '准备下载文件', percent: 98 });
   return { outFile, reportFile, ...report };
 }
 
@@ -72,14 +81,23 @@ export async function exportEditablePptxFromUrl(browser, url, options = {}) {
   const page = await context.newPage();
   try {
     page.setDefaultTimeout(options.timeout || 45000);
+    await emitProgress(options.onProgress, { stage: 'opening', detail: '打开预览页面', percent: 8 });
     await page.goto(url, { waitUntil: 'domcontentloaded' });
     await page.waitForSelector('#deck > .slide.active, #deck > .slide[data-deck-active]');
+    await emitProgress(options.onProgress, { stage: 'preparing', detail: '准备导出页面状态', percent: 12 });
     if (options.snapshot) await applyDeckSnapshot(page, options.snapshot);
     return await exportEditablePptxFromPage(page, options);
   } finally {
     await page.close().catch(() => {});
     await context.close().catch(() => {});
   }
+}
+
+async function emitProgress(onProgress, update) {
+  if (typeof onProgress !== 'function') return;
+  try {
+    await onProgress(update);
+  } catch {}
 }
 
 async function applyDeckSnapshot(page, snapshot) {
@@ -174,6 +192,11 @@ async function collectEditableDeck(page, options = {}) {
       : null;
     const indexes = slideIndexes?.length ? slideIndexes : Array.from({ length: count }, (_, index) => index);
     for (const i of indexes) {
+      await emitProgress(options.onProgress, {
+        stage: 'collecting',
+        detail: `采集页面结构 ${i + 1}/${count}`,
+        percent: 16 + Math.round(((indexes.indexOf(i)) / Math.max(1, indexes.length)) * 48),
+      });
       await page.evaluate(async index => {
         window.go?.(index, { animate: false, force: true });
         const slides = window.__getVisibleSlides?.() || [...document.querySelectorAll('#deck > .slide:not([hidden])')];
@@ -217,9 +240,78 @@ async function resolveElementScreenshots(page, root, warnings, options = {}) {
     if (node.elementScreenshot && node.exportId) targets.push(node);
   });
   for (const node of targets) {
+    let hiddenToken = null;
     try {
+      if (node.stripTextForScreenshot) {
+        hiddenToken = await page.evaluate(({ exportId, mode }) => {
+          const root = document.querySelector(`[data-editable-pptx-export-id="${exportId}"]`);
+          if (!root) return null;
+          const token = `hide-${Date.now()}-${Math.random().toString(36).slice(2)}`;
+          const entries = [];
+          const rootRect = root.getBoundingClientRect();
+          const slide = mode === 'screenshot-rect'
+            ? root.closest('#deck > .slide') || document.querySelector('#deck > .slide.active, #deck > .slide[data-deck-active]')
+            : root;
+          const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+          const mark = (el) => {
+            if (!el || entries.some(entry => entry.el === el)) return;
+            entries.push({ el, style: el.getAttribute('style') });
+            const style = getComputedStyle(el);
+            el.style.setProperty('color', 'transparent', 'important');
+            el.style.setProperty('-webkit-text-fill-color', 'transparent', 'important');
+            el.style.setProperty('-webkit-text-stroke-color', 'transparent', 'important');
+            el.style.setProperty('text-shadow', 'none', 'important');
+            el.style.setProperty('text-decoration-color', 'transparent', 'important');
+            el.style.setProperty('fill', 'transparent', 'important');
+            el.style.setProperty('stroke', 'transparent', 'important');
+            if (String(style.backgroundClip || '').includes('text') || String(style.webkitBackgroundClip || '').includes('text')) {
+              el.style.setProperty('background-image', 'none', 'important');
+            }
+          };
+          const shouldHideRange = (range) => {
+            if (mode !== 'screenshot-rect') return true;
+            const rects = [...range.getClientRects()];
+            const bounds = range.getBoundingClientRect();
+            return (rects.length ? rects : [bounds]).some(rect => rect.width > 1 && rect.height > 1 && intersects(rect, rootRect));
+          };
+          const walker = document.createTreeWalker(slide || root, NodeFilter.SHOW_TEXT);
+          while (walker.nextNode()) {
+            if (!(walker.currentNode.textContent || '').trim()) continue;
+            const range = document.createRange();
+            range.selectNodeContents(walker.currentNode);
+            const shouldHide = shouldHideRange(range);
+            range.detach?.();
+            if (shouldHide) mark(walker.currentNode.parentElement);
+          }
+          (slide || root).querySelectorAll('svg text, text').forEach(el => {
+            if (mode !== 'screenshot-rect') {
+              mark(el);
+              return;
+            }
+            const rect = el.getBoundingClientRect();
+            if (rect.width > 1 && rect.height > 1 && intersects(rect, rootRect)) mark(el);
+          });
+          window.__editablePptxHiddenTextStyles ||= new Map();
+          window.__editablePptxHiddenTextStyles.set(token, entries);
+          return token;
+        }, {
+          exportId: node.exportId,
+          mode: node.imageKind === 'unicorn-background' ? 'screenshot-rect' : 'descendant',
+        });
+      }
       const bytes = await page.locator(`[data-editable-pptx-export-id="${node.exportId}"]`).screenshot({ type: 'png' });
       node.imageData = `data:image/png;base64,${bytes.toString('base64')}`;
+      if (hiddenToken) {
+        await page.evaluate(token => {
+          const entries = window.__editablePptxHiddenTextStyles?.get(token) || [];
+          for (const entry of entries) {
+            if (entry.style == null) entry.el.removeAttribute('style');
+            else entry.el.setAttribute('style', entry.style);
+          }
+          window.__editablePptxHiddenTextStyles?.delete(token);
+        }, hiddenToken).catch(() => {});
+        hiddenToken = null;
+      }
       if (!options.freeze) continue;
       await page.evaluate(({ exportId, data }) => {
         const el = document.querySelector(`[data-editable-pptx-export-id="${exportId}"]`);
@@ -240,6 +332,17 @@ async function resolveElementScreenshots(page, root, warnings, options = {}) {
       }, { exportId: node.exportId, data: node.imageData });
     } catch {
       warnings.push({ slide: node.slideIndex, type: 'element-screenshot-failed', tag: node.tag, kind: node.imageKind });
+    } finally {
+      if (hiddenToken) {
+        await page.evaluate(token => {
+          const entries = window.__editablePptxHiddenTextStyles?.get(token) || [];
+          for (const entry of entries) {
+            if (entry.style == null) entry.el.removeAttribute('style');
+            else entry.el.setAttribute('style', entry.style);
+          }
+          window.__editablePptxHiddenTextStyles?.delete(token);
+        }, hiddenToken).catch(() => {});
+      }
     }
   }
 }
@@ -305,6 +408,8 @@ async function installBrowserCollector(page) {
           'webkitTextStrokeColor',
           'webkitTextStrokeWidth',
           'whiteSpace',
+          'writingMode',
+          'textOrientation',
           'verticalAlign',
           'objectFit',
           'objectPosition',
@@ -357,8 +462,11 @@ async function installBrowserCollector(page) {
         ${rotateFromTransform.toString()}
         ${scaleFromTransform.toString()}
         ${finishEditablePptxAnimations.toString()}
+        ${markUnicornOverlayText.toString()}
         ${fallbackTextRisk.toString()}
         ${visibleTextInSubtree.toString()}
+        ${visibleTextInScreenshotRect.toString()}
+        ${collectDomFallbackTextNodes.toString()}
         ${svgTextRisk.toString()}
         ${fetchImageDataUrl.toString()}
         ${normalizeDataImageUrl.toString()}
@@ -496,7 +604,8 @@ function renderText(slide, node, slideRect, warnings, totals) {
   const fontFace = firstFont(style.fontFamily);
   const weight = String(style.fontWeight || '');
   const singleLine = node.singleLine && !/[\r\n]/.test(value);
-  const autoWidth = singleLine && shouldUseAutoWidthText(value, fontSizePx, c, node);
+  const verticalText = isVerticalWritingMode(style);
+  const autoWidth = !verticalText && singleLine && shouldUseAutoWidthText(value, fontSizePx, c, node);
   const align = normalizeAlign(style.textAlign);
   const options = {
     x: c.x,
@@ -519,6 +628,9 @@ function renderText(slide, node, slideRect, warnings, totals) {
     transparency: combinedTransparency(color.alpha, style.opacity),
     charSpacing: letterSpacing(style.letterSpacing),
   };
+  if (verticalText) {
+    options.vert = 'eaVert';
+  }
   if (/Songti SC/i.test(fontFace) && fontSizePx >= 80 && node.parentTag === 'span') {
     options.y = Math.max(0, options.y - c.h * 0.28);
   }
@@ -556,9 +668,15 @@ function isDecorativeLowAlphaText(color, style, fontSizePx) {
 
 function isDecorativeRotatedSmallText(value, style, fontSizePx, node = {}) {
   return node.source !== 'svg-text'
+    && !node.requiredText
+    && !isVerticalWritingMode(style)
     && rotateFromTransform(style?.transform)
     && fontSizePx <= 32
     && String(value || '').trim().length >= 4;
+}
+
+function isVerticalWritingMode(style = {}) {
+  return String(style.writingMode || '').includes('vertical');
 }
 
 function isDecorativeSparkleText(value) {
@@ -656,6 +774,7 @@ async function collectActiveSlide(slideNumber) {
   const rawRect = slide.getBoundingClientRect();
   const slideRect = rectObject(rawRect);
   const warnings = [];
+  markUnicornOverlayText(slide, slideRect);
   const root = await captureElement(slide, slideRect, warnings, 0, slideNumber);
   const summary = summarizeCapturedTree(root);
   summary.key = slide.dataset.vmSlideId || slide.dataset.layoutKey || slide.id || '';
@@ -686,8 +805,20 @@ async function captureElement(el, slideRect, warnings, depth, slideIndex) {
     node.exportId = exportId;
     node.elementScreenshot = true;
     node.imageKind = 'unicorn-background';
+    const textNodes = collectDomFallbackTextNodes(el, slideRect, slideIndex);
+    const overlayText = visibleTextInScreenshotRect(el, slideRect);
+    if (textNodes.length) {
+      node.children.push(...textNodes);
+    }
+    if (textNodes.length || overlayText.count) node.stripTextForScreenshot = true;
     const risk = fallbackTextRisk(el, slideRect);
-    if (risk.count) warnings.push({ slide: slideIndex, type: 'node-image-fallback-text-risk', node: 'unicorn-background', textCount: risk.count, sample: risk.sample });
+    if (overlayText.count) {
+      warnings.push({ slide: slideIndex, type: 'node-image-fallback-text-extracted', node: 'unicorn-background', textCount: overlayText.count, sample: overlayText.sample, scope: 'screenshot-rect' });
+    } else if (risk.count && textNodes.length) {
+      warnings.push({ slide: slideIndex, type: 'node-image-fallback-text-extracted', node: 'unicorn-background', textCount: textNodes.length, sample: risk.sample, scope: 'descendant' });
+    } else if (risk.count) {
+      warnings.push({ slide: slideIndex, type: 'node-image-fallback-text-risk', node: 'unicorn-background', textCount: risk.count, sample: risk.sample });
+    }
     warnings.push({ slide: slideIndex, type: 'node-image-fallback', node: 'unicorn-background', count: 1 });
     return node;
   }
@@ -871,6 +1002,7 @@ function captureTextNode(textNode, parent, slideRect, style, slideIndex) {
     text: value,
     singleLine,
     parentTag: tag,
+    requiredText: parent.hasAttribute('data-editable-pptx-required-text'),
     href: parent.closest('a')?.href || undefined,
     children: [],
   };
@@ -992,7 +1124,7 @@ async function elementImageData(img, src) {
 async function svgElementData(svg, width, height, options = {}) {
   try {
     const clone = cloneSvgWithComputedStyle(svg);
-    if (options.stripText) clone.querySelectorAll('text').forEach(el => el.remove());
+    if (options.stripText) clone.querySelectorAll('text, foreignObject').forEach(el => el.remove());
     clone.setAttribute('xmlns', 'http://www.w3.org/2000/svg');
     if (!clone.getAttribute('width')) clone.setAttribute('width', String(Math.max(1, Math.round(width))));
     if (!clone.getAttribute('height')) clone.setAttribute('height', String(Math.max(1, Math.round(height))));
@@ -1021,7 +1153,7 @@ async function svgElementData(svg, width, height, options = {}) {
 }
 
 function collectSvgTextNodes(svg, slideRect, slideIndex) {
-  return [...svg.querySelectorAll('text')]
+  const svgTextNodes = [...svg.querySelectorAll('text')]
     .map(el => {
       const text = normalizeText(el.textContent || '');
       if (!text) return null;
@@ -1040,6 +1172,11 @@ function collectSvgTextNodes(svg, slideRect, slideIndex) {
       };
     })
     .filter(Boolean);
+  const foreignTextNodes = [];
+  svg.querySelectorAll('foreignObject').forEach(el => {
+    foreignTextNodes.push(...collectDomFallbackTextNodes(el, slideRect, slideIndex));
+  });
+  return [...svgTextNodes, ...foreignTextNodes];
 }
 
 function cloneSvgWithComputedStyle(svg) {
@@ -1420,6 +1557,39 @@ function finishEditablePptxAnimations(scope) {
   } catch {}
 }
 
+function markUnicornOverlayText(slide, slideRect) {
+  slide.querySelectorAll?.('[data-editable-pptx-required-text]')?.forEach(el => {
+    el.removeAttribute('data-editable-pptx-required-text');
+  });
+  const frames = [...slide.querySelectorAll?.('.bt-unicorn-frame') || []]
+    .filter(el => isVisibleElement(el, slideRect))
+    .map(el => el.getBoundingClientRect());
+  if (!frames.length) return;
+  const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
+  const mark = (el) => {
+    if (el) el.setAttribute('data-editable-pptx-required-text', 'unicorn-overlay');
+  };
+  const walker = document.createTreeWalker(slide, NodeFilter.SHOW_TEXT);
+  while (walker.nextNode()) {
+    if (!normalizeText(walker.currentNode.textContent || '')) continue;
+    const parent = walker.currentNode.parentElement;
+    if (!parent || !isVisibleElement(parent, slideRect)) continue;
+    const range = document.createRange();
+    range.selectNodeContents(walker.currentNode);
+    const rects = [...range.getClientRects()];
+    const bounds = range.getBoundingClientRect();
+    range.detach?.();
+    if ((rects.length ? rects : [bounds]).some(rect => rect.width > 1 && rect.height > 1 && frames.some(frame => intersects(rect, frame)))) {
+      mark(parent);
+    }
+  }
+  slide.querySelectorAll?.('svg text, text')?.forEach(el => {
+    if (!isVisibleElement(el, slideRect)) return;
+    const rect = el.getBoundingClientRect();
+    if (rect.width > 1 && rect.height > 1 && frames.some(frame => intersects(rect, frame))) mark(el);
+  });
+}
+
 function fallbackTextRisk(root, slideRect) {
   const texts = visibleTextInSubtree(root, slideRect);
   return { count: texts.length, sample: texts.join(' ').slice(0, 160) };
@@ -1446,8 +1616,64 @@ function visibleTextInSubtree(root, slideRect) {
   return texts;
 }
 
+function visibleTextInScreenshotRect(root, slideRect) {
+  const slide = root.closest('#deck > .slide') || root;
+  const targetRect = root.getBoundingClientRect();
+  const texts = [];
+  const seen = new Set();
+  const add = (text, rect) => {
+    const value = normalizeText(text || '');
+    if (!value || rect.width <= 1 || rect.height <= 1) return;
+    if (rect.right <= targetRect.left || rect.left >= targetRect.right || rect.bottom <= targetRect.top || rect.top >= targetRect.bottom) return;
+    const key = `${value}:${Math.round(rect.left)}:${Math.round(rect.top)}:${Math.round(rect.width)}:${Math.round(rect.height)}`;
+    if (seen.has(key)) return;
+    seen.add(key);
+    texts.push(value);
+  };
+  const walk = (node) => {
+    for (const child of node.childNodes || []) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const parent = child.parentElement;
+        if (!parent || !isVisibleElement(parent, slideRect)) continue;
+        const range = document.createRange();
+        range.selectNodeContents(child);
+        const rects = [...range.getClientRects()];
+        const bounds = range.getBoundingClientRect();
+        range.detach?.();
+        for (const rect of rects.length ? rects : [bounds]) add(child.textContent || '', rect);
+      } else if (child.nodeType === Node.ELEMENT_NODE && isVisibleElement(child, slideRect)) {
+        walk(child);
+      }
+    }
+  };
+  walk(slide);
+  slide.querySelectorAll?.('svg text, text')?.forEach(el => {
+    if (!isVisibleElement(el, slideRect)) return;
+    add(el.textContent || '', el.getBoundingClientRect());
+  });
+  return { count: texts.length, sample: texts.join(' ').slice(0, 160) };
+}
+
+function collectDomFallbackTextNodes(root, slideRect, slideIndex) {
+  const nodes = [];
+  const walk = (node) => {
+    for (const child of node.childNodes || []) {
+      if (child.nodeType === Node.TEXT_NODE) {
+        const parent = child.parentElement;
+        if (!parent || !isVisibleElement(parent, slideRect)) continue;
+        const textNode = captureTextNode(child, parent, slideRect, readStyle(parent), slideIndex);
+        if (textNode) nodes.push(textNode);
+      } else if (child.nodeType === Node.ELEMENT_NODE && isVisibleElement(child, slideRect)) {
+        walk(child);
+      }
+    }
+  };
+  walk(root);
+  return nodes;
+}
+
 function svgTextRisk(svg) {
-  const texts = [...svg.querySelectorAll('text')]
+  const texts = [...svg.querySelectorAll('text, foreignObject')]
     .map(el => normalizeText(el.textContent || ''))
     .filter(Boolean);
   return { count: texts.length, sample: texts.join(' ').slice(0, 160) };
