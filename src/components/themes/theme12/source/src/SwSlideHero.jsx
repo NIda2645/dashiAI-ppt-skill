@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { swTheme } from './swTheme.js';
-import { SlideRoot, Hl, renderSwText } from './swBase.jsx';
+import { DeckPageNumber, SlideRoot, Hl, renderSwText } from './swBase.jsx';
 import { SwBackgroundLayer, SW_UNICORN_BACKGROUND_CONTROL, createSwUnicornSceneControl } from './SwUnicornBackground.jsx';
 
 const C = swTheme.color, F = swTheme.font;
@@ -141,7 +141,7 @@ export default function SwSlideHero(props) {
       {/* page number */}
       <div style={{ position: 'absolute', bottom: 48, right: 96, zIndex: 3, fontFamily: F.mono,
         fontSize: 24, letterSpacing: '.12em', color: mut, pointerEvents: 'none' }}>
-        <b style={{ color: accent }}>{p.page}</b> / {p.total}
+        <DeckPageNumber page={p.page} total={p.total} accentStyle={{ color: accent }} />
       </div>
     </SlideRoot>
   );

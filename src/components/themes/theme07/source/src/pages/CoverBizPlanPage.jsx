@@ -106,7 +106,7 @@ export default function CoverBizPlanPage(props) {
           <div className="glyph"></div>
           <div><div className="m-cn">{p.markCn}</div><div className="m-en">{p.markEn}</div></div>
         </div>
-        <span className="pageno" style={{ color: 'rgba(255,255,255,.45)', paddingTop: '6px' }}>{p.pageno}</span>
+        <span className="pageno" data-dashi-page-number="fraction" data-dashi-page-separator=" / " data-editable-skip="true" style={{ color: 'rgba(255,255,255,.45)', paddingTop: '6px' }}>{p.pageno}</span>
       </header>
 
       <div style={{ position: 'absolute', left: '120px', right: '120px', top: '120px', bottom: '150px', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', textAlign: 'center' }}>

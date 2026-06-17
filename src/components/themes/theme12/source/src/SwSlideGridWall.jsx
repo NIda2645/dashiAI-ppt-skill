@@ -11,7 +11,7 @@
 
 import React from 'react';
 import { swTheme, swCardPalette } from './swTheme.js';
-import { Bar, Footer, Hl, Shape, SlideRoot, renderSwText } from './swBase.jsx';
+import { Bar, DeckPageCurrent, Footer, Hl, Shape, SlideRoot, renderSwText } from './swBase.jsx';
 import SwImageSlot from './SwImageSlot.jsx';
 
 const C = swTheme.color, F = swTheme.font, T = swTheme.type;
@@ -79,8 +79,8 @@ export default function SwSlideGridWall(props) {
         <div style={{ gridColumn: 'span 2', position: 'relative', overflow: 'hidden', borderRadius: 18,
           background: accent, color: '#fff', padding: '30px 34px', display: 'flex', flexDirection: 'column',
           justifyContent: 'center' }}>
-          <div aria-hidden="true" style={{ position: 'absolute', top: -54, right: -10, fontFamily: F.mono,
-            fontWeight: 700, fontSize: 200, lineHeight: 0.8, color: 'rgba(255,255,255,.14)', pointerEvents: 'none' }}>{p.page}</div>
+          <DeckPageCurrent aria-hidden="true" as="div" value={p.page} style={{ position: 'absolute', top: -54, right: -10, fontFamily: F.mono,
+            fontWeight: 700, fontSize: 200, lineHeight: 0.8, color: 'rgba(255,255,255,.14)', pointerEvents: 'none' }} />
           <Shape kind="pentagon" size={52} color="rgba(255,255,255,.9)" style={{ top: 22, right: 24, zIndex: 1 }} />
           <div style={{ position: 'relative', zIndex: 2 }}>
             <div style={{ fontFamily: F.mono, fontSize: 22, fontWeight: 700, letterSpacing: '.16em',

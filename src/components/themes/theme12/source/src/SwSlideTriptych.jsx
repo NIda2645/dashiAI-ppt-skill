@@ -11,7 +11,7 @@
 
 import React from 'react';
 import { swTheme, swCardPalette } from './swTheme.js';
-import { SlideRoot, Bar, Footer, Kicker, Hl, Shape, renderSwText } from './swBase.jsx';
+import { SlideRoot, Bar, DeckPageCurrent, Footer, Kicker, Hl, Shape, renderSwText } from './swBase.jsx';
 import SwImageSlot from './SwImageSlot.jsx';
 
 const C = swTheme.color, F = swTheme.font, T = swTheme.type;
@@ -75,8 +75,8 @@ export default function SwSlideTriptych(props) {
   const Panel = (
     <div style={{ position: 'relative', overflow: 'hidden', borderRadius: swTheme.radius, background: accent,
       color: '#fff', padding: '40px 36px 34px', display: 'flex', flexDirection: 'column', minWidth: 0 }}>
-      <div aria-hidden="true" style={{ position: 'absolute', top: -70, right: -16, fontFamily: F.mono,
-        fontWeight: 700, fontSize: 240, lineHeight: 0.8, color: 'rgba(255,255,255,.14)', pointerEvents: 'none' }}>{p.page}</div>
+      <DeckPageCurrent aria-hidden="true" as="div" value={p.page} style={{ position: 'absolute', top: -70, right: -16, fontFamily: F.mono,
+        fontWeight: 700, fontSize: 240, lineHeight: 0.8, color: 'rgba(255,255,255,.14)', pointerEvents: 'none' }} />
       <Shape kind="ring" size={64} border={13} color="rgba(255,255,255,.4)" style={{ top: 34, right: 30, zIndex: 1 }} />
       <div style={{ position: 'relative', zIndex: 2, marginTop: 'auto' }}>
         <div style={{ fontFamily: F.mono, fontSize: 23, fontWeight: 700, letterSpacing: '.16em',

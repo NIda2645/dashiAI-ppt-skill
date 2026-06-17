@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { swTheme } from './swTheme.js';
-import { Kicker, useSwReveal, injectBaseStyles, renderSwText } from './swBase.jsx';
+import { DeckPageNumber, Kicker, useSwReveal, injectBaseStyles, renderSwText } from './swBase.jsx';
 import { SwBackgroundLayer, SW_UNICORN_BACKGROUND_CONTROL, createSwUnicornSceneControl } from './SwUnicornBackground.jsx';
 
 const C = swTheme.color, F = swTheme.font;
@@ -116,7 +116,7 @@ export default function SwSlideQuoteImage(props) {
         fontFamily: F.mono, fontSize: 22, letterSpacing: '.12em', textTransform: 'uppercase',
         color: 'rgba(255,255,255,.7)', pointerEvents: 'none' }}>
         <div>{p.footLabel}</div>
-        <div><b style={{ color: p.tint === 'accent' ? '#fff' : accent }}>{p.page}</b> / {p.total}</div>
+        <div><DeckPageNumber page={p.page} total={p.total} accentStyle={{ color: p.tint === 'accent' ? '#fff' : accent }} /></div>
       </div>
     </div>
   );

@@ -128,7 +128,7 @@ export default function CoverSupplyStrategyPage(props) {
           <div className="glyph"></div>
           <div><div className="m-cn">{p.markCn}</div><div className="m-en">{p.markEn}</div></div>
         </div>
-        <span className="pageno" style={{ color: 'rgba(255,255,255,.45)', paddingTop: '6px' }}>{p.pageno}</span>
+        <span className="pageno" data-dashi-page-number="fraction" data-dashi-page-separator=" / " data-editable-skip="true" style={{ color: 'rgba(255,255,255,.45)', paddingTop: '6px' }}>{p.pageno}</span>
       </header>
 
       <div style={{ position: 'absolute', left: '90px', top: '382px', maxWidth: '1040px' }}>

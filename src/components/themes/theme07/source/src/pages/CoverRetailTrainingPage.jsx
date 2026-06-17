@@ -119,7 +119,7 @@ export default function CoverRetailTrainingPage(props) {
           <div className="glyph"></div>
           <div><div className="m-cn">{p.markCn}</div><div className="m-en">{p.markEn}</div></div>
         </div>
-        <span className="pageno" style={{ paddingTop: '6px' }}>{p.pageno}</span>
+        <span className="pageno" data-dashi-page-number="fraction" data-dashi-page-separator=" / " data-editable-skip="true" style={{ paddingTop: '6px' }}>{p.pageno}</span>
       </header>
 
       <div style={{ position: 'absolute', left: '120px', right: '120px', top: '452px', display: 'flex', flexDirection: 'column', alignItems: 'center', textAlign: 'center' }}>

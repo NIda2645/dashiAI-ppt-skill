@@ -64,6 +64,45 @@ function stripRuntimeProps(props) {
   return next;
 }
 
+function inferDeckPagePropSpec(entry) {
+  const defaults = entry?.defaultProps || {};
+  if (typeof defaults.page === 'string' && typeof defaults.total === 'string') return { kind: 'page-total' };
+  if (typeof defaults.pageno === 'string' && /^\s*\d+\s*\/\s*\d+\s*$/.test(defaults.pageno)) return { kind: 'pageno' };
+  return null;
+}
+
+function getDeckPageNumberForSlide(slide) {
+  const state = window.__getDeckPageNumberForSlide?.(slide);
+  if (state) return state;
+  const visible = window.__getVisibleSlides?.() || [...document.querySelectorAll('#deck > .slide:not([hidden])')];
+  const index = visible.indexOf(slide);
+  return index >= 0 ? { current: index + 1, total: visible.length } : null;
+}
+
+function formatDeckPageNumber(value, pad = 2) {
+  const number = Number(value);
+  const text = Number.isFinite(number) ? String(Math.max(0, Math.trunc(number))) : String(value || '');
+  return text.padStart(pad, '0');
+}
+
+function withDeckPageProps(slide, entry, props) {
+  const spec = inferDeckPagePropSpec(entry);
+  if (!spec) return props;
+  const state = getDeckPageNumberForSlide(slide);
+  if (!state) return props;
+  if (spec.kind === 'pageno') {
+    return {
+      ...props,
+      pageno: `${formatDeckPageNumber(state.current)} / ${formatDeckPageNumber(state.total)}`,
+    };
+  }
+  return {
+    ...props,
+    page: formatDeckPageNumber(state.current),
+    total: formatDeckPageNumber(state.total),
+  };
+}
+
 function readMediaFile(file) {
   return new Promise(resolve => {
     if (!file || !/^(image|video)\//.test(file.type || '')) {
@@ -355,7 +394,8 @@ function renderImportedThemeSlide(slide, values = {}) {
     ...defaults,
     ...(values || {}),
   };
-  const componentProps = withMediaHostProps(slide, stripRuntimeProps(baseProps));
+  const pageProps = withDeckPageProps(slide, entry, stripRuntimeProps(baseProps));
+  const componentProps = withMediaHostProps(slide, pageProps);
   flushSync(() => {
     getRootApi(root).render(withImageProviders(
       React.createElement(entry.Component, componentProps),
@@ -364,6 +404,9 @@ function renderImportedThemeSlide(slide, values = {}) {
   });
   bindRenderedImageSlots(root, componentProps.__mediaApi);
   root.dataset.importedThemeRuntime = 'true';
+  const pageSpec = inferDeckPagePropSpec(entry);
+  if (pageSpec) root.dataset.dashiDynamicPageProps = pageSpec.kind;
+  window.__syncDeckPageNumbers?.(slide);
   return true;
 }
 

@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { swTheme } from './swTheme.js';
-import { SlideRoot, Bar, Footer, Hl, Shape, renderSwText } from './swBase.jsx';
+import { SlideRoot, Bar, DeckPageCurrent, Footer, Hl, Shape, renderSwText } from './swBase.jsx';
 
 const C = swTheme.color, F = swTheme.font;
 
@@ -70,11 +70,11 @@ export default function SwSlideStatement(props) {
         textAlign: center ? 'center' : 'left', padding: center ? '0 40px' : '0 8px' }}>
 
         {p.showGhost && (
-          <div aria-hidden="true" style={{ position: 'absolute', bottom: -120, right: -40,
+          <DeckPageCurrent aria-hidden="true" as="div" value={p.page} style={{ position: 'absolute', bottom: -120, right: -40,
             fontFamily: F.mono, fontWeight: 700, fontSize: 560, lineHeight: 0.8,
             color: p.theme === 'light' ? 'transparent' : ghost,
             WebkitTextStroke: p.theme === 'light' ? '2px ' + accent + '22' : 'none',
-            pointerEvents: 'none', zIndex: 0 }}>{p.page}</div>
+            pointerEvents: 'none', zIndex: 0 }} />
         )}
 
         {p.showShapes && (

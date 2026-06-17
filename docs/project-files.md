@@ -36,6 +36,7 @@
 |   |-- sync-skill.mjs - 本地命令脚本。
 |   |-- update-layout-manifest.jsx - 本地命令脚本。
 |   |-- update-project-docs.mjs - 本地命令脚本。
+|   |-- validate-dynamic-page-numbers.mjs - 本地命令脚本。
 |   |-- validate-editable-pptx-export.mjs - 本地命令脚本。
 |   |-- validate-editor-presenter-modes.mjs - 本地命令脚本。
 |   |-- validate-editor-ui-polish.mjs - 本地命令脚本。

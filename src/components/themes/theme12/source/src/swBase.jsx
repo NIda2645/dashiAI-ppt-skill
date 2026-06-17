@@ -7,6 +7,9 @@
 
 import React from 'react';
 import { swTheme } from './swTheme.js';
+import { DeckPageNumber, DeckPageCurrent } from '../../../runtime-helpers.jsx';
+
+export { DeckPageNumber, DeckPageCurrent };
 
 let _injected = false;
 export function injectBaseStyles() {
@@ -109,7 +112,7 @@ export function Footer({ page = '01', total = '04', accent = C.orange, dark = fa
       paddingTop: divider ? 18 : 0, borderTop: divider ? '1px solid ' + line : 'none', fontFamily: F.mono, fontSize: 24,
       letterSpacing: '.12em', textTransform: 'uppercase', color: fg, position: 'relative', zIndex: 5 }}>
       <div>声浪 SOUNDWAVE — Independent Music OS</div>
-      <div><b style={{ color: accent }}>{page}</b> / {total}</div>
+      <div><DeckPageNumber page={page} total={total} accentStyle={{ color: accent }} /></div>
     </div>
   );
 }

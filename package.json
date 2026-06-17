@@ -25,6 +25,7 @@
     "validate:editor-ui-polish:only": "node scripts/validate-editor-ui-polish.mjs",
     "validate:url-state": "npm run render:themes && node scripts/validate-url-state.mjs",
     "validate:url-state:only": "node scripts/validate-url-state.mjs",
+    "validate:dynamic-page-numbers": "node scripts/validate-dynamic-page-numbers.mjs",
     "validate:overview-performance": "npm run render:themes && node scripts/validate-overview-performance.mjs",
     "validate:overview-performance:only": "node scripts/validate-overview-performance.mjs",
     "validate:goal-copy": "node scripts/validate-goal-copy.mjs",

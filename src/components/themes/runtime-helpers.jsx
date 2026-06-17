@@ -1,3 +1,5 @@
+import React from 'react';
+
 export function normalizeRuntimePages(rawPages, { themeKey, layoutPrefix }) {
   return (rawPages || []).map((entry, index) => {
     const pageNumber = index + 1;
@@ -21,6 +23,60 @@ export function normalizeRuntimePages(rawPages, { themeKey, layoutPrefix }) {
       bgClass: entry.bgClass || entry.backgroundClass || '',
     };
   });
+}
+
+export function DeckPageNumber({
+  page = '01',
+  total = '01',
+  pad = 2,
+  totalPad = 2,
+  separator = ' / ',
+  accentStyle,
+  currentStyle,
+  totalStyle,
+  className,
+  style,
+  as: Tag = 'span',
+  ...rest
+}) {
+  return (
+    <Tag
+      {...rest}
+      className={className}
+      style={style}
+      data-dashi-page-number="fraction"
+      data-dashi-page-pad={pad}
+      data-dashi-page-total-pad={totalPad}
+      data-dashi-page-separator={separator}
+      data-editable-skip="true"
+    >
+      <b data-dashi-page-current="" style={{ ...(accentStyle || {}), ...(currentStyle || {}) }}>{page}</b>
+      <span data-dashi-page-separator="true">{separator}</span>
+      <span data-dashi-page-total="" style={totalStyle}>{total}</span>
+    </Tag>
+  );
+}
+
+export function DeckPageCurrent({
+  value = '01',
+  pad = 2,
+  className,
+  style,
+  as: Tag = 'span',
+  ...rest
+}) {
+  return (
+    <Tag
+      {...rest}
+      className={className}
+      style={style}
+      data-dashi-page-number="current"
+      data-dashi-page-pad={pad}
+      data-editable-skip="true"
+    >
+      <span data-dashi-page-current="">{value}</span>
+    </Tag>
+  );
 }
 
 const TEXT_CONTROL_TYPES = new Set(['text', 'string', 'input', 'url', 'email', 'textarea', 'multiline']);

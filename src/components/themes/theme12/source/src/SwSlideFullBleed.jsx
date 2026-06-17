@@ -10,7 +10,7 @@
 
 import React from 'react';
 import { swTheme } from './swTheme.js';
-import { Hl, Shape, injectBaseStyles, useSwReveal, renderSwText } from './swBase.jsx';
+import { DeckPageCurrent, DeckPageNumber, Hl, Shape, injectBaseStyles, useSwReveal, renderSwText } from './swBase.jsx';
 import { SwBackgroundLayer, SW_UNICORN_BACKGROUND_CONTROL, createSwUnicornSceneControl } from './SwUnicornBackground.jsx';
 
 const C = swTheme.color, F = swTheme.font;
@@ -111,8 +111,8 @@ export default function SwSlideFullBleed(props) {
           padding: '40px 52px 42px',
           borderRadius: corner === 'bl' ? '0 26px 0 0' : corner === 'br' ? '26px 0 0 0'
             : corner === 'tl' ? '0 0 26px 0' : '0 0 0 26px' }}>
-          <div aria-hidden="true" style={{ position: 'absolute', top: -50, right: 24, fontFamily: F.mono,
-            fontWeight: 700, fontSize: 200, lineHeight: 0.8, color: 'rgba(255,255,255,.14)', pointerEvents: 'none' }}>{p.page}</div>
+          <DeckPageCurrent aria-hidden="true" as="div" value={p.page} style={{ position: 'absolute', top: -50, right: 24, fontFamily: F.mono,
+            fontWeight: 700, fontSize: 200, lineHeight: 0.8, color: 'rgba(255,255,255,.14)', pointerEvents: 'none' }} />
           <div style={{ position: 'relative', zIndex: 1 }}>
             <div style={{ display: 'inline-flex', alignItems: 'center', gap: 13, fontFamily: F.mono,
               fontSize: 23, fontWeight: 700, letterSpacing: '.16em', textTransform: 'uppercase',
@@ -135,7 +135,7 @@ export default function SwSlideFullBleed(props) {
       <div style={{ position: 'absolute', zIndex: 4, fontFamily: F.mono, fontSize: 22,
         letterSpacing: '.12em', color: 'rgba(255,255,255,.8)', textShadow: '0 1px 8px rgba(0,0,0,.5)',
         bottom: 44, [isLeft ? 'right' : 'left']: 48 }}>
-        <b style={{ color: accent }}>{p.page}</b> / {p.total}
+        <DeckPageNumber page={p.page} total={p.total} accentStyle={{ color: accent }} />
       </div>
     </div>
   );

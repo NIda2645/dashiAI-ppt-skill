@@ -956,6 +956,68 @@ function getVisibleSlides(){
 }
 window.__getVisibleSlides = getVisibleSlides;
 
+function getDeckPageNumberForSlide(slide){
+  if(!slide) return null;
+  const visible = slides && slides.length ? slides : [...document.querySelectorAll('#deck > .slide:not([hidden])')];
+  const index = visible.indexOf(slide);
+  if(index < 0) return null;
+  return {
+    current:index + 1,
+    total:visible.length,
+  };
+}
+window.__getDeckPageNumberForSlide = getDeckPageNumberForSlide;
+
+function formatDeckPageNumber(value, pad=2){
+  const number = Number(value);
+  const text = Number.isFinite(number) ? String(Math.max(0, Math.trunc(number))) : String(value || '');
+  return text.padStart(Math.max(0, Number(pad) || 0), '0');
+}
+
+function syncDeckPageNumbers(scope=document){
+  const roots = [];
+  if(scope instanceof Element && scope.classList.contains('slide')) roots.push(scope);
+  else if(scope instanceof Element) roots.push(...scope.querySelectorAll('.slide'));
+  else roots.push(...(slides || []));
+  const seen = new Set();
+  roots.forEach(slide => {
+    if(!slide || seen.has(slide)) return;
+    seen.add(slide);
+    const state = getDeckPageNumberForSlide(slide);
+    if(!state) return;
+    slide.dataset.dashiPageCurrent = String(state.current);
+    slide.dataset.dashiPageTotal = String(state.total);
+    const signature = `${state.current}/${state.total}`;
+    if(slide.dataset.dashiPageNumberSignature && slide.dataset.dashiPageNumberSignature !== signature){
+      slide.dataset.overviewThumbRevision = String(Number(slide.dataset.overviewThumbRevision || 0) + 1);
+    }
+    slide.dataset.dashiPageNumberSignature = signature;
+    slide.querySelectorAll('[data-dashi-page-number]').forEach(slot => {
+      syncDeckPageNumberSlot(slot, state);
+    });
+  });
+}
+window.__syncDeckPageNumbers = syncDeckPageNumbers;
+
+function syncDeckPageNumberSlot(slot, state){
+  const pad = Number(slot.dataset.dashiPagePad || 2);
+  const totalPad = Number(slot.dataset.dashiPageTotalPad || 2);
+  const separator = slot.dataset.dashiPageSeparator || ' / ';
+  const currentText = formatDeckPageNumber(state.current, pad);
+  const totalText = formatDeckPageNumber(state.total, totalPad);
+  const currentEl = slot.querySelector('[data-dashi-page-current]');
+  const totalEl = slot.querySelector('[data-dashi-page-total]');
+  const separatorEl = slot.querySelector('[data-dashi-page-separator]');
+  if(currentEl) currentEl.textContent = currentText;
+  if(totalEl) totalEl.textContent = totalText;
+  if(separatorEl) separatorEl.textContent = separator;
+  if(!currentEl && !totalEl){
+    slot.textContent = slot.dataset.dashiPageNumber === 'current'
+      ? currentText
+      : `${currentText}${separator}${totalText}`;
+  }
+}
+
 function currentSlideStoreKey(){
   const signature = window.__deckViewModel?.model?.state?.__deckSignature || location.pathname || 'deck';
   return `${CURRENT_SLIDE_STORE}:${signature}`;
@@ -1067,6 +1129,7 @@ function refreshSlideList(){
   total=slides.length;
   if(total === 0) idx=0;
   if(idx >= total) idx=Math.max(0,total-1);
+  syncDeckPageNumbers();
 }
 
 function ensureRuntimeSlideRendered(slide, values){
@@ -1543,6 +1606,7 @@ function commitSlideIndex(nextIndex, opts={}){
   syncNav();
   const el=slides[idx];
   ensureRuntimeSlideRendered(el);
+  syncDeckPageNumbers(el);
   window.__releaseInactiveRuntimeSlides?.(el);
   syncSlideTone(el);
   if(!transitionEntered) syncActiveEffects(el);
@@ -4883,6 +4947,7 @@ refreshRailCatalog();
   function isTextCandidate(el){
     if(!(el instanceof HTMLElement)) return false;
     if(el.hasAttribute('data-editable-skip')) return false;
+    if(el.closest('[data-dashi-page-number]')) return false;
     if(el.parentElement?.closest('[data-editable-id]')) return false;
     if(window.__isDeckFileSlotTarget?.(el) || el.closest('#nav,#preview-panel,#preview-toggle')) return false;
     if(['SCRIPT','STYLE','CANVAS','SVG','PATH','BUTTON','INPUT','SELECT','TEXTAREA','VIDEO','IMG'].includes(el.tagName)) return false;

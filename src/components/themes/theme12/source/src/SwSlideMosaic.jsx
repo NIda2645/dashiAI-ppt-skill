@@ -9,7 +9,7 @@
 
 import React from 'react';
 import { swTheme } from './swTheme.js';
-import { SlideRoot, Hl, renderSwText } from './swBase.jsx';
+import { DeckPageCurrent, SlideRoot, Hl, renderSwText } from './swBase.jsx';
 import SwImageSlot from './SwImageSlot.jsx';
 
 const C = swTheme.color, F = swTheme.font;
@@ -69,8 +69,8 @@ export default function SwSlideMosaic(props) {
         <div style={{ gridArea: 't', background: accent, color: '#fff', borderRadius: swTheme.radius,
           padding: '40px 38px', display: 'flex', flexDirection: 'column', minWidth: 0, minHeight: 0,
           position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: -30, right: -20, fontFamily: F.mono, fontWeight: 700,
-            fontSize: 200, lineHeight: 0.8, color: 'rgba(255,255,255,.14)' }}>{p.page}</div>
+          <DeckPageCurrent as="div" value={p.page} style={{ position: 'absolute', top: -30, right: -20, fontFamily: F.mono, fontWeight: 700,
+            fontSize: 200, lineHeight: 0.8, color: 'rgba(255,255,255,.14)' }} />
           <div style={{ display: 'flex', alignItems: 'center', gap: 13, position: 'relative', zIndex: 1 }}>
             <span style={{ width: 16, height: 16, background: '#fff', borderRadius: 4 }} />
             <span style={{ fontFamily: F.mono, fontWeight: 700, fontSize: 22, letterSpacing: '.2em' }}>{p.brand}</span>
