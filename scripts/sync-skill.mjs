@@ -260,6 +260,7 @@ function renderInstalledSkill(content) {
 
 function syncDistributionFiles() {
   copyPath(path.join(ROOT, 'assets/skill'), path.join(SKILL_ROOT, 'assets/skill'));
+  copyPath(path.join(ROOT, 'agents'), path.join(SKILL_ROOT, 'agents'));
   writeIfChanged(path.join(SKILL_ROOT, 'README.md'), renderReadme(themeMetadata));
   writeIfChanged(path.join(SKILL_ROOT, '.gitignore'), renderGitignore());
 }

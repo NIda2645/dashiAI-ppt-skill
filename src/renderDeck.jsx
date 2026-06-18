@@ -19,6 +19,7 @@ import {
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const MIGRATION_ONLY_DIRS = new Set(['uploads', 'screens', 'screenshots', 'shots', 'scratch']);
+const PREVIEW_FAVICON = 'assets/skill/dashiai-ppt-favicon.png';
 
 export function renderDeck(deck, { outFile, includeThemeSwitcher = deck.preview?.themeSwitcher === true }) {
   const viewModel = buildDeckViewModel(deck, {
@@ -36,7 +37,7 @@ export function renderDeck(deck, { outFile, includeThemeSwitcher = deck.preview?
   html = html.replace('<title>[必填] 替换为 PPT 标题 · Deck Title</title>', `<title>${escapeHtml(viewModel.model.title)}</title>`);
   html = injectPreviewOptions(html, viewModel.options, { includeThemeSwitcher });
   html = injectDeckViewModel(html, serializeDeckViewModel(viewModel));
-  html = html.replace('<link rel="preconnect" href="https://fonts.googleapis.com">', '<link rel="icon" href="data:,">\n<link rel="preconnect" href="https://fonts.googleapis.com">');
+  html = html.replace('<link rel="preconnect" href="https://fonts.googleapis.com">', `<link rel="icon" type="image/png" sizes="32x32" href="${PREVIEW_FAVICON}">\n<link rel="preconnect" href="https://fonts.googleapis.com">`);
 
   fs.mkdirSync(path.dirname(outFile), { recursive: true });
   fs.writeFileSync(outFile, html);
@@ -108,6 +109,7 @@ function copyRuntimeAssets(outDir) {
     copyFileIfExists(path.join(ROOT, 'node_modules/gsap/dist/gsap.min.js'), path.join(assetsDir, 'vendor/gsap.min.js'));
     copyFileIfExists(path.join(ROOT, 'node_modules/pptxgenjs/dist/pptxgen.bundle.js'), path.join(assetsDir, 'vendor/pptxgen.bundle.js'));
     copyFileIfExists(path.join(ROOT, 'node_modules/html-to-image/dist/html-to-image.js'), path.join(assetsDir, 'vendor/html-to-image.js'));
+    copyFileIfExists(path.join(ROOT, PREVIEW_FAVICON), path.join(outDir, PREVIEW_FAVICON));
     copyDirectoryIfExists(path.join(ROOT, 'assets/unicorn'), path.join(assetsDir, 'unicorn'));
     copyDirectoryIfExists(path.join(ROOT, 'assets/social-icons'), path.join(assetsDir, 'social-icons'));
     copyDirectoryIfExists(path.join(ROOT, 'assets/ui-icons'), path.join(assetsDir, 'ui-icons'));

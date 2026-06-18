@@ -6,8 +6,13 @@
 .
 |-- .githooks/
 |   `-- pre-commit - 项目源码或配置文件。
+|-- agents/
+|   `-- openai.yaml - 项目源码或配置文件。
 |-- assets/
 |   |-- skill/
+|   |   |-- dashiai-ppt-favicon.png - 静态模板或浏览器运行时资源。
+|   |   |-- dashiai-ppt-small.png - 静态模板或浏览器运行时资源。
+|   |   |-- dashiai-ppt.png - 静态模板或浏览器运行时资源。
 |   |   `-- theme-style-grid.png - 静态模板或浏览器运行时资源。
 |   |-- social-icons/
 |   |   |-- bilibili.svg - 静态模板或浏览器运行时资源。
