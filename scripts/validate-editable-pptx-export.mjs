@@ -83,6 +83,7 @@ const fallbackTextRiskMatrix = args.has('--fallback-text-risk-matrix');
 const theme10UserRegressions = args.has('--theme10-user-regressions');
 const jad64FollowupRegressions = args.has('--jad64-followup-regressions');
 const jad64AcceptanceRegressions = args.has('--jad64-acceptance-regressions');
+const jad64RootCauseRegressions = args.has('--jad64-root-cause-regressions');
 const cliUrl = getArg('--url');
 const cliThemePack = getArg('--theme-pack');
 const cliSamplesPerTheme = Math.max(DEFAULT_VISUAL_SAMPLE_COUNT, Number(getArg('--samples-per-theme') || DEFAULT_VISUAL_SAMPLE_COUNT));
@@ -114,10 +115,203 @@ if (legacyRed) {
   await runJad64FollowupRegressionValidation();
 } else if (jad64AcceptanceRegressions) {
   await runJad64AcceptanceRegressionValidation();
+} else if (jad64RootCauseRegressions) {
+  await runJad64RootCauseRegressionValidation();
 } else if (theme10UserRegressions) {
   await runTheme10UserRegressionValidation();
 } else {
   await runEditableExportValidation();
+}
+
+async function runJad64RootCauseRegressionValidation() {
+  if (!cliUrl) throw new Error('Usage: node scripts/validate-editable-pptx-export.mjs --jad64-root-cause-regressions --url <preview-url>');
+  const outDir = path.join(OUT_DIR, 'jad64-root-cause-regressions');
+  rmSync(outDir, { recursive: true, force: true });
+  mkdirSync(outDir, { recursive: true });
+  const samples = [
+    {
+      label: 'theme04-cover-neon-material',
+      themePack: 'theme04',
+      key: 'theme04_page001',
+      coverage: 'PowerPoint-visible glass/neon material fidelity for rounded local highlight surfaces',
+      probes: ['material-region'],
+      textProbes: ['重新分配'],
+      screenshot: '/Users/jadon7/Library/Application Support/CleanShot/media/media_6wZe8ktxF9/CleanShot 2026-06-18 at 10.41.22@2x.png',
+    },
+    {
+      label: 'theme07-waterfall-svg-crop',
+      themePack: 'theme07',
+      key: 'theme07_page023',
+      coverage: 'SVG/chart fallback crop must include the full browser-rendered visual bbox',
+      probes: ['svg-crop'],
+      textProbes: ['+50', '其他'],
+      screenshot: '/Users/jadon7/Library/Application Support/CleanShot/media/media_CARCyRC48K/CleanShot 2026-06-18 at 10.25.28@2x.png',
+    },
+    {
+      label: 'theme02-radar-svg-aspect',
+      themePack: 'theme02',
+      key: 'theme02_page016',
+      coverage: 'SVG/chart fallback aspect must match the rendered HTML chart region',
+      probes: ['svg-aspect'],
+      textProbes: ['模型能力', '商业化', '算力储备'],
+      screenshot: '/Users/jadon7/Library/Application Support/CleanShot/media/media_JSQQ3rlqc9/CleanShot 2026-06-18 at 10.26.43@2x.png',
+    },
+    {
+      label: 'theme09-rounded-material-cross-theme',
+      themePack: 'theme09',
+      key: 'theme09_page010',
+      coverage: 'cross-theme rounded/glass material region uses the same local fallback geometry',
+      probes: ['material-region'],
+    },
+    {
+      label: 'theme04-radar-svg-aspect-cross-page',
+      themePack: 'theme04',
+      key: 'theme04_page030',
+      coverage: 'cross-page radar SVG aspect uses the same fallback sizing logic',
+      probes: ['svg-aspect'],
+      textProbes: ['模型能力', '资本储备'],
+    },
+    {
+      label: 'theme04-waterfall-svg-crop-cross-page',
+      themePack: 'theme04',
+      key: 'theme04_page047',
+      coverage: 'cross-page waterfall SVG crop uses the same fallback visual bbox logic',
+      probes: ['svg-crop'],
+      textProbes: ['其他赛道', 'OTHERS'],
+    },
+  ];
+  const rootCauseMatrix = [
+    {
+      cluster: 'local material fallback bbox',
+      samples: ['theme04-cover-neon-material', 'theme09-rounded-material-cross-theme'],
+      sharedMechanism: 'CSS gradient/shadow/glow/glass regions are browser-rendered visual surfaces; PPT native approximations need a bounded local image fallback at the element visual bbox while preserving text as editable objects.',
+    },
+    {
+      cluster: 'SVG fallback aspect and crop',
+      samples: ['theme07-waterfall-svg-crop', 'theme02-radar-svg-aspect', 'theme04-radar-svg-aspect-cross-page', 'theme04-waterfall-svg-crop-cross-page'],
+      sharedMechanism: 'SVG/chart fallback images must use the browser-rendered visual bbox and rendered aspect instead of the raw element CSS box when exported to PowerPoint.',
+    },
+  ];
+  const renderPath = {
+    primary: 'Quick Look qlmanage thumbnail rendered from the exported PPTX, normalized to 960x540 for deterministic local crop comparison.',
+    candidates: [
+      {
+        renderer: 'Microsoft PowerPoint AppleScript save as PNG/PDF',
+        status: 'rejected',
+        reason: 'PowerPoint is installed and scriptable, but save-as PNG/PDF AppleScript calls returned success without creating files in this environment.',
+      },
+      {
+        renderer: 'Microsoft PowerPoint slide show + screencapture',
+        status: 'rejected',
+        reason: 'A slide show window can be created, but macOS screencapture captured the foreground desktop/app stack instead of the slide show surface, so it would create false evidence.',
+      },
+      {
+        renderer: 'LibreOffice',
+        status: 'unavailable',
+        reason: 'LibreOffice/soffice is not installed on this machine.',
+      },
+    ],
+    limitation: 'Quick Look is not identical to an interactive PowerPoint edit window, but it renders the actual exported PPTX through the macOS presentation preview stack and is repeatable for automated red/green visual evidence.',
+  };
+  writeFileSync(path.join(outDir, 'root-cause-matrix.json'), JSON.stringify(rootCauseMatrix, null, 2) + '\n');
+  writeFileSync(path.join(outDir, 'render-path.json'), JSON.stringify(renderPath, null, 2) + '\n');
+
+  const browser = await chromium.launch({ headless: true, executablePath: CHROME_PATH });
+  let context;
+  let page;
+  const mod = await import(pathToFileURL(path.join(ROOT, 'src/export-pptx/editable.mjs')));
+  const results = [];
+  const failures = [];
+  try {
+    context = await browser.newContext({ viewport: { width: 1920, height: 1080 }, ignoreHTTPSErrors: true });
+    page = await context.newPage();
+    page.setDefaultTimeout(180000);
+    await page.goto(`${cliUrl}${cliUrl.includes('?') ? '&' : '?'}jad64_root_cause=${Date.now()}`, { waitUntil: 'domcontentloaded' });
+    await page.waitForSelector('#deck > .slide.active, #deck > .slide[data-deck-active]');
+    await installValidationHelpers(page);
+
+    for (const sample of samples) {
+      const sampleDir = path.join(outDir, sample.label);
+      mkdirSync(sampleDir, { recursive: true });
+      const nav = await navigateValidationSample(page, sample);
+      if (!nav.found) {
+        failures.push(`${sample.label} could not find ${sample.key} in ${sample.themePack}; available keys: ${nav.availableKeys.slice(0, 10).join(', ')}`);
+        results.push({ ...sample, found: false, availableKeys: nav.availableKeys });
+        continue;
+      }
+      const activeSlide = await page.$('#deck > .slide.active, #deck > .slide[data-deck-active]');
+      const htmlScreenshot = path.join(sampleDir, 'html-slide.png');
+      if (activeSlide) await activeSlide.screenshot({ path: htmlScreenshot });
+      const dom = await collectJad64RootCauseDomProbe(page, sample);
+      writeFileSync(path.join(sampleDir, 'dom-probe.json'), JSON.stringify(dom, null, 2) + '\n');
+
+      const pptxFile = path.join(sampleDir, `${sample.label}.pptx`);
+      const reportFile = path.join(sampleDir, `${sample.label}-report.json`);
+      await mod.exportEditablePptxFromPage(page, {
+        outFile: pptxFile,
+        reportFile,
+        title: `JAD-64 root cause ${sample.label}`,
+        slideIndexes: [nav.index],
+      });
+      const pptx = inspectPptx(pptxFile);
+      const visual = runQuickLookVisualComparison(pptxFile, htmlScreenshot, sampleDir);
+      const pairImage = createSamplePairImage(sample, visual, sampleDir);
+      const regionChecks = analyzeJad64RootCauseRegions(sample, dom, visual, sampleDir);
+      const checks = validateJad64RootCauseSample(sample, dom, pptx, visual, regionChecks);
+      failures.push(...checks.failures);
+      if (!visual?.available || !pairImage) failures.push(`${sample.label} did not produce rendered PPTX visual evidence (${visual?.reason || 'missing-pair'}).`);
+      if (sample.screenshot && existsSync(sample.screenshot) && pairImage && commandAvailable('magick')) {
+        spawnSync('magick', [
+          sample.screenshot,
+          '-resize',
+          '640x360>',
+          pairImage,
+          '-resize',
+          '960x540!',
+          '-append',
+          path.join(sampleDir, 'user-failure-vs-current-render.png'),
+        ], { encoding: 'utf8', maxBuffer: 32 * 1024 * 1024 });
+      }
+      results.push({
+        ...sample,
+        found: true,
+        index: nav.index,
+        htmlScreenshot,
+        pptxFile,
+        reportFile,
+        pairImage,
+        userFailureVsCurrentRender: sample.screenshot ? path.join(sampleDir, 'user-failure-vs-current-render.png') : null,
+        quickLook: visual,
+        dom,
+        pptx: summarizeInspection(pptx),
+        regionChecks,
+        checks,
+      });
+    }
+  } finally {
+    await closePage(page);
+    await context?.close().catch(() => {});
+    await closeBrowser(browser);
+  }
+  const contactSheet = createSampleContactSheet(results, outDir);
+  const result = {
+    mode: 'jad64-root-cause-regressions',
+    url: cliUrl,
+    outDir,
+    rootCauseMatrix: path.join(outDir, 'root-cause-matrix.json'),
+    renderPath: path.join(outDir, 'render-path.json'),
+    contactSheet,
+    passed: failures.length === 0,
+    samples: results,
+    failures,
+  };
+  writeFileSync(path.join(outDir, 'jad64-root-cause-regressions.json'), JSON.stringify(result, null, 2) + '\n');
+  if (failures.length) {
+    console.error(JSON.stringify(result, null, 2));
+    process.exit(1);
+  }
+  console.log(JSON.stringify(result, null, 2));
+  process.exit(0);
 }
 
 async function runJad64AcceptanceRegressionValidation() {
@@ -1878,6 +2072,165 @@ async function navigateValidationSample(page, sample) {
   }, sample);
 }
 
+async function collectJad64RootCauseDomProbe(page, sample) {
+  return await page.evaluate(({ textProbes }) => {
+    const slide = document.querySelector('#deck > .slide.active, #deck > .slide[data-deck-active]');
+    if (!slide) return { key: '', slide: null, materialRegions: [], svgRegions: [], textAnchors: [], text: '' };
+    const slideRect = slide.getBoundingClientRect();
+    const localRect = rect => ({
+      x: Math.max(0, rect.left - slideRect.left),
+      y: Math.max(0, rect.top - slideRect.top),
+      w: Math.max(1, Math.min(rect.right, slideRect.right) - Math.max(rect.left, slideRect.left)),
+      h: Math.max(1, Math.min(rect.bottom, slideRect.bottom) - Math.max(rect.top, slideRect.top)),
+    });
+    const normalize = value => String(value || '').replace(/[^\p{L}\p{N}%+]+/gu, '').toLowerCase();
+    const isVisible = (el, style = getComputedStyle(el)) => {
+      if (!el || style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity || 1) <= 0.01) return false;
+      const rect = el.getBoundingClientRect();
+      return rect.width > 2 && rect.height > 2
+        && rect.right >= slideRect.left && rect.left <= slideRect.right
+        && rect.bottom >= slideRect.top && rect.top <= slideRect.bottom;
+    };
+    const colorVisible = value => {
+      const raw = String(value || '').trim();
+      return raw && raw !== 'transparent' && !/^rgba?\(\s*0\s*,\s*0\s*,\s*0\s*,\s*0\s*\)$/i.test(raw);
+    };
+    const radiusPx = style => Math.max(
+      parseFloat(style.borderTopLeftRadius || '0') || 0,
+      parseFloat(style.borderTopRightRadius || '0') || 0,
+      parseFloat(style.borderBottomRightRadius || '0') || 0,
+      parseFloat(style.borderBottomLeftRadius || '0') || 0,
+    );
+    const borderVisible = style => ['Top', 'Right', 'Bottom', 'Left'].some(side => {
+      const width = parseFloat(style[`border${side}Width`] || '0') || 0;
+      return width > 0 && colorVisible(style[`border${side}Color`]);
+    });
+    const hasMaterialPaint = style => {
+      const bg = String(style.backgroundImage || '');
+      return bg.includes('gradient')
+        || bg.includes('url(')
+        || (style.boxShadow && style.boxShadow !== 'none')
+        || (style.filter && style.filter !== 'none')
+        || (style.mixBlendMode && style.mixBlendMode !== 'normal')
+        || (radiusPx(style) >= 10 && (colorVisible(style.backgroundColor) || borderVisible(style)));
+    };
+    const textAnchors = (textProbes || []).map(probe => {
+      const target = normalize(probe);
+      const matches = [];
+      const walker = document.createTreeWalker(slide, NodeFilter.SHOW_TEXT);
+      for (let node = walker.nextNode(); node; node = walker.nextNode()) {
+        if (!target || !normalize(node.textContent).includes(target)) continue;
+        const parent = node.parentElement;
+        if (!isVisible(parent)) continue;
+        const range = document.createRange();
+        range.selectNodeContents(node);
+        const rect = range.getBoundingClientRect();
+        range.detach?.();
+        if (rect.width > 1 && rect.height > 1) matches.push({ text: node.textContent || '', rect: localRect(rect) });
+      }
+      return { probe, found: matches.length > 0, matches: matches.slice(0, 8) };
+    });
+    const probeSet = new Set((textProbes || []).map(normalize).filter(Boolean));
+    const materialRegions = [...slide.querySelectorAll('*')]
+      .map(el => {
+        const style = getComputedStyle(el);
+        if (!isVisible(el, style) || !hasMaterialPaint(style)) return null;
+        const rect = el.getBoundingClientRect();
+        const areaRatio = (rect.width * rect.height) / Math.max(1, slideRect.width * slideRect.height);
+        if (areaRatio > 0.68 || areaRatio < 0.0002) return null;
+        const text = (el.innerText || el.textContent || '').trim().replace(/\s+/g, ' ');
+        const normalizedText = normalize(text);
+        const probeHit = [...probeSet].some(probe => normalizedText.includes(probe));
+        const bg = String(style.backgroundImage || '');
+        const score = (probeHit ? 10000 : 0)
+          + (bg.includes('gradient') ? 360 : 0)
+          + ((style.boxShadow && style.boxShadow !== 'none') ? 420 : 0)
+          + ((style.filter && style.filter !== 'none') ? 320 : 0)
+          + (radiusPx(style) >= 10 ? 260 : 0)
+          + Math.min(260, Math.sqrt(rect.width * rect.height) / 2)
+          - (areaRatio > 0.35 ? 2500 : 0);
+        return {
+          tag: el.tagName.toLowerCase(),
+          className: String(el.className || '').slice(0, 160),
+          text: text.slice(0, 160),
+          rect: localRect(rect),
+          score,
+          probeHit,
+          style: {
+            backgroundColor: style.backgroundColor,
+            backgroundImage: bg.slice(0, 220),
+            boxShadow: String(style.boxShadow || '').slice(0, 220),
+            filter: String(style.filter || '').slice(0, 120),
+            mixBlendMode: style.mixBlendMode,
+            borderRadius: [
+              style.borderTopLeftRadius,
+              style.borderTopRightRadius,
+              style.borderBottomRightRadius,
+              style.borderBottomLeftRadius,
+            ],
+          },
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 24);
+    const svgRegions = [...slide.querySelectorAll('svg')]
+      .map(el => {
+        if (!isVisible(el)) return null;
+        const rect = el.getBoundingClientRect();
+        const union = { left: rect.left, top: rect.top, right: rect.right, bottom: rect.bottom };
+        const text = (el.textContent || '').trim().replace(/\s+/g, ' ');
+        for (const child of el.querySelectorAll('*')) {
+          const childStyle = getComputedStyle(child);
+          if (childStyle.display === 'none' || childStyle.visibility === 'hidden' || Number(childStyle.opacity || 1) <= 0.01) continue;
+          const childRect = child.getBoundingClientRect();
+          if (childRect.width <= 0.5 || childRect.height <= 0.5) continue;
+          union.left = Math.min(union.left, childRect.left);
+          union.top = Math.min(union.top, childRect.top);
+          union.right = Math.max(union.right, childRect.right);
+          union.bottom = Math.max(union.bottom, childRect.bottom);
+        }
+        const visualRect = localRect({
+          left: Math.max(slideRect.left, union.left),
+          top: Math.max(slideRect.top, union.top),
+          right: Math.min(slideRect.right, union.right),
+          bottom: Math.min(slideRect.bottom, union.bottom),
+        });
+        const box = localRect(rect);
+        const normalizedText = normalize(text);
+        const probeHit = [...probeSet].some(probe => normalizedText.includes(probe));
+        const overflow = {
+          left: Math.max(0, rect.left - union.left),
+          top: Math.max(0, rect.top - union.top),
+          right: Math.max(0, union.right - rect.right),
+          bottom: Math.max(0, union.bottom - rect.bottom),
+        };
+        return {
+          tag: 'svg',
+          className: String(el.className?.baseVal || el.getAttribute('class') || '').slice(0, 160),
+          text: text.slice(0, 240),
+          rect: box,
+          visualRect,
+          overflow,
+          probeHit,
+          viewBox: el.getAttribute('viewBox') || '',
+          preserveAspectRatio: el.getAttribute('preserveAspectRatio') || '',
+          score: (probeHit ? 10000 : 0) + box.w * box.h / 1000 + text.length,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => b.score - a.score);
+    return {
+      key: slide.dataset.vmSlideId || slide.dataset.layoutKey || slide.id || '',
+      slide: { w: slideRect.width, h: slideRect.height },
+      text: (slide.innerText || '').trim().replace(/\s+/g, ' ').slice(0, 1200),
+      textAnchors,
+      materialRegions,
+      svgRegions,
+    };
+  }, sample);
+}
+
 async function collectJad64FollowupDomProbe(page) {
   return await page.evaluate(() => {
     const slide = document.querySelector('#deck > .slide.active, #deck > .slide[data-deck-active]');
@@ -2941,6 +3294,199 @@ function createSampleContactSheet(samples, visualDir) {
     out,
   ], { encoding: 'utf8', maxBuffer: 16 * 1024 * 1024 });
   return sheet.status === 0 ? out : null;
+}
+
+function analyzeJad64RootCauseRegions(sample, dom, visual, sampleDir) {
+  return (sample.probes || []).map(probe => {
+    const region = selectJad64RootCauseRegion(probe, dom);
+    if (!region) return { probe, available: false, reason: 'region-not-found' };
+    const metrics = analyzeRenderedRegionPair({
+      probe,
+      region,
+      slide: dom.slide,
+      visual,
+      sampleDir,
+      padPx: probe === 'material-region' ? 18 : 24,
+    });
+    return {
+      probe,
+      available: Boolean(metrics),
+      reason: metrics ? undefined : 'rendered-region-analysis-failed',
+      region,
+      metrics,
+    };
+  });
+}
+
+function selectJad64RootCauseRegion(probe, dom = {}) {
+  if (probe === 'material-region') return dom.materialRegions?.[0] || null;
+  if (probe === 'svg-aspect' || probe === 'svg-crop') return dom.svgRegions?.[0] || null;
+  return null;
+}
+
+function analyzeRenderedRegionPair({ probe, region, slide, visual, sampleDir, padPx }) {
+  if (!visual?.available || !existsSync(visual.htmlImage) || !existsSync(visual.pptxImage) || !commandAvailable('magick')) return null;
+  const rect = probe === 'material-region' ? region.rect : (region.visualRect || region.rect);
+  if (!rect || !slide?.w || !slide?.h) return null;
+  const crop = renderedCropSpec(rect, slide, padPx);
+  const compareDir = path.join(sampleDir, 'region-compare');
+  mkdirSync(compareDir, { recursive: true });
+  const safeProbe = safePathSegment(probe);
+  const htmlCrop = path.join(compareDir, `${safeProbe}-html.png`);
+  const pptxCrop = path.join(compareDir, `${safeProbe}-pptx.png`);
+  const htmlEdge = path.join(compareDir, `${safeProbe}-html-edge.png`);
+  const pptxEdge = path.join(compareDir, `${safeProbe}-pptx-edge.png`);
+  const cropHtml = spawnSync('magick', [visual.htmlImage, '-crop', crop.spec, htmlCrop], { encoding: 'utf8' });
+  const cropPptx = spawnSync('magick', [visual.pptxImage, '-crop', crop.spec, pptxCrop], { encoding: 'utf8' });
+  if (cropHtml.status !== 0 || cropPptx.status !== 0) return null;
+  const edgeHtml = spawnSync('magick', [htmlCrop, '-colorspace', 'Gray', '-edge', '1', htmlEdge], { encoding: 'utf8' });
+  const edgePptx = spawnSync('magick', [pptxCrop, '-colorspace', 'Gray', '-edge', '1', pptxEdge], { encoding: 'utf8' });
+  const edgeRmse = edgeHtml.status === 0 && edgePptx.status === 0 ? compareImageMetric('RMSE', htmlEdge, pptxEdge) : Number.NaN;
+  const htmlStats = summarizeRenderedRegionPixels(htmlCrop);
+  const pptxStats = summarizeRenderedRegionPixels(pptxCrop);
+  return {
+    crop,
+    htmlCrop,
+    pptxCrop,
+    htmlEdge: edgeHtml.status === 0 ? htmlEdge : null,
+    pptxEdge: edgePptx.status === 0 ? pptxEdge : null,
+    rmse: compareImageMetric('RMSE', htmlCrop, pptxCrop),
+    mae: compareImageMetric('MAE', htmlCrop, pptxCrop),
+    edgeRmse,
+    htmlStats,
+    pptxStats,
+    contentAspectDelta: contentAspectDelta(htmlStats, pptxStats),
+    contentWidthRatio: contentRatio(htmlStats?.contentBounds?.w, pptxStats?.contentBounds?.w),
+    contentHeightRatio: contentRatio(htmlStats?.contentBounds?.h, pptxStats?.contentBounds?.h),
+  };
+}
+
+function renderedCropSpec(rect, slide, padPx = 0) {
+  const scaleX = 960 / Number(slide.w || 1920);
+  const scaleY = 540 / Number(slide.h || 1080);
+  const x = Math.max(0, Math.floor(Number(rect.x || 0) * scaleX - padPx));
+  const y = Math.max(0, Math.floor(Number(rect.y || 0) * scaleY - padPx));
+  const right = Math.min(960, Math.ceil((Number(rect.x || 0) + Number(rect.w || 0)) * scaleX + padPx));
+  const bottom = Math.min(540, Math.ceil((Number(rect.y || 0) + Number(rect.h || 0)) * scaleY + padPx));
+  const w = Math.max(1, right - x);
+  const h = Math.max(1, bottom - y);
+  return { x, y, w, h, spec: `${w}x${h}+${x}+${y}` };
+}
+
+function summarizeRenderedRegionPixels(file) {
+  if (!file || !existsSync(file) || !commandAvailable('magick')) return null;
+  const identified = spawnSync('magick', ['identify', '-format', '%w %h', file], { encoding: 'utf8' });
+  const [width, height] = String(identified.stdout || '').trim().split(/\s+/).map(Number);
+  if (!Number.isFinite(width) || !Number.isFinite(height) || width <= 0 || height <= 0) return null;
+  const raw = spawnSync('magick', [file, '-depth', '8', 'rgb:-'], { encoding: null, maxBuffer: 64 * 1024 * 1024 });
+  if (raw.status !== 0 || !raw.stdout?.length) return null;
+  const buffer = raw.stdout;
+  const pixels = Math.min(width * height, Math.floor(buffer.length / 3));
+  const cornerSamples = [
+    0,
+    Math.max(0, width - 1),
+    Math.max(0, (height - 1) * width),
+    Math.max(0, height * width - 1),
+  ].filter(index => index >= 0 && index < pixels);
+  const corner = cornerSamples.reduce((acc, index) => {
+    acc.r += buffer[index * 3];
+    acc.g += buffer[index * 3 + 1];
+    acc.b += buffer[index * 3 + 2];
+    return acc;
+  }, { r: 0, g: 0, b: 0 });
+  const divisor = Math.max(1, cornerSamples.length);
+  const bg = { r: corner.r / divisor, g: corner.g / divisor, b: corner.b / divisor };
+  let greenPixels = 0;
+  let brightPixels = 0;
+  let nearBlackPixels = 0;
+  let minX = width;
+  let minY = height;
+  let maxX = -1;
+  let maxY = -1;
+  for (let i = 0; i < pixels; i += 1) {
+    const r = buffer[i * 3];
+    const g = buffer[i * 3 + 1];
+    const b = buffer[i * 3 + 2];
+    const max = Math.max(r, g, b);
+    if (max > 110) brightPixels += 1;
+    if (max < 38) nearBlackPixels += 1;
+    if (g >= 96 && g >= r + 22 && g >= b + 10) greenPixels += 1;
+    const bgDistance = Math.abs(r - bg.r) + Math.abs(g - bg.g) + Math.abs(b - bg.b);
+    if (bgDistance > 38 && max > 24) {
+      const x = i % width;
+      const y = Math.floor(i / width);
+      minX = Math.min(minX, x);
+      minY = Math.min(minY, y);
+      maxX = Math.max(maxX, x);
+      maxY = Math.max(maxY, y);
+    }
+  }
+  const contentBounds = maxX >= minX && maxY >= minY
+    ? { x: minX, y: minY, w: maxX - minX + 1, h: maxY - minY + 1, aspect: (maxX - minX + 1) / Math.max(1, maxY - minY + 1) }
+    : null;
+  return {
+    width,
+    height,
+    pixels,
+    greenRatio: pixels ? greenPixels / pixels : 0,
+    brightRatio: pixels ? brightPixels / pixels : 0,
+    nearBlackRatio: pixels ? nearBlackPixels / pixels : 0,
+    contentBounds,
+  };
+}
+
+function contentAspectDelta(htmlStats, pptxStats) {
+  const left = htmlStats?.contentBounds?.aspect;
+  const right = pptxStats?.contentBounds?.aspect;
+  if (!Number.isFinite(left) || !Number.isFinite(right)) return null;
+  return Math.abs(left - right) / Math.max(0.001, left);
+}
+
+function contentRatio(htmlValue, pptxValue) {
+  if (!Number.isFinite(htmlValue) || !Number.isFinite(pptxValue) || htmlValue <= 0) return null;
+  return pptxValue / htmlValue;
+}
+
+function validateJad64RootCauseSample(sample, dom, pptx, visual, regionChecks) {
+  const failures = [];
+  const warnings = [];
+  if (!visual?.available) failures.push(`${sample.label} rendered PPTX comparison unavailable: ${visual?.reason || 'unknown'}.`);
+  if (pptx.fullSlideImageOnlySlides.length) failures.push(`${sample.label} became full-slide-image-only: ${pptx.fullSlideImageOnlySlides.join(', ')}.`);
+  for (const anchor of dom.textAnchors || []) {
+    if (!anchor.found) warnings.push(`${sample.label} could not find optional DOM text probe "${anchor.probe}".`);
+  }
+  for (const check of regionChecks || []) {
+    if (!check.available) {
+      failures.push(`${sample.label} ${check.probe} region analysis unavailable: ${check.reason || 'unknown'}.`);
+      continue;
+    }
+    const m = check.metrics || {};
+    const rmse = Number(m.rmse);
+    const edgeRmse = Number(m.edgeRmse);
+    if (check.probe === 'material-region') {
+      if (Number.isFinite(rmse) && rmse > 0.18) failures.push(`${sample.label} material crop RMSE ${rmse.toFixed(4)} exceeds 0.1800.`);
+      if (Number.isFinite(edgeRmse) && edgeRmse > 0.245) failures.push(`${sample.label} material edge RMSE ${edgeRmse.toFixed(4)} exceeds 0.2450.`);
+      const htmlGreen = Number(m.htmlStats?.greenRatio || 0);
+      const pptxGreen = Number(m.pptxStats?.greenRatio || 0);
+      if (htmlGreen > 0.04 && pptxGreen < htmlGreen * 0.55) {
+        failures.push(`${sample.label} material crop lost green/cyan glow pixels (${pptxGreen.toFixed(4)} < ${(htmlGreen * 0.55).toFixed(4)}; HTML ${htmlGreen.toFixed(4)}).`);
+      }
+    } else {
+      const rmseLimit = check.probe === 'svg-aspect' ? 0.14 : 0.22;
+      if (Number.isFinite(rmse) && rmse > rmseLimit) failures.push(`${sample.label} ${check.probe} crop RMSE ${rmse.toFixed(4)} exceeds ${rmseLimit.toFixed(4)}.`);
+      if (Number.isFinite(edgeRmse) && edgeRmse > 0.30) failures.push(`${sample.label} ${check.probe} edge RMSE ${edgeRmse.toFixed(4)} exceeds 0.3000.`);
+      if (Number.isFinite(m.contentAspectDelta) && m.contentAspectDelta > 0.14) {
+        failures.push(`${sample.label} ${check.probe} content aspect drift ${(m.contentAspectDelta * 100).toFixed(1)}% exceeds 14.0%.`);
+      }
+      if (Number.isFinite(m.contentWidthRatio) && m.contentWidthRatio < 0.82) {
+        failures.push(`${sample.label} ${check.probe} rendered content width ratio ${m.contentWidthRatio.toFixed(3)} is below 0.820, indicating crop/loss.`);
+      }
+      if (Number.isFinite(m.contentHeightRatio) && m.contentHeightRatio < 0.82) {
+        failures.push(`${sample.label} ${check.probe} rendered content height ratio ${m.contentHeightRatio.toFixed(3)} is below 0.820, indicating crop/loss.`);
+      }
+    }
+  }
+  return { passed: failures.length === 0, failures, warnings };
 }
 
 function createMatrixContactSheet(themeResults, matrixDir) {

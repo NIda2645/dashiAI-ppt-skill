@@ -243,19 +243,33 @@ async function resolveElementScreenshots(page, root, warnings, options = {}) {
     let hiddenToken = null;
     try {
       if (node.stripTextForScreenshot || node.stripOverlayForScreenshot) {
-        hiddenToken = await page.evaluate(({ exportId, mode, stripText, stripOverlay }) => {
+        hiddenToken = await page.evaluate(({ exportId, mode, stripText, stripOverlay, screenshotRect }) => {
           const root = document.querySelector(`[data-editable-pptx-export-id="${exportId}"]`);
           if (!root) return null;
           const token = `hide-${Date.now()}-${Math.random().toString(36).slice(2)}`;
           const entries = [];
-          const rootRect = root.getBoundingClientRect();
+          const sourceRect = root.getBoundingClientRect();
+          const rootRect = screenshotRect
+            ? {
+              left: Number(screenshotRect.x || 0),
+              top: Number(screenshotRect.y || 0),
+              right: Number(screenshotRect.x || 0) + Number(screenshotRect.w || screenshotRect.width || 0),
+              bottom: Number(screenshotRect.y || 0) + Number(screenshotRect.h || screenshotRect.height || 0),
+              width: Number(screenshotRect.w || screenshotRect.width || 0),
+              height: Number(screenshotRect.h || screenshotRect.height || 0),
+            }
+            : sourceRect;
           const slide = mode === 'screenshot-rect'
             ? root.closest('#deck > .slide') || document.querySelector('#deck > .slide.active, #deck > .slide[data-deck-active]')
             : root;
           const intersects = (a, b) => a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top;
-          const mark = (el) => {
+          const remember = (el) => {
             if (!el || entries.some(entry => entry.el === el)) return;
             entries.push({ el, style: el.getAttribute('style') });
+          };
+          const mark = (el) => {
+            if (!el) return;
+            remember(el);
             const style = getComputedStyle(el);
             el.style.setProperty('color', 'transparent', 'important');
             el.style.setProperty('-webkit-text-fill-color', 'transparent', 'important');
@@ -269,8 +283,8 @@ async function resolveElementScreenshots(page, root, warnings, options = {}) {
             }
           };
           const markOverlay = (el) => {
-            if (!el || entries.some(entry => entry.el === el)) return;
-            entries.push({ el, style: el.getAttribute('style') });
+            if (!el) return;
+            remember(el);
             el.style.setProperty('opacity', '0', 'important');
           };
           const hasOverlayPaint = (el) => {
@@ -343,12 +357,15 @@ async function resolveElementScreenshots(page, root, warnings, options = {}) {
           return token;
         }, {
           exportId: node.exportId,
-          mode: node.imageKind === 'unicorn-background' ? 'screenshot-rect' : 'descendant',
+          mode: node.imageKind === 'unicorn-background' || node.imageKind === 'material-background' || node.screenshotRect ? 'screenshot-rect' : 'descendant',
           stripText: Boolean(node.stripTextForScreenshot),
           stripOverlay: Boolean(node.stripOverlayForScreenshot),
+          screenshotRect: node.screenshotRect || null,
         });
       }
-      const bytes = await page.locator(`[data-editable-pptx-export-id="${node.exportId}"]`).screenshot({ type: 'png' });
+      const bytes = node.screenshotRect
+        ? await page.screenshot({ type: 'png', clip: screenshotClip(node.screenshotRect) })
+        : await page.locator(`[data-editable-pptx-export-id="${node.exportId}"]`).screenshot({ type: 'png' });
       node.imageData = `data:image/png;base64,${bytes.toString('base64')}`;
       if (hiddenToken) {
         await page.evaluate(token => {
@@ -400,6 +417,15 @@ function walkCapturedNodes(node, visit) {
   if (!node) return;
   visit(node);
   for (const child of node.children || []) walkCapturedNodes(child, visit);
+}
+
+function screenshotClip(rect) {
+  return {
+    x: Math.max(0, Math.floor(Number(rect.x || 0))),
+    y: Math.max(0, Math.floor(Number(rect.y || 0))),
+    width: Math.max(1, Math.ceil(Number(rect.w ?? rect.width ?? 1))),
+    height: Math.max(1, Math.ceil(Number(rect.h ?? rect.height ?? 1))),
+  };
 }
 
 async function installBrowserCollector(page) {
@@ -484,6 +510,12 @@ async function installBrowserCollector(page) {
         ${rangeBoundsForOffsets.toString()}
         ${effectiveTextStyle.toString()}
         ${elementRenderRect.toString()}
+        ${visualEffectRect.toString()}
+        ${svgVisualRect.toString()}
+        ${expandedClampedRect.toString()}
+        ${shadowOutsetPx.toString()}
+        ${splitShadowLayers.toString()}
+        ${shouldUseLocalMaterialFallback.toString()}
         ${transparentCssPaint.toString()}
         ${hasTextPaintSource.toString()}
         ${readStyle.toString()}
@@ -565,6 +597,7 @@ function renderCapturedNode(slide, node, slideRect, warnings, totals) {
 }
 
 function renderBox(slide, node, slideRect, warnings, totals) {
+  if (node.imageKind === 'material-background') return;
   const c = coords(node, slideRect);
   if (c.w < 0.003 || c.h < 0.003) return;
   const style = node.style || {};
@@ -704,7 +737,7 @@ function renderText(slide, node, slideRect, warnings, totals) {
     fit: autoWidth ? 'resize' : 'shrink',
     wrap: autoWidth ? false : !isNoWrap(style.whiteSpace),
     fontFace,
-    fontSize: pptFontSize(fontSizePx, fontFace),
+    fontSize: pptFontSize(fontSizePx, fontFace, style),
     color: color.color,
     bold: weight === 'bold' || Number.parseInt(weight, 10) >= 600,
     italic: style.fontStyle === 'italic',
@@ -722,10 +755,13 @@ function renderText(slide, node, slideRect, warnings, totals) {
   if (/Songti SC/i.test(fontFace) && fontSizePx >= 80 && node.parentTag === 'span') {
     options.y = Math.max(0, options.y - c.h * 0.28);
   }
+  if (style.materialBackground === 'true' && fontSizePx >= 72 && /PingFang SC|Songti SC/i.test(fontFace)) {
+    options.y += c.h * 0.12;
+  }
   if (!autoWidth) {
     options.w = Math.max(0.08, c.w + 0.04);
   } else {
-    options.w = singleLineWidth(value, fontSizePx, c);
+    options.w = singleLineWidth(value, fontSizePx, c, fontFace, style);
   }
   if (autoWidth && align !== 'left') {
     if (align === 'right') options.x = Math.max(0, c.x + c.w - options.w);
@@ -819,13 +855,15 @@ function shouldUseAutoWidthText(value, fontSizePx, box, node) {
   if (['p', 'li', 'td', 'th', 'blockquote'].includes(parentTag) && units > 24) return false;
   if (units <= 20) return true;
   if (fontSizePx >= 36 && units <= 32) return true;
+  if (!['p', 'li', 'td', 'th', 'blockquote'].includes(parentTag) && fontSizePx >= 24 && units <= 44) return true;
   return box.w < 1.3 && units <= 28;
 }
 
-function singleLineWidth(value, fontSizePx, box) {
-  const fontPt = pptFontSize(fontSizePx);
+function singleLineWidth(value, fontSizePx, box, fontFace, style = {}) {
+  const fontPt = pptFontSize(fontSizePx, fontFace, style);
   const units = textUnits(value);
-  const estimated = units * fontPt / 72;
+  const spacing = Math.max(0, letterSpacing(style.letterSpacing)) * Math.max(0, Array.from(String(value || '')).length - 1) / 72 * 1.75;
+  const estimated = units * fontPt / 72 + spacing;
   const width = Math.max(0.08, box.w + 0.1, estimated + 0.12);
   return Math.min(PPT_W - Math.max(0, box.x), width);
 }
@@ -848,8 +886,8 @@ function renderNodeImage(slide, node, slideRect, warnings, totals) {
   if (node.imageData) items.push({ data: node.imageData, kind: node.imageKind || node.tag });
   if (!items.length) return;
 
-  const c = coords(node, slideRect);
-  const rotate = rotateFromTransform(node.style?.transform) || 0;
+  const c = coords(node, slideRect, { visual: node.elementScreenshot });
+  const rotate = node.elementScreenshot ? 0 : rotateFromTransform(node.style?.transform) || 0;
   for (const item of items) {
     try {
       slide.addImage({
@@ -871,12 +909,13 @@ function renderNodeImage(slide, node, slideRect, warnings, totals) {
 }
 
 function localBackgroundShadow(style, kind) {
-  if (kind !== 'background-image' && kind !== 'pattern-background') return null;
+  if (kind !== 'background-image' && kind !== 'pattern-background' && kind !== 'material-background') return null;
+  if (kind === 'material-background') return null;
   return parseBoxShadow(style?.boxShadow) || parseDropShadow(style?.filter);
 }
 
-function coords(node, slideRect) {
-  const rect = node.renderRect || node.rect;
+function coords(node, slideRect, options = {}) {
+  const rect = options.visual ? node.rect : node.renderRect || node.rect;
   return {
     x: round((rect.x - slideRect.x) / slideRect.w * PPT_W),
     y: round((rect.y - slideRect.y) / slideRect.h * PPT_H),
@@ -930,6 +969,7 @@ async function captureElement(el, slideRect, warnings, depth, slideIndex) {
   if (el.classList?.contains('bt-unicorn-frame')) {
     const exportId = `editable-pptx-${slideIndex}-${depth}-${Math.random().toString(36).slice(2, 9)}`;
     el.setAttribute('data-editable-pptx-export-id', exportId);
+    el.setAttribute('data-editable-pptx-material-background', '');
     node.exportId = exportId;
     node.elementScreenshot = true;
     node.imageKind = 'unicorn-background';
@@ -974,22 +1014,41 @@ async function captureElement(el, slideRect, warnings, depth, slideIndex) {
   }
   if (tag === 'svg') {
     const svgTexts = collectSvgTextNodes(el, slideRect, slideIndex);
-    node.imageData = await svgElementData(el, clipped.width, clipped.height, { stripText: svgTexts.length > 0 });
+    const visualRect = svgVisualRect(el, clipped, slideRect);
+    node.rect = rectObject(visualRect);
+    node.screenshotRect = rectObject(visualRect);
+    const exportId = `editable-pptx-${slideIndex}-${depth}-${Math.random().toString(36).slice(2, 9)}`;
+    el.setAttribute('data-editable-pptx-export-id', exportId);
+    node.exportId = exportId;
+    node.elementScreenshot = true;
     node.imageKind = 'svg';
+    node.stripTextForScreenshot = svgTexts.length > 0;
     const risk = svgTextRisk(el);
     if (risk.count && svgTexts.length) {
       warnings.push({ slide: slideIndex, type: 'node-image-fallback-text-extracted', node: 'svg', textCount: svgTexts.length, sample: risk.sample });
     } else if (risk.count) {
       warnings.push({ slide: slideIndex, type: 'node-image-fallback-text-risk', node: 'svg', textCount: risk.count, sample: risk.sample });
     }
-    if (node.imageData) warnings.push({ slide: slideIndex, type: 'node-image-fallback', node: 'svg', count: 1 });
-    else warnings.push({ slide: slideIndex, type: 'svg-skipped', reason: 'rasterize-failed' });
+    warnings.push({ slide: slideIndex, type: 'node-image-fallback', node: 'svg', count: 1, source: 'browser-visual-bbox' });
     node.children.push(...svgTexts);
     return node;
   }
 
+  if (shouldUseLocalMaterialFallback(el, style, clipped, slideRect)) {
+    const exportId = `editable-pptx-${slideIndex}-${depth}-${Math.random().toString(36).slice(2, 9)}`;
+    el.setAttribute('data-editable-pptx-export-id', exportId);
+    el.setAttribute('data-editable-pptx-material-background', '');
+    node.exportId = exportId;
+    node.elementScreenshot = true;
+    node.imageKind = 'material-background';
+    node.stripTextForScreenshot = visibleTextInScreenshotRect(el, slideRect).count > 0;
+    warnings.push({ slide: slideIndex, type: 'node-image-fallback', node: 'material-background', count: 1, source: 'browser-local-material' });
+  }
+
   const bg = backgroundUrl(style.backgroundImage);
-  if (bg) {
+  if (node.imageKind === 'material-background') {
+    // The browser screenshot carries the local material; editable children are collected below.
+  } else if (bg) {
     const isTurbulence = isTurbulenceDataImage(bg);
     node.backgroundImageData = await fetchImageDataUrl(bg, clipped.width, clipped.height, isTurbulence ? 0.02 : 1);
     if (isTurbulence) node.backgroundImageTransparency = 0;
@@ -1002,12 +1061,12 @@ async function captureElement(el, slideRect, warnings, depth, slideIndex) {
     if (node.backgroundImageData) warnings.push({ slide: slideIndex, type: 'node-image-fallback', node: 'css-gradient-background', count: 1 });
   }
 
-  const before = capturePseudoElement(el, '::before', slideRect, slideIndex);
+  const before = node.imageKind === 'material-background' ? null : capturePseudoElement(el, '::before', slideRect, slideIndex);
   if (before) node.children.push(before);
   const wholeText = captureWholeTextElement(el, slideRect, style, slideIndex);
   if (wholeText) {
     node.children.push(wholeText);
-    const after = capturePseudoElement(el, '::after', slideRect, slideIndex);
+    const after = node.imageKind === 'material-background' ? null : capturePseudoElement(el, '::after', slideRect, slideIndex);
     if (after) node.children.push(after);
     return node;
   }
@@ -1025,7 +1084,7 @@ async function captureElement(el, slideRect, warnings, depth, slideIndex) {
       }
     }
   }
-  const after = capturePseudoElement(el, '::after', slideRect, slideIndex);
+  const after = node.imageKind === 'material-background' ? null : capturePseudoElement(el, '::after', slideRect, slideIndex);
   if (after) node.children.push(after);
   return node;
 }
@@ -1285,6 +1344,7 @@ function rangeBoundsForOffsets(textNode, start, end) {
 
 function effectiveTextStyle(parent, slideRect) {
   const style = styleWithCumulativeRotation(readStyle(parent), parent);
+  if (parent.closest?.('[data-editable-pptx-material-background]')) style.materialBackground = 'true';
   if (!transparentCssPaint(style.webkitTextFillColor) || !transparentCssPaint(style.color) || isTextClippedBackground(style) || hasTextPaintSource(style)) {
     return style;
   }
@@ -1323,6 +1383,98 @@ function elementRenderRect(el, clipped, style, slideRect) {
   const cx = clipped.left + clipped.width / 2;
   const cy = clipped.top + clipped.height / 2;
   return { x: cx - width / 2, y: cy - height / 2, w: width, h: height };
+}
+
+function visualEffectRect(rect, style, slideRect) {
+  const outset = shadowOutsetPx(style);
+  return expandedClampedRect(rect, slideRect, outset);
+}
+
+function svgVisualRect(svg, clipped, slideRect) {
+  const union = {
+    left: clipped.left,
+    top: clipped.top,
+    right: clipped.left + clipped.width,
+    bottom: clipped.top + clipped.height,
+  };
+  svg.querySelectorAll?.('*')?.forEach(child => {
+    const style = getComputedStyle(child);
+    if (style.display === 'none' || style.visibility === 'hidden' || Number(style.opacity || 1) <= 0.01) return;
+    const rect = child.getBoundingClientRect();
+    if (rect.width <= 0.5 || rect.height <= 0.5) return;
+    union.left = Math.min(union.left, rect.left);
+    union.top = Math.min(union.top, rect.top);
+    union.right = Math.max(union.right, rect.right);
+    union.bottom = Math.max(union.bottom, rect.bottom);
+  });
+  return expandedClampedRect({
+    left: union.left,
+    top: union.top,
+    width: union.right - union.left,
+    height: union.bottom - union.top,
+  }, slideRect, 2);
+}
+
+function expandedClampedRect(rect, slideRect, outset = 0) {
+  const left = Math.max(slideRect.x, rect.left - outset);
+  const top = Math.max(slideRect.y, rect.top - outset);
+  const right = Math.min(slideRect.x + slideRect.w, rect.left + rect.width + outset);
+  const bottom = Math.min(slideRect.y + slideRect.h, rect.top + rect.height + outset);
+  return {
+    left,
+    top,
+    width: Math.max(1, right - left),
+    height: Math.max(1, bottom - top),
+  };
+}
+
+function shadowOutsetPx(style = {}) {
+  let outset = 0;
+  for (const layer of splitShadowLayers(style.boxShadow)) {
+    const numbers = layer.replace(/rgba?\([^)]+\)|color\([^)]+\)|#[0-9a-f]{3,8}/ig, '').match(/-?\d+(\.\d+)?px/g) || [];
+    const offsetX = Math.abs(parseFloat(numbers[0] || '0') || 0);
+    const offsetY = Math.abs(parseFloat(numbers[1] || '0') || 0);
+    const blur = Math.abs(parseFloat(numbers[2] || '0') || 0);
+    const spread = Math.abs(parseFloat(numbers[3] || '0') || 0);
+    outset = Math.max(outset, offsetX + offsetY + blur + spread);
+  }
+  const filter = String(style.filter || '');
+  for (const match of filter.matchAll(/blur\(([-\d.]+)px\)|drop-shadow\(([^)]+(?:\)[^)]+)?)\)/ig)) {
+    if (match[1]) {
+      outset = Math.max(outset, Math.abs(parseFloat(match[1]) || 0) * 2);
+    } else if (match[2]) {
+      const numbers = match[2].replace(/rgba?\([^)]+\)|color\([^)]+\)|#[0-9a-f]{3,8}/ig, '').match(/-?\d+(\.\d+)?px/g) || [];
+      const offsetX = Math.abs(parseFloat(numbers[0] || '0') || 0);
+      const offsetY = Math.abs(parseFloat(numbers[1] || '0') || 0);
+      const blur = Math.abs(parseFloat(numbers[2] || '0') || 0);
+      outset = Math.max(outset, offsetX + offsetY + blur);
+    }
+  }
+  return Math.min(160, Math.ceil(outset));
+}
+
+function splitShadowLayers(value) {
+  const raw = String(value || '');
+  if (!raw || raw === 'none') return [];
+  return splitCssLayers(raw);
+}
+
+function shouldUseLocalMaterialFallback(el, style, clipped, slideRect) {
+  if (isTextClippedBackground(style) || String(style.clipPath || '').includes('polygon(')) return false;
+  const tag = el.tagName.toLowerCase();
+  if (['section', 'main', 'article'].includes(tag) && clipped.width * clipped.height > slideRect.w * slideRect.h * 0.28) return false;
+  const background = String(style.backgroundImage || '');
+  if (!background.includes('gradient') && !background.includes('url(')) return false;
+  if (backgroundUrl(background)) return false;
+  if (shouldUseNativeGradientShape(style, clipped.width, clipped.height)) return false;
+  const areaRatio = clipped.width * clipped.height / Math.max(1, slideRect.w * slideRect.h);
+  if (areaRatio <= 0.0002 || areaRatio > 0.42) return false;
+  const hasDepth = (style.boxShadow && style.boxShadow !== 'none')
+    || (style.filter && style.filter !== 'none')
+    || (style.mixBlendMode && style.mixBlendMode !== 'normal')
+    || maxCssRadius(style, clipped.width, clipped.height) >= 10
+    || splitCssLayers(background).filter(layer => layer.includes('gradient')).length > 1;
+  return Boolean(hasDepth);
 }
 
 function transparentCssPaint(value) {
@@ -2419,7 +2571,7 @@ function firstFont(value) {
   return families[0] || 'Arial';
 }
 
-function pptFontSize(px, fontFace) {
+function pptFontSize(px, fontFace, style = {}) {
   const scale = /PingFang SC|Songti SC/i.test(fontFace) ? 0.60
     : /Menlo/i.test(fontFace) ? 0.66
       : PX_TO_PT;
