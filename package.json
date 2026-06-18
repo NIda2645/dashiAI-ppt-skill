@@ -29,6 +29,8 @@
     "validate:editor-presenter-modes:only": "node scripts/validate-editor-presenter-modes.mjs",
     "validate:editor-ui-polish": "npm run render:themes && node scripts/validate-editor-ui-polish.mjs",
     "validate:editor-ui-polish:only": "node scripts/validate-editor-ui-polish.mjs",
+    "validate:page-transitions": "npm run render:themes && node scripts/validate-page-transitions.mjs",
+    "validate:page-transitions:only": "node scripts/validate-page-transitions.mjs",
     "validate:url-state": "npm run render:themes && node scripts/validate-url-state.mjs",
     "validate:url-state:only": "node scripts/validate-url-state.mjs",
     "validate:dynamic-page-numbers": "node scripts/validate-dynamic-page-numbers.mjs",

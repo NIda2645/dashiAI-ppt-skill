@@ -243,6 +243,10 @@
   .page-transition-stage [data-transition-role="current"] *{animation:none!important;transition:none!important}
   .page-transition-stage [data-transition-role="next"] *{animation-delay:0ms!important;animation-play-state:paused!important;animation-fill-mode:both!important;transition:none!important}
   .page-transition-stage[data-enter-motion="running"] [data-transition-role="next"] *{animation-play-state:running!important}
+  .page-transition-pixel-grid,.page-transition-slice-grid,.page-transition-canvas{position:absolute;inset:0;z-index:6;pointer-events:none}
+  .page-transition-pixel{position:absolute;border-radius:1px;background:linear-gradient(135deg,rgba(70,227,198,.9),rgba(255,255,255,.22) 45%,rgba(2,4,12,.82));box-shadow:0 0 0 1px rgba(255,255,255,.08);will-change:transform,opacity}
+  .page-transition-slice{position:absolute;top:0;height:100%;background:linear-gradient(90deg,rgba(255,255,255,.18),rgba(70,227,198,.42),rgba(2,4,12,.72));will-change:transform,opacity}
+  .page-transition-canvas{width:100%;height:100%;mix-blend-mode:screen;opacity:.9}
   .bt-unicorn-frame{background:#05070b}
   .bt-unicorn-scene{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
   .bt-unicorn-scene canvas{width:100%!important;height:100%!important;display:block}
@@ -332,6 +336,9 @@
       <select id="preview-transition">
         <option value="none">无动画</option>
         <option value="liquidMorph">液态形变</option>
+        <option value="pixelReveal">像素网格</option>
+        <option value="sliceReveal">切片揭示</option>
+        <option value="canvasWipe">波形擦除</option>
       </select>
     </div>
     <div class="preview-field is-hidden" id="preview-props-field">
@@ -385,8 +392,11 @@
 <script src="assets/imported-theme-runtime.js"></script>
 <script>
 (function(){
+  window.__pageTransitionModes = ['none', 'liquidMorph', 'pixelReveal', 'sliceReveal', 'canvasWipe'];
   window.__pageTransitionMode = 'none';
-  window.__setPageTransition = value => { window.__pageTransitionMode = value === 'none' ? 'none' : 'liquidMorph'; };
+  window.__setPageTransition = value => {
+    window.__pageTransitionMode = window.__pageTransitionModes.includes(value) ? value : 'none';
+  };
   window.__getPageTransition = () => window.__pageTransitionMode || 'none';
   function updateHint(){
     const hint = document.getElementById('hint');
@@ -3317,7 +3327,7 @@ refreshRailCatalog();
 
   const urlViewState = window.__deckUrlStateInitial?.view || {};
   const saved = readSaved();
-  const transitionModes = ['none', 'liquidMorph'];
+  const transitionModes = window.__pageTransitionModes || ['none', 'liquidMorph'];
   const themePacks = options.themePacks || {};
   const initialThemePack = normalizeThemePack(urlViewState.themePack)
     || normalizeThemePack(saved.themePack)
@@ -5178,59 +5188,226 @@ refreshRailCatalog();
     slide.setAttribute('data-deck-active', '');
     window.__syncTheme10Motion?.(slide);
   };
-  function prepareTransitionClone(sourceSlide, role){
-    const clone = sourceSlide.cloneNode(true);
-    clone.classList.add('active');
-    clone.dataset.transitionRole = role;
-    clone.setAttribute('data-deck-active', '');
-    return clone;
-  }
-  window.__prepareTransitionClone = prepareTransitionClone;
+	  function prepareTransitionClone(sourceSlide, role){
+	    const clone = sourceSlide.cloneNode(true);
+	    clone.classList.add('active');
+	    clone.dataset.transitionRole = role;
+	    clone.setAttribute('data-deck-active', '');
+	    return clone;
+	  }
+	  window.__prepareTransitionClone = prepareTransitionClone;
+	  const transitionPlayers = {
+	    liquidMorph: playLiquidMorph,
+	    pixelReveal: playPixelReveal,
+	    sliceReveal: playSliceReveal,
+	    canvasWipe: playCanvasWipe,
+	  };
 	  window.__playPageTransition = function(mode, currentSlide, nextSlide, direction, commit, opts={}){
-	    if(!window.gsap || mode !== 'liquidMorph') { commit?.(); return Promise.resolve(); }
-      const nonBlocking = !!opts.nonBlocking || document.body.dataset.mode === 'edit';
-      if(nonBlocking){
-        document.querySelectorAll('.page-transition-stage[data-edit-transition="true"]').forEach(existing => {
-          existing.__transitionTimeline?.kill?.();
-          existing.__transitionResolve?.();
-          existing.remove();
-        });
-      }
+	    const player = transitionPlayers[mode];
+	    if(!player || !window.gsap || prefersReducedMotion()) {
+	      cleanupTransitionStages();
+	      commit?.();
+	      return Promise.resolve();
+	    }
+	    const ctx = createTransitionContext(mode, currentSlide, nextSlide, direction, commit, opts);
+	    return player(ctx, opts);
+	  };
+	  function prefersReducedMotion(){
+	    return window.matchMedia?.('(prefers-reduced-motion: reduce)')?.matches;
+	  }
+	  function cleanupTransitionStages(){
+	    document.querySelectorAll('.page-transition-stage').forEach(stage => {
+	      stage.__transitionCancel?.();
+	      stage.__transitionTimeline?.kill?.();
+	      stage.__transitionResolve?.();
+	      stage.remove();
+	    });
+	  }
+	  function createTransitionContext(mode, currentSlide, nextSlide, direction, commit, opts){
+	    const nonBlocking = !!opts.nonBlocking || document.body.dataset.mode === 'edit';
+	    cleanupTransitionStages();
 	    const stage = document.createElement('div');
 	    stage.className = 'page-transition-stage is-active';
-      if(nonBlocking) stage.dataset.editTransition='true';
+	    stage.dataset.transitionMode = mode;
+	    if(nonBlocking) stage.dataset.editTransition='true';
 	    const current = prepareTransitionClone(currentSlide, 'current');
-	    const next = prepareTransitionClone(nextSlide, 'next');
+	    const next = prepareTransitionClone(nextSlide, "next");
 	    stage.append(current, next);
 	    document.body.appendChild(stage);
-      window.__syncChartGrowthMotion?.(next);
-      window.__syncTheme10Motion?.(next);
+	    window.__syncChartGrowthMotion?.(next);
+	    window.__syncTheme10Motion?.(next);
 	    gsap.set([current, next], {position:'absolute', inset:0});
-      let targetEnterStarted = false;
-      const startTargetEnter = () => {
-        if(targetEnterStarted) return;
-        targetEnterStarted = true;
-        stage.dataset.enterMotion = 'running';
-        window.__startTransitionSlideEnter?.(nextSlide);
-      };
-	    let tl = gsap.timeline({defaults:{ease:'power3.inOut'}});
-      stage.__transitionTimeline = tl;
-	    gsap.set(next, {scale:1.02, filter:'blur(18px)', clipPath:'circle(0% at 50% 52%)', autoAlpha:1});
-      if(opts.commitEarly || nonBlocking) requestAnimationFrame(() => commit?.());
-	    tl.to(current, {scale:.985, filter:'blur(12px)', autoAlpha:.18, duration:.45}, 0)
-	      .to(next, {clipPath:'circle(142% at 50% 52%)', filter:'blur(0px)', scale:1, duration:.58, ease:'power4.inOut'}, 0)
-        .add(startTargetEnter, 0.23);
+	    const ctx = {
+	      mode,
+	      stage,
+	      current,
+	      next,
+	      direction: direction >= 0 ? 1 : -1,
+	      commit,
+	      nonBlocking,
+	      done: false,
+	      targetEnterStarted: false,
+	      resolve: null,
+	      timeline: null,
+	      startTargetEnter(){
+	        if(ctx.targetEnterStarted) return;
+	        ctx.targetEnterStarted = true;
+	        stage.dataset.enterMotion = 'running';
+	        window.__startTransitionSlideEnter?.(nextSlide);
+	      },
+	      finish(){
+	        if(ctx.done) return;
+	        ctx.done = true;
+	        ctx.startTargetEnter();
+	        commit?.();
+	        stage.remove();
+	        ctx.resolve?.();
+	      },
+	      cancel(){
+	        if(ctx.done) return;
+	        ctx.done = true;
+	        ctx.timeline?.kill?.();
+	        stage.remove();
+	        ctx.resolve?.();
+	      },
+	    };
+	    stage.__transitionCancel = ctx.cancel;
+	    return ctx;
+	  }
+	  function playTimeline(ctx, build, opts){
+	    const tl = gsap.timeline({defaults:{ease:'power3.inOut'}});
+	    ctx.timeline = tl;
+	    ctx.stage.__transitionTimeline = tl;
+	    build(tl, ctx);
+	    if(opts.commitEarly || ctx.nonBlocking) requestAnimationFrame(() => ctx.commit?.());
 	    return new Promise(resolve => {
-        stage.__transitionResolve = resolve;
-        tl.eventCallback('onComplete', () => {
-          startTargetEnter();
-          commit?.();
-          stage.remove();
-          resolve();
-        });
-      });
-	  };
-})();
+	      ctx.resolve = resolve;
+	      ctx.stage.__transitionResolve = resolve;
+	      tl.eventCallback('onComplete', ctx.finish);
+	    });
+	  }
+	  function playLiquidMorph(ctx, opts){
+	    return playTimeline(ctx, tl => {
+	      const startTargetEnter = ctx.startTargetEnter;
+	      gsap.set(ctx.next, {scale:1.02, filter:'blur(18px)', clipPath:'circle(0% at 50% 52%)', autoAlpha:1});
+	      tl.to(ctx.current, {scale:.985, filter:'blur(12px)', autoAlpha:.18, duration:.45}, 0)
+	        .to(ctx.next, {clipPath:'circle(142% at 50% 52%)', filter:'blur(0px)', scale:1, duration:.58, ease:'power4.inOut'}, 0)
+	        .add(startTargetEnter, 0.23);
+	    }, opts);
+	  }
+	  function playPixelReveal(ctx, opts){
+	    const grid = document.createElement('div');
+	    grid.className = 'page-transition-pixel-grid';
+	    grid.dataset.transitionProbe = 'true';
+	    const cols = 12;
+	    const rows = 7;
+	    const cells = [];
+	    for(let row=0; row<rows; row+=1){
+	      for(let col=0; col<cols; col+=1){
+	        const cell = document.createElement('i');
+	        cell.className = 'page-transition-pixel';
+	        cell.dataset.transitionProbe = 'true';
+	        cell.style.left = `${col * 100 / cols}%`;
+	        cell.style.top = `${row * 100 / rows}%`;
+	        cell.style.width = `${100 / cols + .08}%`;
+	        cell.style.height = `${100 / rows + .12}%`;
+	        cell.style.transformOrigin = `${ctx.direction > 0 ? '0%' : '100%'} 50%`;
+	        grid.appendChild(cell);
+	        cells.push(cell);
+	      }
+	    }
+	    ctx.stage.appendChild(grid);
+	    return playTimeline(ctx, tl => {
+	      gsap.set(ctx.current, {zIndex:2, autoAlpha:1, scale:1, filter:'blur(0px)'});
+	      gsap.set(ctx.next, {zIndex:1, autoAlpha:1, scale:1.018, filter:'saturate(.82) brightness(.86)'});
+	      gsap.set(cells, {autoAlpha:0, scale:.28});
+	      tl.to(cells, {autoAlpha:.95, scale:1, duration:.2, stagger:{each:.004, from:ctx.direction > 0 ? 'start' : 'end'}}, 0)
+	        .to(ctx.current, {autoAlpha:0, scale:.992, filter:'blur(8px)', duration:.38, ease:'power2.inOut'}, .08)
+	        .to(ctx.next, {scale:1, filter:'saturate(1) brightness(1)', duration:.56, ease:'power3.out'}, 0)
+	        .to(cells, {autoAlpha:0, scale:.72, duration:.28, stagger:{each:.003, from:'random'}}, .32)
+	        .add(ctx.startTargetEnter, .24);
+	    }, opts);
+	  }
+	  function playSliceReveal(ctx, opts){
+	    const grid = document.createElement('div');
+	    grid.className = 'page-transition-slice-grid';
+	    grid.dataset.transitionProbe = 'true';
+	    const count = 9;
+	    const slices = [];
+	    for(let index=0; index<count; index+=1){
+	      const slice = document.createElement('i');
+	      slice.className = 'page-transition-slice';
+	      slice.dataset.transitionProbe = 'true';
+	      slice.style.left = `${index * 100 / count}%`;
+	      slice.style.width = `${100 / count + .18}%`;
+	      slice.style.transformOrigin = ctx.direction > 0 ? '0% 50%' : '100% 50%';
+	      grid.appendChild(slice);
+	      slices.push(slice);
+	    }
+	    ctx.stage.appendChild(grid);
+	    const hiddenClip = ctx.direction > 0 ? 'inset(0 100% 0 0)' : 'inset(0 0 0 100%)';
+	    return playTimeline(ctx, tl => {
+	      gsap.set(ctx.current, {zIndex:1, autoAlpha:1, scale:1});
+	      gsap.set(ctx.next, {zIndex:2, autoAlpha:1, clipPath:hiddenClip, scale:1.012});
+	      gsap.set(slices, {autoAlpha:0, scaleX:0});
+	      tl.to(slices, {autoAlpha:.86, scaleX:1, duration:.32, stagger:{each:.025, from:ctx.direction > 0 ? 'start' : 'end'}, ease:'power3.inOut'}, 0)
+	        .to(ctx.next, {clipPath:'inset(0% 0% 0% 0%)', scale:1, duration:.64, ease:'power4.inOut'}, .02)
+	        .to(ctx.current, {scale:.988, autoAlpha:.22, filter:'blur(6px)', duration:.46}, .08)
+	        .to(slices, {autoAlpha:0, duration:.26, stagger:{each:.012, from:ctx.direction > 0 ? 'end' : 'start'}}, .42)
+	        .add(ctx.startTargetEnter, .24);
+	    }, opts);
+	  }
+	  function playCanvasWipe(ctx, opts){
+	    const canvas = document.createElement('canvas');
+	    canvas.className = 'page-transition-canvas';
+	    canvas.dataset.transitionProbe = 'true';
+	    ctx.stage.appendChild(canvas);
+	    const rect = ctx.stage.getBoundingClientRect();
+	    const ratio = Math.min(2, devicePixelRatio || 1);
+	    canvas.width = Math.max(2, Math.round(rect.width * ratio));
+	    canvas.height = Math.max(2, Math.round(rect.height * ratio));
+	    const drawing = canvas.getContext('2d');
+	    const state = {progress:0};
+	    const render = () => {
+	      const w = canvas.width;
+	      const h = canvas.height;
+	      const p = state.progress;
+	      drawing.clearRect(0, 0, w, h);
+	      const edge = ctx.direction > 0 ? p * w : (1 - p) * w;
+	      const gradient = drawing.createLinearGradient(0, 0, w, 0);
+	      gradient.addColorStop(0, 'rgba(70,227,198,0)');
+	      gradient.addColorStop(.48, 'rgba(70,227,198,.15)');
+	      gradient.addColorStop(.52, 'rgba(255,255,255,.75)');
+	      gradient.addColorStop(1, 'rgba(0,47,167,0)');
+	      drawing.fillStyle = gradient;
+	      drawing.fillRect(0, 0, w, h);
+	      drawing.strokeStyle = 'rgba(255,255,255,.82)';
+	      drawing.lineWidth = Math.max(2, 7 * ratio);
+	      drawing.beginPath();
+	      for(let y=0; y<=h; y+=8 * ratio){
+	        const wave = Math.sin((y / h) * Math.PI * 4 + p * Math.PI * 2) * 28 * ratio;
+	        const x = edge + wave;
+	        if(y === 0) drawing.moveTo(x, y);
+	        else drawing.lineTo(x, y);
+	      }
+	      drawing.stroke();
+	      const clip = ctx.direction > 0
+	        ? `inset(0 ${Math.max(0, 100 - p * 100)}% 0 0)`
+	        : `inset(0 0 0 ${Math.max(0, 100 - p * 100)}%)`;
+	      ctx.next.style.clipPath = clip;
+	    };
+	    return playTimeline(ctx, tl => {
+	      gsap.set(ctx.current, {zIndex:1, autoAlpha:1, scale:1});
+	      gsap.set(ctx.next, {zIndex:2, autoAlpha:1, scale:1.01, filter:'contrast(1.08) saturate(.92)'});
+	      render();
+	      tl.to(state, {progress:1, duration:.68, ease:'power2.inOut', onUpdate:render}, 0)
+	        .to(ctx.current, {autoAlpha:.18, filter:'blur(7px)', duration:.5}, .08)
+	        .to(ctx.next, {scale:1, filter:'contrast(1) saturate(1)', duration:.68, ease:'power3.out'}, 0)
+	        .to(canvas, {autoAlpha:0, duration:.22}, .5)
+	        .add(ctx.startTargetEnter, .25);
+	    }, opts);
+	  }
+	})();
 </script>
 </body>
 </html>
