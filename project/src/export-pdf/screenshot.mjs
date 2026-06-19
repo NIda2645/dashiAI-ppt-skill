@@ -19,7 +19,7 @@ export async function exportScreenshotPdfFromUrl(browser, url, options = {}) {
 
   const pdf = await PDFDocument.create();
   pdf.setTitle(options.title || 'Deck PDF Export');
-  pdf.setAuthor('Dashi PPT Skill');
+  pdf.setAuthor('DashiAI PPT');
   pdf.setSubject('Screenshot PDF export');
 
   const slideReports = [];

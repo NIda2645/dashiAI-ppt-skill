@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "title": "Dashi PPT Goal Spec",
+  "title": "DashiAI PPT Goal Spec",
   "type": "object",
   "required": [
     "title",

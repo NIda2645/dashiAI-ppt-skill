@@ -356,7 +356,7 @@ function testHttpPreviewDelivery() {
       title: 'HTTP Preview Smoke',
       goal: 'verify preview server delivery',
       audience: 'workflow validation',
-      owner: 'Dashi Skill',
+      owner: 'DashiAI PPT',
       randomSeed: 'http-preview-smoke',
       themePack: 'theme01',
       slides: [
@@ -372,7 +372,7 @@ function testHttpPreviewDelivery() {
             panelIndex: '01',
             panelEn: 'LOCAL PREVIEW',
             meta: ['Workflow', 'Validation', 'JAD-150'],
-            footnote: 'Dashi Skill · Preview delivery smoke',
+            footnote: 'DashiAI PPT · Preview delivery smoke',
           },
         },
         {
