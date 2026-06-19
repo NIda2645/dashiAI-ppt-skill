@@ -4418,7 +4418,7 @@ function analyzeCutoutMediaContamination(sample, pptx, media, sampleDir) {
 }
 
 function cutoutMediaMetrics(file) {
-  const image = readSampledRgbImage(file, 160, 160);
+  const image = readSampledRgbaImage(file, 160, 160);
   if (!image) return null;
   const fraction = (x0, y0, x1, y1, predicate) => {
     let matched = 0;
@@ -4429,21 +4429,23 @@ function cutoutMediaMetrics(file) {
     const endY = Math.min(image.height, Math.ceil(y1 * image.height));
     for (let y = startY; y < endY; y += 1) {
       for (let x = startX; x < endX; x += 1) {
-        const offset = (y * image.width + x) * 3;
+        const offset = (y * image.width + x) * 4;
         const r = image.buffer[offset];
         const g = image.buffer[offset + 1];
         const b = image.buffer[offset + 2];
+        const a = image.buffer[offset + 3];
         total += 1;
-        if (predicate(r, g, b)) matched += 1;
+        if (predicate(r, g, b, a)) matched += 1;
       }
     }
     return total ? matched / total : 0;
   };
-  const white = (r, g, b) => r > 225 && g > 225 && b > 225;
-  const dark = (r, g, b) => r < 50 && g < 65 && b < 95;
-  const black = (r, g, b) => r < 15 && g < 15 && b < 20;
-  const nearBlack = (r, g, b) => r < 30 && g < 30 && b < 40;
-  const blue = (r, g, b) => b > 110 && b > r + 15 && b > g - 15;
+  const visible = (_r, _g, _b, a) => a > 32;
+  const white = (r, g, b, a) => visible(r, g, b, a) && r > 225 && g > 225 && b > 225;
+  const dark = (r, g, b, a) => visible(r, g, b, a) && r < 50 && g < 65 && b < 95;
+  const black = (r, g, b, a) => visible(r, g, b, a) && r < 15 && g < 15 && b < 20;
+  const nearBlack = (r, g, b, a) => visible(r, g, b, a) && r < 30 && g < 30 && b < 40;
+  const blue = (r, g, b, a) => visible(r, g, b, a) && b > 110 && b > r + 15 && b > g - 15;
   const leftWhite = fraction(0, 0, 0.24, 1, white);
   const rightBlue = fraction(0.24, 0, 1, 1, blue);
   const rightDark = fraction(0.24, 0, 1, 1, dark);
@@ -4483,6 +4485,16 @@ function readSampledRgbImage(file, width, height) {
   const [sourceWidth, sourceHeight] = String(identified.stdout || '').trim().split(/\s+/).map(Number);
   if (!Number.isFinite(sourceWidth) || !Number.isFinite(sourceHeight) || sourceWidth <= 0 || sourceHeight <= 0) return null;
   const raw = spawnSync('magick', [file, '-resize', `${width}x${height}!`, '-depth', '8', 'rgb:-'], { encoding: null, maxBuffer: width * height * 3 + 1024 });
+  if (raw.status !== 0 || !raw.stdout?.length) return null;
+  return { sourceWidth, sourceHeight, width, height, buffer: raw.stdout };
+}
+
+function readSampledRgbaImage(file, width, height) {
+  if (!file || !existsSync(file) || !commandAvailable('magick')) return null;
+  const identified = spawnSync('magick', ['identify', '-format', '%w %h', file], { encoding: 'utf8' });
+  const [sourceWidth, sourceHeight] = String(identified.stdout || '').trim().split(/\s+/).map(Number);
+  if (!Number.isFinite(sourceWidth) || !Number.isFinite(sourceHeight) || sourceWidth <= 0 || sourceHeight <= 0) return null;
+  const raw = spawnSync('magick', [file, '-resize', `${width}x${height}!`, '-depth', '8', 'rgba:-'], { encoding: null, maxBuffer: width * height * 4 + 1024 });
   if (raw.status !== 0 || !raw.stdout?.length) return null;
   return { sourceWidth, sourceHeight, width, height, buffer: raw.stdout };
 }
