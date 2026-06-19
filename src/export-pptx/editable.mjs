@@ -744,7 +744,7 @@ function renderText(slide, node, slideRect, warnings, totals) {
     c.x += symbolWidth;
     c.w = Math.max(0.08, c.w - symbolWidth);
   }
-  const fontFace = firstFont(style.fontFamily);
+  const fontFace = fontFaceForText(style.fontFamily, value);
   const weight = String(style.fontWeight || '');
   const singleLine = node.singleLine && !/[\r\n]/.test(value);
   const verticalText = isVerticalWritingMode(style);
@@ -759,7 +759,7 @@ function renderText(slide, node, slideRect, warnings, totals) {
     fit: autoWidth ? 'resize' : 'shrink',
     wrap: autoWidth ? false : !isNoWrap(style.whiteSpace),
     fontFace,
-    fontSize: pptFontSize(fontSizePx, fontFace, style),
+    fontSize: pptFontSize(fontSizePx, fontFace, style, value),
     color: color.color,
     bold: weight === 'bold' || Number.parseInt(weight, 10) >= 600,
     italic: style.fontStyle === 'italic',
@@ -771,13 +771,17 @@ function renderText(slide, node, slideRect, warnings, totals) {
     transparency: combinedTransparency(color.alpha, style.opacity),
     charSpacing: letterSpacing(style.letterSpacing),
   };
+  const lineSpacing = pptLineSpacing(style.lineHeight, fontSizePx, fontFace, style, value);
+  if (lineSpacing) {
+    options.lineSpacing = lineSpacing;
+  }
   if (verticalText) {
     options.vert = 'eaVert';
   }
-  if (/Songti SC/i.test(fontFace) && fontSizePx >= 80 && node.parentTag === 'span') {
+  if (/Songti SC/i.test(fontStack(style, fontFace)) && fontSizePx >= 80 && node.parentTag === 'span') {
     options.y = Math.max(0, options.y - c.h * 0.28);
   }
-  if (style.materialBackground === 'true' && fontSizePx >= 72 && /PingFang SC|Songti SC/i.test(fontFace)) {
+  if (style.materialBackground === 'true' && fontSizePx >= 72 && /PingFang SC|Songti SC/i.test(fontStack(style, fontFace))) {
     options.y += c.h * 0.12;
   }
   if (!autoWidth) {
@@ -882,7 +886,7 @@ function shouldUseAutoWidthText(value, fontSizePx, box, node) {
 }
 
 function singleLineWidth(value, fontSizePx, box, fontFace, style = {}) {
-  const fontPt = pptFontSize(fontSizePx, fontFace, style);
+  const fontPt = pptFontSize(fontSizePx, fontFace, style, value);
   const units = textUnits(value);
   const spacing = Math.max(0, letterSpacing(style.letterSpacing)) * Math.max(0, Array.from(String(value || '')).length - 1) / 72 * 1.75;
   const estimated = units * fontPt / 72 + spacing;
@@ -2705,19 +2709,54 @@ function letterSpacing(value) {
   return Number.isFinite(n) ? Math.max(-2, Math.min(12, n * PX_TO_PT)) : 0;
 }
 
-function firstFont(value) {
-  const families = String(value || 'Arial')
+function fontFamilies(value) {
+  return String(value || 'Arial')
     .split(',')
-    .map(item => item.replace(/^["']|["']$/g, '').trim())
+    .map(item => item.trim().replace(/^["']|["']$/g, ''))
     .filter(Boolean);
+}
+
+function fontFaceForText(fontFamily, text = '') {
+  const families = fontFamilies(fontFamily);
+  if (hasCjkText(text)) {
+    const cjk = families.find(isCjkFontFamily);
+    if (cjk) return cjk;
+  }
   return families[0] || 'Arial';
 }
 
-function pptFontSize(px, fontFace, style = {}) {
-  const scale = /Noto Sans SC|PingFang SC|Songti SC|Microsoft YaHei/i.test(fontFace) ? 0.60
-    : /Space Mono|Menlo|ui-monospace|monospace/i.test(fontFace) ? 0.66
-      : PX_TO_PT;
+function isCjkFontFamily(value) {
+  return /Noto Sans SC|PingFang SC|Songti SC|Microsoft YaHei|Source Han|思源|黑体|宋体/i.test(String(value || ''));
+}
+
+function fontStack(style = {}, fontFace = '') {
+  return [fontFace, style.fontFamily].filter(Boolean).join(',');
+}
+
+function pptFontSize(px, fontFace, style = {}, text = '') {
+  const scale = pptFontScale(fontFace, style, text);
   return px * scale;
+}
+
+function pptFontScale(fontFace, style = {}, text = '') {
+  const stack = fontStack(style, fontFace);
+  if (/Space Mono|IBM Plex Mono|SFMono|ui-monospace|monospace|Menlo/i.test(stack)) return 0.66;
+  if (hasCjkText(text) || /Noto Sans SC|PingFang SC|Songti SC|Microsoft YaHei|Source Han|思源|黑体|宋体|sans-serif|system-ui|-apple-system/i.test(stack)) return 0.60;
+  return PX_TO_PT;
+}
+
+function hasCjkText(value) {
+  return /[\u2e80-\u9fff]/.test(String(value || ''));
+}
+
+function pptLineSpacing(value, fontSizePx, fontFace, style = {}, text = '') {
+  const raw = String(value || '').trim();
+  if (!raw || raw === 'normal') return null;
+  const n = parseFloat(raw);
+  if (!Number.isFinite(n) || n <= 0) return null;
+  const lineHeightPx = raw.endsWith('px') ? n : n <= 4 ? n * fontSizePx : n;
+  if (!Number.isFinite(lineHeightPx) || lineHeightPx <= 0) return null;
+  return pptFontSize(lineHeightPx, fontFace, style, text);
 }
 
 function normalizeAlign(value) {
