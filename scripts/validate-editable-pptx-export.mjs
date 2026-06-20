@@ -3183,7 +3183,7 @@ function validateJad64FollowupSample(sample, dom, pptx) {
   });
   const roundedGeomCount = details.filter(shape => ['roundRect', 'ellipse'].includes(shape.geom)).length;
   const triangleGeomCount = details.filter(shape => ['custGeom', 'triangle', 'rtTriangle'].includes(shape.geom)).length;
-  const symbolTextBoxes = textBoxes.filter(box => /[→↔⇒➜➤▶►◆◇⬩✦✧★☆]/.test(box.text || ''));
+  const symbolTextBoxes = textBoxes.filter(box => /[→↔⇒➜➤▶►➡↗↘↑↓←↖↙↕▲▼◆◇⬩✦✧★☆]/.test(box.text || ''));
   const highlightTexts = (dom.inlineHighlights || [])
     .map(item => normalizeSearchText(item.text))
     .filter(text => text.length >= 2);
