@@ -1097,7 +1097,8 @@
 |   |   |   |   |   |-- Slide83CoverPoster.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   |   |   |   |-- Slide84CoverHero.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   |   |   |   |-- Slide85CoverStatement.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
-|   |   |   |   |   `-- Slide86CoverSplit.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
+|   |   |   |   |   |-- Slide86CoverSplit.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
+|   |   |   |   |   `-- Slide87Icebreaker.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   |   |   |-- metadata.js - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   |   |   `-- runtime.jsx - Claude Design 导入主题组件、运行时、素材或登记元数据。
 |   |   |   |-- theme12/

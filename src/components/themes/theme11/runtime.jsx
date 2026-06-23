@@ -85,6 +85,7 @@ import CoverPoster, { coverPosterDefaultProps, coverPosterControls } from './sou
 import CoverHero, { coverHeroDefaultProps, coverHeroControls } from './source/Slide84CoverHero.jsx';
 import CoverStatement, { coverStatementDefaultProps, coverStatementControls } from './source/Slide85CoverStatement.jsx';
 import CoverSplit, { coverSplitDefaultProps, coverSplitControls } from './source/Slide86CoverSplit.jsx';
+import Icebreaker, { icebreakerDefaultProps, icebreakerControls } from './source/Slide87Icebreaker.jsx';
 
 const rawPages = [
   { Comp: CoverPoster, defaults: coverPosterDefaultProps, controls: coverPosterControls, label: '封面 · 海报' },
@@ -172,6 +173,7 @@ const rawPages = [
   { Comp: Pull, defaults: pullDefaultProps, controls: pullControls, label: '金句' },
   { Comp: Plate, defaults: plateDefaultProps, controls: plateControls, label: '陈列' },
   { Comp: Era, defaults: eraDefaultProps, controls: eraControls, label: '历程' },
+  { Comp: Icebreaker, defaults: icebreakerDefaultProps, controls: icebreakerControls, label: '破冰航道' },
   { Comp: Closing, defaults: closingDefaultProps, controls: closingControls, label: '谢幕' },
 ];
 
