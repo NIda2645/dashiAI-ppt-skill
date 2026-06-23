@@ -378,6 +378,9 @@ function testSkillPromptGuidance() {
   if (!(/文案长度/.test(skill) && /短词/.test(skill) && /短句/.test(skill))) missing.push('copy length guidance');
   if (!(/copyBudgets/.test(skill) && /display/.test(skill) && /metric/.test(skill))) missing.push('copyBudgets display/metric guidance');
   if (!(/media:stage/.test(skill) && /relative/.test(skill) && /AVIF/.test(skill))) missing.push('media:stage AVIF relative-path guidance');
+  if (!(/本次 deck 目录/.test(skill) && /deck 内相对路径/.test(skill) && /外部绝对路径/.test(skill))) missing.push('deck-local media path guidance');
+  if (!(/渲染后核对/.test(skill) && /ppt\/<relative>/.test(skill) && /HTML 包含文件名/.test(skill))) missing.push('post-render media path check guidance');
+  if (!(/缺失时只补最终 `ppt\/assets`/.test(skill) && /重跑校验/.test(skill))) missing.push('post-render media repair scope guidance');
   if (!(/props:safe -- --goal/.test(skill) || /props:safe --goal/.test(skill))) missing.push('whole-goal props:safe guidance');
   if (!(/goal:scaffold/.test(skill) && /唯一 layout 骨架/.test(skill))) missing.push('goal scaffold guidance');
   if (!(/可见数组项/.test(skill) && /隐藏的尾项/.test(skill) && /请输入文本/.test(skill))) missing.push('visible-vs-hidden placeholder guidance');

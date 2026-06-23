@@ -59,6 +59,8 @@ node scripts/check_latest_version.mjs
 - 需要 image-gen 生成 2 张以上独立图片时,用多个 subagent 并行生成,不要串行逐张等待;每张图独立生成,不要用一张拼图/素材板再拆分。subagent 只用于生图,不用于选题、文案、选页或校验。
 - 用户给素材时优先选 `layout:query --provided-images/--provided-media` 候选;只使用 `mediaSlots[].canPresetMedia: true` 的槽,按 `presetProp` 写路径。
 - 用户提供本地图片/视频先运行 `npm run media:stage -- <deck-output-dir-or-ppt-dir> <media-file...>`,使用返回的 `relative` 路径;AVIF 会转成浏览器可用格式。
+- image-gen 或用户素材必须先落到本次 deck 目录;`goal.json` 只引用 deck 内相对路径,不要引用临时目录或外部绝对路径。
+- 渲染后核对 goal 引用的每个图片/视频:`ppt/<relative>` 存在且 HTML 包含文件名;缺失时只补最终 `ppt/assets` 并重跑校验。
 - 用户提供的图片/视频素材每个最多使用一次。素材用完后,媒体插槽留空或改选无媒体插槽页面;除非用户明确要求,不要重复填充同一素材。
 - 元素出现动画使用 Claude Design 页面组件自带的原生效果。
 - 页面切换动画可以在预览控制面板里调整。
@@ -85,10 +87,11 @@ node scripts/check_latest_version.mjs
 5. 每页只承载一个主要信息角色。无法安全覆盖的页面优先换 layout,不要改样式字段硬凑。
 6. 把 JSON 写入本次工作目录的 `output/<deck-name>/goal.json`;渲染前运行 `npm run props:safe -- --goal output/<deck-name>/goal.json` 和 goal spec 校验。
 7. 运行 `npm run render:goal -- output/<deck-name>/goal.json output/<deck-name>/ppt/index.html`。
-8. 运行 `npm run validate:swiss -- output/<deck-name>/ppt/index.html`。
-9. 运行 `npm run validate:goal-copy -- output/<deck-name>/goal.json output/<deck-name>/ppt/index.html`。
-10. 从项目目录启动本地 HTTP/HTTPS 预览服务: `npm run preview:start -- output/<deck-name>/ppt <port>`。
-11. 按交付格式回复:HTML 给本机 HTTP、HTTPS 备用、HTML 文件路径;PPTX 只给文件路径或下载结果。
+8. 渲染后核对素材路径,缺失时补最终 `ppt/assets`。
+9. 运行 `npm run validate:swiss -- output/<deck-name>/ppt/index.html`。
+10. 运行 `npm run validate:goal-copy -- output/<deck-name>/goal.json output/<deck-name>/ppt/index.html`。
+11. 从项目目录启动本地 HTTP/HTTPS 预览服务: `npm run preview:start -- output/<deck-name>/ppt <port>`。
+12. 按交付格式回复:HTML 给本机 HTTP、HTTPS 备用、HTML 文件路径;PPTX 只给文件路径或下载结果。
 
 ## 返工与浏览器检查
 
