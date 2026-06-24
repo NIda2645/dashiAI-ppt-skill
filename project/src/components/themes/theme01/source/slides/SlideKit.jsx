@@ -151,6 +151,7 @@ export function ImageSlot({
   // tap; these handlers only exist when a host wired ImageSlotActions.
   const stopSlotNavigation = (e) => { e.stopPropagation(); };
   const hostProps = interactive ? {
+    'data-dashi-theme01-image-slot': 'true',
     role: 'button',
     onMouseEnter: () => setHover(true),
     onMouseLeave: () => setHover(false),

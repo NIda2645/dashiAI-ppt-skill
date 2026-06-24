@@ -182,6 +182,7 @@ function Pyramid({ tiers, focusIndex, showNumbers, faceTexture = 'gloss', accent
         // bottom inner-shadow band
         const bsY = yb - (yb - yt) * 0.22, bhw = hw(bsY);
         const lower = [[cx - bhw, bsY], [cx + bhw, bsY], FBR, FBL];
+        const titleX = showNumbers ? cx + frontHW * 0.18 : cx;
         return (
           <g key={idx} opacity={dim ? 0.32 : 1}>
             {/* right depth face + rim light on its leading edge */}
@@ -216,7 +217,7 @@ function Pyramid({ tiers, focusIndex, showNumbers, faceTexture = 'gloss', accent
                     style={{ fontFamily: "'Space Grotesk', sans-serif", letterSpacing: '0.02em',
                              paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.18)', strokeWidth: 3 }}>{num}</text>
             )}
-            <text x={cx + frontHW * 0.18} y={cyMid} fill="#ffffff" fillOpacity="0.97"
+            <text x={titleX} y={cyMid} fill="#ffffff" fillOpacity="0.97"
                   fontSize="31" fontWeight="500" textAnchor="middle" dominantBaseline="central"
                   style={{ fontFamily: "'Noto Sans SC', sans-serif", letterSpacing: '0.04em',
                            paintOrder: 'stroke', stroke: 'rgba(0,0,0,0.18)', strokeWidth: 3 }}>{L.data.title}</text>

@@ -640,7 +640,7 @@ async function testHttpPreviewDelivery() {
       title: 'HTTP Preview Smoke',
       goal: 'verify preview server delivery',
       audience: 'workflow validation',
-      owner: 'DashAI PPT',
+      owner: 'DashiAI PPT',
       randomSeed: 'http-preview-smoke',
       themePack: 'theme01',
       slides: [
@@ -660,7 +660,7 @@ async function testHttpPreviewDelivery() {
               { label: 'CHECK', value: 'Validation' },
               { label: 'ID', value: 'JAD-150' },
             ],
-            footnote: 'DashAI PPT · Preview delivery smoke',
+            footnote: 'DashiAI PPT · Preview delivery smoke',
           },
         },
         {

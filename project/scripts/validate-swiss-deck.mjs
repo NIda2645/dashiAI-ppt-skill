@@ -305,6 +305,12 @@ if (!/renderOverviewThumbDomPreview/.test(overviewThumbSource) || !/rememberOver
   errors.push('Overview thumbnails must use the controlled DOM clone thumbnail path with stable cache reuse.');
 }
 
+if (!/function uniquifySvgCloneIds\(/.test(html)
+  || !/value\.replace\(\s*\/url\\\(/.test(html)
+  || !/attr\.name === 'xlink:href'/.test(html)) {
+  errors.push('Cloned slide DOM must rewrite SVG ids and url(#id) references so thumbnails and transitions do not shadow the live slide defs.');
+}
+
 if (!/cloneNode\(true\)/.test(overviewDomPreviewSource)
   || !/querySelectorAll\(['"]script,style,template,noscript['"]\)/.test(overviewDomPreviewSource)
   || !/querySelectorAll\(['"]iframe,video['"]\)/.test(overviewDomPreviewSource)
@@ -312,6 +318,12 @@ if (!/cloneNode\(true\)/.test(overviewDomPreviewSource)
   || !/style\.transition\s*=\s*['"]none['"]/.test(overviewDomPreviewSource)
   || !/contain:layout paint style/.test(overviewDomPreviewSource)) {
   errors.push('Overview DOM clone thumbnails must be clipped, staticized, animation-free, and paint-contained.');
+}
+
+if (!/cloneNode\(true\)[\s\S]{0,180}uniquifySvgCloneIds\([^,]+,\s*['"]overview['"]/.test(overviewDomPreviewSource)
+  || !/rememberOverviewThumbFromDom[\s\S]{0,260}uniquifySvgCloneIds\([^,]+,\s*['"]overview-cache['"]/.test(html)
+  || !/restoreOverviewThumb[\s\S]{0,280}uniquifySvgCloneIds\([^,]+,\s*['"]overview-restore['"]/.test(html)) {
+  errors.push('Overview thumbnail clones and cached restores must uniquify SVG defs before they are inserted back into the document.');
 }
 
 if (/visualSlots|textSlots|fillText\s*\(|foreignObject|makeOverviewThumbSvg/.test(overviewDomPreviewSource)) {
@@ -381,6 +393,10 @@ if (/next\.classList\.add\(['"]active['"]\)[\s\S]{0,260}next\.removeAttribute\([
 
 if (!/prepareTransitionClone\(\s*nextSlide\s*,\s*['"]next['"]/.test(transitionRuntimeSource)) {
   errors.push('__playPageTransition must build the target clone through prepareTransitionClone(nextSlide, "next").');
+}
+
+if (!/prepareTransitionClone[\s\S]{0,220}uniquifySvgCloneIds\(\s*clone\s*,\s*`transition-\$\{role\}`\s*\)/.test(html)) {
+  errors.push('Page transition clones must uniquify SVG defs so cloned slides cannot shadow the live slide visual effects.');
 }
 
 if (!/function startTransitionSlideEnter\(/.test(html) || !/__transitionEnteredSlide/.test(html)) {

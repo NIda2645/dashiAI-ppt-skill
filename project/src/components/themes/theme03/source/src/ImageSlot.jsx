@@ -63,6 +63,10 @@ export function ImageSlot({
 
   const readFile = (file) => {
     if (!file || !/^(image|video)\//.test(file.type || "")) return;
+    if (media?.drop) {
+      media.drop(slotIndex, file);
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       const url = reader.result;

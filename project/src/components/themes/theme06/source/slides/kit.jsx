@@ -233,6 +233,10 @@ export function KxImageSlot({ id, placeholder = 'DROP IMAGE', badge, minRatio = 
 
   const accept = (file) => {
     if (!file || !/^(image|video)\//.test(file.type || '')) return;
+    if (hasHostMedia && media?.drop) {
+      media.drop(id, 0, file);
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e) => {
       const src = e.target.result;

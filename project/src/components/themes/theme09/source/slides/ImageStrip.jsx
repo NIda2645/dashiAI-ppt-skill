@@ -105,6 +105,10 @@ function ImageStrip(props){
 
   const ingest = (i, file)=>{
     if(!file || !/^(image|video)\//.test(file.type || '')) return;
+    if(hasHostMedia && media?.drop){
+      media.drop(slotKey(i), i, file);
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e)=>{
       const url = e.target.result;
@@ -163,6 +167,7 @@ function ImageSlotCell({ data, aspect, height, placeholder, onFile, onClear }){
 
   return (
     <div
+      data-dashi-theme09-image-slot="true"
       onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}
       onPointerDown={(e)=>e.stopPropagation()}
       onMouseDown={(e)=>e.stopPropagation()}
@@ -246,6 +251,10 @@ export function FillSlot({ idPrefix='fill', idx=0, placeholder='图片 / image',
   };
   const ingest = (file)=>{
     if(!file || !/^(image|video)\//.test(file.type || '')) return;
+    if(hasHostMedia && media?.drop){
+      media.drop(key, idx, file);
+      return;
+    }
     const reader = new FileReader();
     reader.onload = (e)=>{ const url = e.target.result;
       if(file.type.startsWith('video/')){
@@ -262,6 +271,7 @@ export function FillSlot({ idPrefix='fill', idx=0, placeholder='图片 / image',
   };
   return (
     <div
+      data-dashi-theme09-image-slot="true"
       onMouseEnter={()=>setHover(true)} onMouseLeave={()=>setHover(false)}
       onPointerDown={(e)=>e.stopPropagation()}
       onMouseDown={(e)=>e.stopPropagation()}

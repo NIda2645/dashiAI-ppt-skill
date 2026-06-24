@@ -137,6 +137,10 @@ export function ImageSlot({ src, placeholder = '图片', mode = 'ratio', height,
   };
   const ingest = (f) => {
     if (!f || !/^(image|video)\//.test(f.type || '')) return;
+    if (mediaBridge?.drop && Number.isFinite(bridgeIndex)) {
+      mediaBridge.drop(bridgeIndex, f);
+      return;
+    }
     const rd = new FileReader();
     rd.onload = () => {
       const url = rd.result;

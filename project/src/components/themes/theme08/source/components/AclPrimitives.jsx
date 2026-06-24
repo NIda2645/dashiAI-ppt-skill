@@ -226,6 +226,10 @@ function AdaptiveImageSlot({ id, box = 300, ratio = 0.8, placeholder = '拖入�
   };
   const readFile = (file) => {
     if (!file || !/^(image|video)\//.test(file.type || '')) return;
+    if (hasHostMedia && media?.drop) {
+      media.drop(id, 0, file);
+      return;
+    }
     const r = new FileReader();
     r.onload = () => {
       if (file.type.startsWith('video/')) {

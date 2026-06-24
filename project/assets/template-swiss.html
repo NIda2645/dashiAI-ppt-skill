@@ -1185,6 +1185,42 @@ function getSlideVmId(slide, index=allSlides.indexOf(slide)){
   return slide?.dataset?.vmSlideId || slide?.id || slide?.dataset?.layout || `slide-${Math.max(0, index) + 1}`;
 }
 
+let svgCloneIdCounter = 0;
+function uniquifySvgCloneIds(root, label='clone'){
+  if(!root?.querySelectorAll) return root;
+  const idNodes = [...root.querySelectorAll('svg [id]')];
+  if(root.matches?.('svg [id]')) idNodes.unshift(root);
+  if(!idNodes.length) return root;
+  const suffix = `${label}-${Date.now().toString(36)}-${(svgCloneIdCounter++).toString(36)}`;
+  const idMap = new Map();
+  idNodes.forEach((node, index) => {
+    const id = node.id;
+    if(!id || idMap.has(id)) return;
+    const next = `${id}__${suffix}-${index}`;
+    idMap.set(id, next);
+    node.id = next;
+  });
+  if(!idMap.size) return root;
+  const refNodes = [root, ...root.querySelectorAll('*')];
+  refNodes.forEach(node => {
+    if(!node.attributes) return;
+    [...node.attributes].forEach(attr => {
+      let value = attr.value;
+      if(!value) return;
+      let next = value.replace(/url\((["']?)#([^"')]+)\1\)/g, (match, quote, id) => {
+        const mapped = idMap.get(id);
+        return mapped ? `url(${quote}#${mapped}${quote})` : match;
+      });
+      if((attr.name === 'href' || attr.name === 'xlink:href') && next.startsWith('#')){
+        const mapped = idMap.get(next.slice(1));
+        if(mapped) next = `#${mapped}`;
+      }
+      if(next !== value) node.setAttribute(attr.name, next);
+    });
+  });
+  return root;
+}
+
 function restorePersistedCatalogSlides(){
   const state = window.__deckViewModel?.getState?.() || {};
   const records = Array.isArray(state.duplicatedSlides) ? state.duplicatedSlides : [];
@@ -1195,6 +1231,7 @@ function restorePersistedCatalogSlides(){
     const source = slideById.get(record.sourceId);
     if(!source) return;
     const clone = source.cloneNode(true);
+    uniquifySvgCloneIds(clone, 'duplicated-slide');
     prepareDuplicatedSlideClone(clone, source, record.copyId);
     deck.insertBefore(clone, source.nextSibling);
     slideById.set(record.copyId, clone);
@@ -1900,6 +1937,7 @@ function duplicateCatalogSlide(catalogIndex){
   const sourceId = getSlideVmId(source, allSlides.indexOf(source));
   const copyId = `${sourceId}__copy_${Date.now().toString(36)}_${Math.random().toString(36).slice(2, 6)}`;
   const clone = source.cloneNode(true);
+  uniquifySvgCloneIds(clone, 'duplicated-slide');
   prepareDuplicatedSlideClone(clone, source, copyId);
   deck.insertBefore(clone, source.nextSibling);
   const sourceModel = window.__deckViewModel?.model?.slides?.find(item => item.id === sourceId);
@@ -2492,6 +2530,7 @@ function createOverviewDomPreview(slide){
   if(shouldUseLiteOverviewPreview(slide) && !slide.firstElementChild) return createOverviewLitePreview(slide);
   const {width, height} = getOverviewSourceSize();
   const clone = slide.cloneNode(true);
+  uniquifySvgCloneIds(clone, 'overview');
   clone.dataset.overviewThumbPreview='true';
   clone.hidden=false;
   clone.classList.add('active');
@@ -2546,8 +2585,10 @@ function rememberOverviewThumb(slide, value){
 }
 
 function rememberOverviewThumbFromDom(slide, node){
+  const child = node.cloneNode(true);
+  uniquifySvgCloneIds(child, 'overview-cache');
   rememberOverviewThumb(slide, {
-    children:[node.cloneNode(true)],
+    children:[child],
     nodeCount:node.querySelectorAll('*').length + 1,
   });
 }
@@ -2894,20 +2935,20 @@ function requestProgrammaticRailThumbRefresh(){
 
 function cloneOverviewThumb(wrap){
   if(wrap?.dataset?.overviewRendered === 'true'){
-    const children = [...(wrap?.children || [])].map(child => child.cloneNode(true));
+    const children = [...(wrap?.children || [])].map(child => uniquifySvgCloneIds(child.cloneNode(true), 'overview-copy'));
     return {
       children,
       nodeCount: children.reduce((sum, child) => sum + 1 + (child.querySelectorAll?.('*').length || 0), 0),
     };
   }
   return {
-    children: [...(wrap?.children || [])].map(child => child.cloneNode(true)),
+    children: [...(wrap?.children || [])].map(child => uniquifySvgCloneIds(child.cloneNode(true), 'overview-copy')),
   };
 }
 
 function restoreOverviewThumb(wrap, cached){
   if(cached?.children?.length){
-    wrap.replaceChildren(...cached.children.map(child => child.cloneNode(true)));
+    wrap.replaceChildren(...cached.children.map(child => uniquifySvgCloneIds(child.cloneNode(true), 'overview-restore')));
     wrap.dataset.overviewMode='dom-clone';
     wrap.dataset.overviewRendered='true';
     return true;
@@ -5569,12 +5610,13 @@ refreshRailCatalog();
     void slide.offsetWidth;
     slide.setAttribute('data-deck-active', '');
     window.__syncTheme10Motion?.(slide);
-  };
-	  function prepareTransitionClone(sourceSlide, role, opts={}){
-	    const clone = sourceSlide.cloneNode(true);
-	    clone.classList.add('active');
-	    clone.dataset.transitionRole = role;
-	    clone.setAttribute('data-deck-active', '');
+	  };
+		  function prepareTransitionClone(sourceSlide, role, opts={}){
+		    const clone = sourceSlide.cloneNode(true);
+		    uniquifySvgCloneIds(clone, `transition-${role}`);
+		    clone.classList.add('active');
+		    clone.dataset.transitionRole = role;
+		    clone.setAttribute('data-deck-active', '');
 	    return clone;
 	  }
 	  window.__prepareTransitionClone = prepareTransitionClone;

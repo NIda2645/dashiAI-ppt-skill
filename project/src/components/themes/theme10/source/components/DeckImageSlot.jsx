@@ -60,6 +60,10 @@ function DeckImageSlot({ id, placeholder = 'IMAGE', fit = 'cover', radius = 18, 
 
   const ingest = (file) => {
     if (!file || !/^(image|video)\//.test(file.type || '')) return;
+    if (hasHostMedia && mediaHost?.drop) {
+      mediaHost.drop(id, 0, file);
+      return;
+    }
     const reader = new FileReader();
     reader.onload = () => {
       const url = String(reader.result);
