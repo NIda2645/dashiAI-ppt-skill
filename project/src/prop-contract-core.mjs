@@ -117,10 +117,12 @@ export function normalizeSlidePropsForContract(layout, props = {}, contract = nu
     if (!Number.isFinite(currentNumber)) {
       errors.push(`${binding.key} 不是有效数字`);
     } else {
+      // count 拖到比当前 authored 数组长——不再是硬错误:渲染合成层(client-runtime.jsx
+      // withPaddedCountArrays)会用该 layout 契约 defaultProps 里的同名数组补足到 count 再渲染,
+      // 用户能看到完整档位下的内容。这里只校验静态声明的 min/max(结构性上限),不再拿
+      // 「当前实际数据条数」倒逼报错——那属于生成侧数据完整度的提示,由 props:safe /
+      // validate:goal-spec 的 warnings 承接(见 scripts/skill-workflow-utils.mjs)。
       validateCountRange(binding, currentNumber, binding.key, errors, { props: next, defaults: contract.defaultProps });
-      if (currentNumber > derived.count && !isAllowedMediaCountShortage(binding, derived)) {
-        errors.push(`${binding.key}=${currentNumber},但 ${derived.source} 只有 ${derived.count} 条`);
-      }
     }
   }
   validateControlRanges(next, contract.controls, contract.countBindings, contract.defaultProps, errors);
@@ -327,7 +329,7 @@ function arrayLengthAtPath(source, pathName) {
   return Array.isArray(value) ? value.length : NaN;
 }
 
-function isMediaArrayPath(pathName) {
+export function isMediaArrayPath(pathName) {
   return isMediaArrayKey(String(pathName || '').split('.')[0].replace(/\[\]$/, ''))
     || isMediaArrayKey(countArrayPathField(pathName));
 }
@@ -351,8 +353,10 @@ function isVisualSlotCountBinding(binding) {
     && /(frame|image|media|photo|picture|slot|gallery|画框|画格|图片|图像|媒体|照片|相册)/i.test(text);
 }
 
-function isAllowedMediaCountShortage(binding, derived) {
-  return isMediaCountBinding(binding) && isMediaArrayPath(derived?.source);
+export function isAllowedMediaCountShortage(binding, derived) {
+  // 判据看绑定数组本身是否媒体数组(source),不看控件名模式——真实控件名有
+  // imgCount/mediaSlotCount 等变体,名字模式(imageCount/mediaCount)接不住它们。
+  return isMediaArrayPath(derived?.source);
 }
 
 function preferredMediaBindingArray(binding, mediaArrays = []) {
@@ -535,10 +539,9 @@ function applyMediaBackgroundMode(props, authoredProps, contract) {
   if (Object.prototype.hasOwnProperty.call(authoredProps || {}, 'backgroundMode')) return;
   const defaultProps = contract.defaultProps || {};
   if (!Object.prototype.hasOwnProperty.call(defaultProps, 'backgroundMode')) return;
-  // Pages whose contract defaults to the dynamic (unicorn) background keep it unless the author
-  // explicitly opts into upload. Auto-flipping to 'media' just because an image slot was filled
-  // would swap the dynamic backdrop for an empty upload placeholder.
-  if (defaultProps.backgroundMode === 'unicorn') return;
+  // Authored media is an explicit opt-in: hasAuthoredMedia() below only passes when the author
+  // actually filled a media array, so unicorn-default pages flip to 'media' too — matching the
+  // browser upload path, where landing an upload switches the gate atomically.
   if (!backgroundModeSupportsMedia(contract.controls)) return;
   if (!hasAuthoredMedia(authoredProps)) return;
   props.backgroundMode = 'media';
@@ -1297,7 +1300,7 @@ function normalizeControlType(type) {
   return type || 'range';
 }
 
-function deriveCount(props, binding) {
+export function deriveCount(props, binding) {
   if (binding.key === 'phaseCount') return derivePhaseCount(props);
 
   const counts = binding.arrays.flatMap(key => collectArrayCounts(props, key));

@@ -1234,6 +1234,7 @@ export const pages = [
       "focusIndex": 1,
       "showScale": true,
       "mediaMode": "gradient",
+      "images": [],
       "overline": "投资你的奖金 · ALLOCATION",
       "title": "自主指数 · 配置",
       "desc": "奖金的大部分配置于股票、另类资产与对冲工具的多元组合，并保留部分现金以维持灵活度。",
@@ -3060,6 +3061,7 @@ export const pages = [
       "showCreds": true,
       "backgroundMode": "unicorn",
       "unicornScene": "automations",
+      "images": [],
       "overline": "团队 · WHO RUNS IT",
       "name": "林彦",
       "role": "首席投资官 · Chief Investment Officer",
@@ -3112,7 +3114,7 @@ export const pages = [
         "max": 6,
         "step": 1,
         "publicKey": "memberCount",
-        "desc": "内容卡片数量（自动分列填满版面）。"
+        "desc": "内容卡片数量，含图片位（自动分列填满版面）。"
       },
       {
         "key": "showRole",
@@ -3148,6 +3150,7 @@ export const pages = [
       "showRole": true,
       "showIndex": false,
       "radius": 12,
+      "images": [],
       "overline": "团队 · WHO RUNS IT",
       "title": "替你执行纪律的人",
       "members": [
@@ -5416,6 +5419,7 @@ export const pages = [
       "imageSide": "right",
       "showPlates": true,
       "showLead": true,
+      "images": [],
       "overline": "影像随笔 · FIELD ESSAY",
       "title": "组合背后，\n是真实的生活",
       "lead": "每一条回报曲线的尽头，都站着一个具体的人、一段想要守护的日子。我们把抽象的数字，重新放回它本来的位置。",
@@ -5520,6 +5524,7 @@ export const pages = [
       "factCount": 2,
       "panelGlass": true,
       "showKicker": true,
+      "images": [],
       "kicker": "专栏 · IN PRACTICE",
       "headline": "把纪律，过成一种习惯",
       "lede": "真正改变结果的，不是某一次聪明的择时，而是日复一日、不被情绪干扰的执行。引擎把这件最难坚持的事，变成默认发生。",
@@ -5636,6 +5641,7 @@ export const pages = [
       "showIndex": true,
       "captionPos": "bottom",
       "radius": 12,
+      "images": [],
       "overline": "三种生活 · WHAT IT BUYS",
       "panels": [
         {
@@ -5743,6 +5749,7 @@ export const pages = [
       "showIndex": true,
       "focus": false,
       "focusIndex": 1,
+      "images": [],
       "bands": [
         {
           "label": "资产配置",
@@ -6039,7 +6046,7 @@ export const pages = [
         "max": 4,
         "step": 1,
         "publicKey": "itemCount",
-        "desc": "条目总数（1 条放大，其余进入右侧清单）。"
+        "desc": "条目总数，含圆形图片位（1 条放大，其余进入右侧清单）。"
       },
       {
         "key": "focusIndex",
@@ -6065,6 +6072,7 @@ export const pages = [
       "cardCount": 4,
       "focusIndex": 1,
       "showAvatar": true,
+      "images": [],
       "overline": "客户实证 · IN THEIR WORDS",
       "title": "把钱交给纪律之后",
       "cards": [
@@ -6172,6 +6180,7 @@ export const pages = [
       "showStats": true,
       "showCaption": false,
       "split": true,
+      "images": [],
       "overline": "产品理念",
       "title": "一个会自己思考的组合",
       "body": "自主指数不是一只基金，而是一套持续运行的系统。它读懂你的目标，在市场的每一次呼吸里，悄悄把组合调回最优。",
@@ -6350,6 +6359,7 @@ export const pages = [
       "showCaption": true,
       "scatter": true,
       "showPin": true,
+      "images": [],
       "overline": "影像 · FIELD NOTES",
       "title": "组合背后的人与现场",
       "cards": [
@@ -6449,6 +6459,7 @@ export const pages = [
       "showCaptions": true,
       "showIndex": true,
       "radius": 14,
+      "images": [],
       "overline": "影像 · IN FRAMES",
       "title": "把抽象的数字，放回真实的生活",
       "captions": [
@@ -6651,6 +6662,7 @@ export const pages = [
       "showImage": false,
       "rowCount": 4,
       "showFooter": true,
+      "images": [],
       "kicker": "投资你的奖金 · INVESTING YOUR BONUS",
       "title": "自主指数",
       "sub": "将大部分资金配置于股票、另类与对冲的分散组合，并保留部分现金以保持灵活。",
@@ -6970,6 +6982,7 @@ export const pages = [
       "imageCount": 3,
       "layout": "grid",
       "showCaption": true,
+      "images": [],
       "overline": "影像档案 · FIELD NOTES",
       "title": "组合背后的真实场景",
       "caption": "拖入你自己的图片 · 槽位将自动适配其比例与数量",
@@ -9908,6 +9921,7 @@ export const pages = [
       "tilt": true,
       "showCaptions": true,
       "showIndex": true,
+      "images": [],
       "overline": "影像志 · COLLAGE",
       "title": "一年，被记录下来",
       "captions": [
@@ -10004,6 +10018,7 @@ export const pages = [
       "noteCount": 3,
       "showMarkers": false,
       "showOverline": true,
+      "images": [],
       "overline": "细节 · ANNOTATED",
       "title": "把一张图，读到底",
       "notes": [
@@ -10163,6 +10178,7 @@ export const pages = [
       "showOverline": true,
       "backgroundMode": "unicorn",
       "unicornScene": "moving",
+      "images": [],
       "overline": "年度影像 · COVER",
       "title": "让财富，安静地生长",
       "ticks": [
@@ -10308,6 +10324,7 @@ export const pages = [
       "showRule": true,
       "backgroundMode": "unicorn",
       "unicornScene": "tech",
+      "images": [],
       "kicker": "第三章 · 长期主义",
       "headline": "时间，是\n最被低估的\n复利",
       "footL": "自主指数 · 2025 年度报告",
@@ -11108,6 +11125,7 @@ export const pages = [
       "showMark": true,
       "showAttribution": true,
       "radius": 16,
+      "images": [],
       "overline": "受托人手记 · IN THEIR WORDS",
       "quote": "我们不预测市场，我们设计一套无论市场怎么走，你都能睡得着觉的结构。",
       "name": "林知远",
@@ -12040,6 +12058,7 @@ export const pages = [
       "showThesis": true,
       "showTags": true,
       "showFileLabel": true,
+      "images": [],
       "overline": "标的档案 · ONE NAME, UP CLOSE",
       "fileNo": "NO.012",
       "title": "长江电力",
@@ -12157,6 +12176,7 @@ export const pages = [
       "arc": true,
       "showLabels": true,
       "showLead": true,
+      "images": [],
       "overline": "入选标的 · THIS YEAR’S FEATURED",
       "title": "今年走进组合的五张面孔",
       "lead": "它们不是全部，却最能说明这套规则在挑选什么——稳健的现金流、可解释的护城河、与组合其余部分的低相关。",
@@ -12405,6 +12425,7 @@ export const pages = [
       "align": "left",
       "showContact": true,
       "showQR": false,
+      "images": [],
       "title": "让财富，开始自主增长",
       "kicker": "THANK YOU",
       "contacts": [

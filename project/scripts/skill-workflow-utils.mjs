@@ -566,7 +566,11 @@ function validateFillableValueShape(value, shape, field, errors, warnings = [], 
     }
     const contractPath = contractPathForField(field);
     const countBound = countBoundLengths.get(contractPath);
-    if (countBound != null && value.length !== countBound.count) {
+    if (countBound != null && value.length < countBound.count) {
+      // count 拖到比当前 authored 数组长不再是硬错误——渲染合成层会用该 layout 契约
+      // defaultProps 里的同名数组补足到 count 再显示,这里只提醒生成侧最好把数组写全。
+      warnings.push(`countBinding shortfall ${countBound.key}=${countBound.count}; ${String(field).replace(/^props\./, '')} has ${value.length} (渲染会用默认内容补足,建议补全数组)`);
+    } else if (countBound != null && value.length > countBound.count) {
       errors.push(`countBinding mismatch ${countBound.key}=${countBound.count}; ${String(field).replace(/^props\./, '')} has ${value.length}`);
       return;
     }

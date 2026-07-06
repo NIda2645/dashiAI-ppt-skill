@@ -301,6 +301,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "backgroundTheme": "muted",
       "mediaCount": 4,
       "showDecor": true,

@@ -315,8 +315,7 @@
         '  <div class="handle" data-c="sw"></div><div class="handle" data-c="se"></div>' +
         '</div>' +
         '<div class="ctl"><button data-act="replace" title="Replace media">Replace</button>' +
-        '  <button data-act="clear" title="Remove media">Remove</button></div>' +
-        '<input type="file" accept="' + ACCEPT.join(',') + '" hidden>';
+        '  <button data-act="clear" title="Remove media">Remove</button></div>';
       this._frame = root.querySelector('.frame');
       this._ring = root.querySelector('.ring');
       this._img = root.querySelector('.frame img.main');
@@ -328,7 +327,7 @@
       this._spill = root.querySelector('.spill');
       this._ghost = root.querySelector('.ghost');
       this._err = null;
-      this._input = root.querySelector('input');
+      this._input = null;
       this._depth = 0;
       this._gen = 0;
       this._view = { s: 1, x: 0, y: 0 };
@@ -340,24 +339,20 @@
       this._empty.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this._input.click();
+        this._pickFile();
       });
       root.addEventListener('click', (e) => {
         e.stopPropagation();
         const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
-        if (act === 'replace') { this._exitReframe(true); this._input.click(); }
+        if (act === 'replace') { this._exitReframe(true); this._pickFile(); }
         if (act === 'clear') {
           this._exitReframe(false);
           this._gen++;
           this._local = null;
           if (this.id) setSlot(this.id, null); else this._render();
+          this._notifyHost(null);
         }
-        if (!act && !this._empty.contains(e.target) && e.target !== this._input) this._input.click();
-      });
-      this._input.addEventListener('change', () => {
-        const f = this._input.files && this._input.files[0];
-        if (f) this._ingest(f);
-        this._input.value = '';
+        if (!act && !this._empty.contains(e.target) && e.target !== this._input) this._pickFile();
       });
       // naturalWidth/Height aren't known until load — re-apply so the cover
       // baseline is computed from real dimensions, not the 100%×100% fallback.
@@ -500,7 +495,45 @@
       this.removeEventListener('drop', this);
       if (this._ro) { this._ro.disconnect(); this._ro = null; }
       if (this._activeObserver) { this._activeObserver.disconnect(); this._activeObserver = null; }
+      this._dropPendingInput();
       this._exitReframe(false);
+    }
+
+    // The file input is created per pick and torn down as soon as it's
+    // consumed, never kept resident in the shadow DOM. Slides stay mounted
+    // for the whole session, so a resident <input type="file"> in every
+    // slot outlives its page and pollutes any generic file-input lookup
+    // made against the document (shadow-piercing host tooling, the upload
+    // gate in scripts/test/test-media-upload-all-pages.mjs): an upload
+    // driven on a *different* theme's page can resolve to one of these
+    // stale inputs and silently land nowhere. With a single-use input
+    // there is nothing stale to find. A canceled pick's input lingers only
+    // until the next pick, the slide going inactive (_renderImpl), or
+    // disconnect — deliberately no 'cancel' listener, because environments
+    // that never open a real picker dialog (headless automation) fire
+    // 'cancel' immediately on click, which would tear the input down
+    // before a programmatic file assignment can land.
+    _pickFile() {
+      this._dropPendingInput();
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = ACCEPT.join(',');
+      input.hidden = true;
+      input.addEventListener('change', () => {
+        const f = input.files && input.files[0];
+        input.remove();
+        if (this._input === input) this._input = null;
+        if (f) this._ingest(f);
+      }, { once: true });
+      this._input = input;
+      this.shadowRoot.appendChild(input);
+      input.click();
+    }
+
+    _dropPendingInput() {
+      if (!this._input) return;
+      this._input.remove();
+      this._input = null;
     }
 
     _enterReframe() {
@@ -579,11 +612,33 @@
         // Keep a session-local copy for id-less slots so the drop still
         // shows, even though it cannot persist.
         if (!this.id) { this._local = val; this._render(); }
+        this._notifyHost(val);
       } catch (err) {
         if (gen !== this._gen) return;
         this._setError('Could not read that image.');
         console.warn('<image-slot> ingest failed:', err);
       }
+    }
+
+    // <image-slot> owns its own upload/persistence (setSlot/subs, above) —
+    // entirely outside the deck's createMediaApi/updateList bridge that every
+    // other theme's media slot writes through. That's fine for display and
+    // reload-persistence (sidecar/localStorage), but it means the deck's own
+    // view-model (window.__deckViewModel — read by PPTX/PDF export's
+    // data-driven paths, undo, and any host tooling that inspects slide
+    // props) never sees the upload. Mirror the *content identity* (src/kind
+    // only — crop/reframe stays local, it isn't part of the images[] shape)
+    // into a bubbling, composed DOM event so client-runtime.jsx can fold it
+    // into props.images at this slot's DOM-order index (see
+    // bindRenderedImageSlots' 'dashi-image-slot-change' listener + JAD-MEDIA01
+    // defaultProps declarations across theme04's slides).
+    _notifyHost(value) {
+      if (!this.id) return;
+      this.dispatchEvent(new CustomEvent('dashi-image-slot-change', {
+        bubbles: true,
+        composed: true,
+        detail: { id: this.id, value: value ? { src: value.u, kind: value.kind || 'image' } : null },
+      }));
     }
 
     _setError(msg) {
@@ -682,6 +737,10 @@
     }
 
     _renderImpl() {
+      // A pick left dangling by a canceled dialog must not outlive its
+      // slide's active state — the slide-deactivation re-render (via
+      // _activeObserver) is the natural sweep point.
+      if (!slotIsActive(this)) this._dropPendingInput();
       // Shape / mask. Presets use border-radius so the dashed ring can
       // follow the rounded outline; clip-path is only applied for an
       // explicit `mask` (the ring is hidden there since a rectangle

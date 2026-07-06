@@ -487,11 +487,13 @@ function validateCountBindingConsistency(layout, props, slideNumber, layoutLabel
     const count = numberOrNull(rawCount);
     if (count == null) continue;
 
+    // count 比 authored 数组长(渲染合成层会用 defaultProps 补足到 count 再显示)不再是硬
+    // 错误——只有数组比 count 还长(多余的已写数据不会被渲染,大概率是笔误)仍然拦下来。
     const mismatches = [];
     for (const arrayPath of binding.arrays || []) {
       if (isMediaArrayKey(rootArrayKey(arrayPath))) continue;
       for (const item of collectBoundArrays(props, arrayPath)) {
-        if (item.value.length === count) continue;
+        if (item.value.length <= count) continue;
         const shortField = stripPropsPrefix(item.field);
         const fullField = item.field === shortField ? '' : ` (${item.field} has ${item.value.length})`;
         mismatches.push(`${shortField} has ${item.value.length}${fullField}`);

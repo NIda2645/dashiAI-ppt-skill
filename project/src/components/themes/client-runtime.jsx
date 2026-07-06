@@ -4,6 +4,7 @@ import { createRoot } from 'react-dom/client';
 import {
   createLayoutContracts,
   isMediaArrayKey,
+  isMediaArrayPath,
   isPrunedContractOmit,
   normalizeSlidePropsForContract,
   pruneContractValue,
@@ -272,13 +273,24 @@ function renderMedia(value, props = {}) {
 }
 
 function createMediaApi(slide, baseProps, entry, defaults) {
-  function updateList(key, index, value) {
+  // `extraProps` (optional): companion top-level props to merge in the same
+  // write — e.g. a theme gates a slot's visibility behind a switch
+  // (backgroundMode:'unicorn'|'media', mediaCount:0) whose upload-only
+  // fallback slot (mounted so editors have a click/drop target before they've
+  // found the switch) writes media but leaves the gate untouched, so the
+  // upload lands in the view-model yet never paints. Callers that own such a
+  // gate pass its target value here so the single setProps below flips both
+  // atomically. Read back the gate's current value first so undo restores it.
+  function updateList(key, index, value, extraProps) {
     const slideId = slide.dataset.vmSlideId;
     const currentProps = window.__deckViewModel?.getState?.().props?.[slideId] || {};
     const safeCurrentProps = sanitizeExternalStateValues(entry, defaults, currentProps);
     const sourceProps = { ...baseProps, ...safeCurrentProps };
     const nextList = toArray(sourceProps[key]);
     const previousValue = nextList[index] || null;
+    const previousExtraProps = extraProps
+      ? Object.fromEntries(Object.keys(extraProps).map(k => [k, sourceProps[k]]))
+      : null;
     nextList[index] = value || null;
     // Persist from `sourceProps` (baseProps + live overrides), not just
     // `safeCurrentProps` (live overrides alone) — baseProps carries the
@@ -289,10 +301,10 @@ function createMediaApi(slide, baseProps, entry, defaults) {
     // a prop gating a media slot's visibility (as here) silently unmounts
     // the slot — the media a user just dropped renders once, then the
     // background/media control reverts and the video disappears.
-    const nextProps = sanitizeExternalStateValues(entry, defaults, stripRuntimeProps({ ...sourceProps, [key]: nextList }));
+    const nextProps = sanitizeExternalStateValues(entry, defaults, stripRuntimeProps({ ...sourceProps, [key]: nextList, ...extraProps }));
     window.__dashiUndo?.push?.({
       label: 'media',
-      undo: () => updateList(key, index, previousValue),
+      undo: () => updateList(key, index, previousValue, previousExtraProps),
     });
     window.__deckViewModel?.setProps?.(slideId, nextProps);
     window.__markOverviewThumbDirty?.(slide);
@@ -301,18 +313,18 @@ function createMediaApi(slide, baseProps, entry, defaults) {
     window.__syncActiveEffects?.(slide, { skipMotion: true });
   }
 
-  async function acceptFile(key, index, file) {
+  async function acceptFile(key, index, file, extraProps) {
     const data = await readMediaFile(file);
-    if (data?.src) updateList(key, index, data);
+    if (data?.src) updateList(key, index, data, extraProps);
   }
 
-  function pick(key, index) {
+  function pick(key, index, extraProps) {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*,video/mp4,video/webm,video/quicktime,video/*';
     input.style.display = 'none';
     input.addEventListener('change', () => {
-      acceptFile(key, index, input.files && input.files[0]).finally(() => input.remove());
+      acceptFile(key, index, input.files && input.files[0], extraProps).finally(() => input.remove());
     }, { once: true });
     document.body.appendChild(input);
     input.click();
@@ -470,7 +482,7 @@ function withMediaHostProps(slide, baseProps, entry, defaults) {
     onActivate: index => mediaApi.pick('images', index),
     onClear: index => mediaApi.set('images', index, null),
     onImageChange: (index, src, ar) => mediaApi.set('images', index, mediaWithAspect(src, ar)),
-    onMediaChange: (index, src) => mediaApi.set('media', index, src),
+    onMediaChange: (index, src, extraProps) => mediaApi.set('media', index, src, extraProps),
     renderSlot: (index, options) => (
       <HostImageSlot mediaApi={mediaApi} index={index} options={options} />
     ),
@@ -479,16 +491,24 @@ function withMediaHostProps(slide, baseProps, entry, defaults) {
 }
 
 function withImageProviders(element, mediaApi) {
+  // `extraProps` (optional 2nd/3rd arg here) mirrors createMediaApi's own
+  // extraProps passthrough (see its comment above `updateList`): a page can
+  // gate its real ImageSlot behind a switch (backgroundMode:'unicorn'|'media')
+  // and still mount a corner EditOnlyImageSlot as an upload entry point before
+  // the editor finds that switch. Threading extraProps from the slot all the
+  // way through this context bridge lets that corner slot flip the gate in
+  // the same write as the upload, so the image doesn't land invisibly behind
+  // a switch that's still set to its dynamic-background default.
   const theme01Value = {
-      pick: index => mediaApi.pick('images', index),
+      pick: (index, extraProps) => mediaApi.pick('images', index, extraProps),
       clear: index => mediaApi.set('images', index, null),
-      drop: (index, file) => mediaApi.acceptFile('images', index, file),
+      drop: (index, file, extraProps) => mediaApi.acceptFile('images', index, file, extraProps),
   };
   const theme03Value = {
     get: index => mediaApi.get('images', index),
-    set: (index, value) => mediaApi.set('images', index, value),
-    pick: index => mediaApi.pick('images', index),
-    drop: (index, file) => mediaApi.acceptFile('images', index, file),
+    set: (index, value, extraProps) => mediaApi.set('images', index, value, extraProps),
+    pick: (index, extraProps) => mediaApi.pick('images', index, extraProps),
+    drop: (index, file, extraProps) => mediaApi.acceptFile('images', index, file, extraProps),
   };
   const keyedValue = createKeyedImageBridge(mediaApi);
   const theme11Value = createTheme11ImageBridge(mediaApi);
@@ -539,9 +559,13 @@ function createKeyedImageBridge(mediaApi) {
   return {
     isActive: () => mediaApi.isActive?.() !== false,
     get: (slotKey, fallbackIndex) => mediaApi.get('images', resolveIndex(slotKey, fallbackIndex)),
-    set: (slotKey, fallbackIndex, value) => mediaApi.set('images', resolveIndex(slotKey, fallbackIndex), value),
-    pick: (slotKey, fallbackIndex) => mediaApi.pick('images', resolveIndex(slotKey, fallbackIndex)),
-    drop: (slotKey, fallbackIndex, file) => mediaApi.acceptFile('images', resolveIndex(slotKey, fallbackIndex), file),
+    // Trailing `extraProps` mirrors createMediaApi's own passthrough (see the
+    // comment above `updateList`): lets a mode-gated edit-only slot (e.g.
+    // theme06 layout:'table'|'map' presets) flip its gate in the same write
+    // as the upload so the media never lands invisibly.
+    set: (slotKey, fallbackIndex, value, extraProps) => mediaApi.set('images', resolveIndex(slotKey, fallbackIndex), value, extraProps),
+    pick: (slotKey, fallbackIndex, extraProps) => mediaApi.pick('images', resolveIndex(slotKey, fallbackIndex), extraProps),
+    drop: (slotKey, fallbackIndex, file, extraProps) => mediaApi.acceptFile('images', resolveIndex(slotKey, fallbackIndex), file, extraProps),
   };
 }
 
@@ -613,6 +637,33 @@ function bindRenderedImageSlots(root, mediaApi) {
     const file = event.dataTransfer?.files?.[0];
     rootMediaApis.get(root)?.acceptFile('images', getGxnSlotIndex(root, slot), file);
   });
+
+  // theme04's <image-slot> custom element manages its own upload/persistence
+  // (shadow DOM + sidecar/localStorage) entirely outside this bridge, and
+  // notifies content changes via a bubbling 'dashi-image-slot-change' event
+  // (see source/image-slot.js `_notifyHost`). Fold that into props.images at
+  // the slot's DOM-order index — same indexing applyImageSlotSources() uses
+  // to read the initial src back out — so uploads land in the deck's own
+  // view-model (export/undo/hash-visible state), not just the slot's shadow
+  // DOM.
+  //
+  // A page can gate its "real" <image-slot> behind another control (e.g.
+  // backgroundMode:'unicorn'|'media') and mount an EditOnlySlot fallback with
+  // the same id as an upload entry point before the editor finds that
+  // control. The fallback element can declare a `data-dashi-media-extra-props`
+  // JSON attribute (companion props to write atomically with the upload, only
+  // applied when a value actually lands — clearing an image shouldn't also
+  // flip an unrelated gate) so the write doesn't land invisibly behind a gate
+  // that's still at its default.
+  root.addEventListener('dashi-image-slot-change', event => {
+    const slot = event.target;
+    if (!slot || slot.tagName !== 'IMAGE-SLOT' || !root.contains(slot)) return;
+    const index = [...root.querySelectorAll('image-slot')].indexOf(slot);
+    if (index < 0) return;
+    const value = event.detail?.value ?? null;
+    const extraProps = value ? readJson(slot.getAttribute('data-dashi-media-extra-props'), null) : null;
+    rootMediaApis.get(root)?.set('images', index, value, extraProps || undefined);
+  });
 }
 
 function applyImageSlotSources(root, mediaApi) {
@@ -623,6 +674,43 @@ function applyImageSlotSources(root, mediaApi) {
     if (src) slot.setAttribute('src', src);
     else if (slot.hasAttribute('src')) slot.removeAttribute('src');
   });
+}
+
+const entryContracts = new Map();
+
+function getEntryContract(entry) {
+  if (!entry?.key) return null;
+  if (entryContracts.has(entry.key)) return entryContracts.get(entry.key);
+  const contract = createLayoutContracts([{
+    ...entry,
+    defaultProps: { ...(entry.defaultProps || {}) },
+  }]).get(entry.key) || null;
+  entryContracts.set(entry.key, contract);
+  return contract;
+}
+
+// 把一批待应用的外部改动喂给契约校验;超出边界(如 count 超出数组长度)时不整体作废这次
+// 编辑,而是逐字段回退到"改动前"的取值,把真正违规的那个字段单独丢弃——用户拖坏一个滑杆
+// 不该连坐同一页的其它控件,也不该让这次渲染直接抛出、把上层调用链的收尾代码一起冲掉。
+function safeNormalizeContractValues(entry, contract, contractValues, baselineAuthored) {
+  try {
+    return { values: normalizeSlidePropsForContract(entry.key, contractValues, contract) };
+  } catch (error) {
+    const safe = {};
+    for (const [key, value] of Object.entries(contractValues)) {
+      try {
+        normalizeSlidePropsForContract(entry.key, { ...baselineAuthored, [key]: value }, contract);
+        safe[key] = value;
+      } catch {
+        // 该字段单独校验也不通过(如 count 超出当前数组长度):丢弃它,保留其余改动。
+      }
+    }
+    try {
+      return { values: normalizeSlidePropsForContract(entry.key, safe, contract), error };
+    } catch (fallbackError) {
+      return { values: {}, error: fallbackError };
+    }
+  }
 }
 
 function normalizeExternalValues(entry, defaults, values) {
@@ -659,17 +747,36 @@ function normalizeExternalValues(entry, defaults, values) {
     }
   }
   if (!Object.keys(contractValues).length) return passthroughValues;
-  const contract = createLayoutContracts([{
-    ...entry,
-    defaultProps: {
-      ...(entry.defaultProps || {}),
-      ...(defaults || {}),
-    },
-  }]).get(entry.key);
-  const normalizedValues = contract
-    ? normalizeSlidePropsForContract(entry.key, contractValues, contract)
-    : contractValues;
+  const contract = getEntryContract(entry);
+  if (!contract) return { ...contractValues, ...passthroughValues };
+  carryCountKeysForChangedArrays(contract, contractValues, authoredValues);
+  const { values: normalizedValues, error } = safeNormalizeContractValues(entry, contract, contractValues, baselineValues);
+  if (error) {
+    console.warn(`[dashi-ppt] dropped invalid prop(s) for "${entry.key}" instead of crashing the render`, error);
+  }
   return { ...normalizedValues, ...passthroughValues };
+}
+
+// contractValues 只装「与 baseline 不同」的字段(见 changedExternalValues)。一个 count 控件
+// 拖到和当页 baseline(布局设计默认值)恰好相同的档位时(常见于拖到静态 max——很多页面的
+// defaultProps 数组长度正好等于 max),count 字段本身会被判定为"没变"而被这里漏掉,只留下
+// 真正变了的内容数组。normalizeSlidePropsForContract 一旦发现 count 字段缺失,会按"未显式
+// 设置"处理、从(此刻已变短的)数组长度反推 count——把用户刚选的档位悄悄改回数组长度。
+//
+// 只在调用方这次确实显式带了这个 count 字段(hasOwnProperty,不只是"凑巧等于 baseline")时才
+// 把它带回 contractValues;从不退回 baseline——只 authored 了数组、从没提过 count 的场景(如
+// goal.json 只写了内容数组)必须继续让 normalizeSlidePropsForContract 按数组长度自动推导,
+// 不能被这里意外钉死成布局设计默认值。
+function carryCountKeysForChangedArrays(contract, contractValues, authoredValues) {
+  for (const binding of contract.countBindings || []) {
+    if (!binding?.key || Object.prototype.hasOwnProperty.call(contractValues, binding.key)) continue;
+    if (!Object.prototype.hasOwnProperty.call(authoredValues, binding.key)) continue;
+    const arrayChanged = (binding.arrays || []).some(pathName => {
+      const rootKey = String(pathName || '').split(/[.[]/)[0];
+      return rootKey && Object.prototype.hasOwnProperty.call(contractValues, rootKey);
+    });
+    if (arrayChanged) contractValues[binding.key] = authoredValues[binding.key];
+  }
 }
 
 function isAuthoredMediaArrayValue(entry, defaults, key, value) {
@@ -867,34 +974,127 @@ function isPlainObject(value) {
   return !!value && typeof value === 'object' && !Array.isArray(value);
 }
 
+// count 控件的静态 max 是布局设计的完整档位(参见 prop-contract-core.mjs 的
+// clampCountControlLimits——它保证 max 永远不超过该 layout defaultProps 里对应数组的长度),
+// 所以把 count 拖到比当前 authored 数组长时,defaultProps 同名数组里永远有足够的条目可以
+// 补足。这里只补渲染用的 props,不改 entry/view-model 本身——用户没编辑过的补足条目因此不会
+// 被持久化;补足条目取自 defaultProps 的同下标内容,和这些下标平时默认渲染出来的文案 ID 一致,
+// 侧栏按 `text:<slideKey>:<slot>` 编辑这些条目和编辑普通默认条目没有区别。
+function withPaddedCountArrays(entry, props) {
+  const contract = getEntryContract(entry);
+  if (!contract) return props;
+  let next = props;
+  for (const binding of contract.countBindings || []) {
+    const count = Number(next[binding.key]);
+    if (!Number.isFinite(count) || count <= 0) continue;
+    for (const arrayPath of binding.arrays || []) {
+      if (isMediaArrayPath(arrayPath)) continue; // 媒体数组靠上传增长，容量上限已在契约里放行。
+      next = padArrayAtPath(next, entry.defaultProps, arrayPath, count);
+    }
+  }
+  // 同长绑定组(如图表 series[].values 必须和 categories 同长):count 补足只直接触达
+  // countBindings.arrays 里登记的数组,anchor 数组补长之后,单靠 lengthBindings 关联、自己不
+  // 挂 count 控件的 dependent 数组不会跟着变——这里按 anchor 补足后的实际长度再补一次 dependent,
+  // 避免"categories 变长了但 values 还是老长度"这种渲染期错位。
+  for (const binding of contract.lengthBindings || []) {
+    if ((binding.relation || 'same-length') !== 'same-length' || !binding.anchor || !binding.dependent) continue;
+    const anchorLength = readArrayLengthAtPath(next, binding.anchor);
+    if (!Number.isFinite(anchorLength) || anchorLength <= 0) continue;
+    next = padArrayAtPath(next, entry.defaultProps, binding.dependent, anchorLength);
+  }
+  return next;
+}
+
+// 读 `a.b` / `a[].b` 路径上第一个数组的长度,用来给 lengthBindings 的 dependent 数组定补足
+// 目标——语义上与 prop-contract-core.mjs 的 collectArrayCounts 一致,但只取长度、不聚合多条。
+function readArrayLengthAtPath(container, pathName) {
+  if (!container || typeof container !== 'object') return NaN;
+  const [segment, ...restParts] = String(pathName || '').split('.');
+  const rest = restParts.join('.');
+  const arraySegment = segment.endsWith('[]');
+  const key = arraySegment ? segment.slice(0, -2) : segment;
+  const current = container[key];
+  if (arraySegment) {
+    if (!Array.isArray(current)) return NaN;
+    if (!rest) return current.length;
+    for (const item of current) {
+      const length = readArrayLengthAtPath(item, rest);
+      if (Number.isFinite(length)) return length;
+    }
+    return NaN;
+  }
+  if (!rest) return Array.isArray(current) ? current.length : NaN;
+  return readArrayLengthAtPath(current, rest);
+}
+
+// 与 prop-contract-core.mjs 的 collectArrayCounts 用同一套路径语法：`a.b` 逐层取值，
+// `a[].b` 表示先取数组 a，再逐项钻进每项的 b。只在需要补足的节点上浅拷贝，其余引用原样保留。
+function padArrayAtPath(container, defaultContainer, pathName, count) {
+  if (!container || typeof container !== 'object') return container;
+  const [segment, ...restParts] = String(pathName || '').split('.');
+  const rest = restParts.join('.');
+  const arraySegment = segment.endsWith('[]');
+  const key = arraySegment ? segment.slice(0, -2) : segment;
+  const current = container[key];
+  if (arraySegment) {
+    if (!Array.isArray(current)) return container;
+    if (!rest) return padArrayField(container, key, current, defaultContainer?.[key], count);
+    const defaultArray = Array.isArray(defaultContainer?.[key]) ? defaultContainer[key] : [];
+    let itemsChanged = false;
+    const nextItems = current.map((item, index) => {
+      const padded = padArrayAtPath(item, defaultArray[index], rest, count);
+      if (padded !== item) itemsChanged = true;
+      return padded;
+    });
+    return itemsChanged ? { ...container, [key]: nextItems } : container;
+  }
+  if (!rest) return padArrayField(container, key, current, defaultContainer?.[key], count);
+  const nested = padArrayAtPath(current, defaultContainer?.[key], rest, count);
+  return nested === current ? container : { ...container, [key]: nested };
+}
+
+function padArrayField(container, key, current, defaultValue, count) {
+  if (!Array.isArray(current) || current.length >= count) return container;
+  if (!Array.isArray(defaultValue) || defaultValue.length < count) return container;
+  return { ...container, [key]: [...current, ...defaultValue.slice(current.length, count)] };
+}
+
 function renderRuntimeThemeSlide(slide, values = {}, options = {}) {
   const root = slide?.querySelector?.('.imported-theme-root');
   if (!root) return false;
   const entry = entriesByKey.get(root.dataset.pageKey);
   if (!entry?.Component) return false;
-  const defaults = readJson(root.dataset.propDefaults, {});
-  const externalProps = options.trusted
-    ? stripRuntimeProps(values || {})
-    : normalizeExternalValues(entry, defaults, values);
-  const baseProps = mergeExternalPropsForRender({
-    ...(entry.defaultProps || {}),
-    ...defaults,
-  }, externalProps);
-  const pageProps = withDeckPageProps(slide, entry, stripRuntimeProps(baseProps));
-  const componentProps = withMediaHostProps(slide, pageProps, entry, defaults);
-  flushSync(() => {
-    getRootApi(root).render(withImageProviders(
-      React.createElement(entry.Component, componentProps),
-      componentProps.__mediaApi,
-    ));
-  });
-  applyImageSlotSources(root, componentProps.__mediaApi);
-  bindRenderedImageSlots(root, componentProps.__mediaApi);
-  root.dataset.importedThemeRuntime = 'true';
-  const pageSpec = inferDeckPagePropSpec(entry);
-  if (pageSpec) root.dataset.dashiDynamicPageProps = pageSpec.kind;
-  window.__syncDeckPageNumbers?.(slide);
-  return true;
+  // 整段渲染尝试(含契约校验、React 渲染)都不允许把异常抛给调用方——一页坏 props 不该
+  // 冲断 template-swiss.html 里 go()/commitSlideIndex 的收尾代码,导致导航锁永远释放不掉。
+  try {
+    const defaults = readJson(root.dataset.propDefaults, {});
+    const externalProps = options.trusted
+      ? stripRuntimeProps(values || {})
+      : normalizeExternalValues(entry, defaults, values);
+    const mergedProps = mergeExternalPropsForRender({
+      ...(entry.defaultProps || {}),
+      ...defaults,
+    }, externalProps);
+    const baseProps = withPaddedCountArrays(entry, mergedProps);
+    const pageProps = withDeckPageProps(slide, entry, stripRuntimeProps(baseProps));
+    const componentProps = withMediaHostProps(slide, pageProps, entry, defaults);
+    flushSync(() => {
+      getRootApi(root).render(withImageProviders(
+        React.createElement(entry.Component, componentProps),
+        componentProps.__mediaApi,
+      ));
+    });
+    applyImageSlotSources(root, componentProps.__mediaApi);
+    bindRenderedImageSlots(root, componentProps.__mediaApi);
+    root.dataset.importedThemeRuntime = 'true';
+    const pageSpec = inferDeckPagePropSpec(entry);
+    if (pageSpec) root.dataset.dashiDynamicPageProps = pageSpec.kind;
+    window.__syncDeckPageNumbers?.(slide);
+    return true;
+  } catch (error) {
+    console.error(`[dashi-ppt] runtime render failed for "${root.dataset.pageKey || entry.key}"`, error);
+    return false;
+  }
 }
 
 function releaseRuntimeThemeSlide(slide) {

@@ -261,8 +261,7 @@
         '  <div class="handle" data-c="sw"></div><div class="handle" data-c="se"></div>' +
         '</div>' +
         '<div class="ctl"><button data-act="replace" title="Replace media">Replace</button>' +
-        '  <button data-act="clear" title="Remove media">Remove</button></div>' +
-        '<input type="file" accept="' + ACCEPT.join(',') + '" hidden>';
+        '  <button data-act="clear" title="Remove media">Remove</button></div>';
       this._frame = root.querySelector('.frame');
       this._ring = root.querySelector('.ring');
       this._img = root.querySelector('.frame img');
@@ -273,7 +272,7 @@
       this._spill = root.querySelector('.spill');
       this._ghost = root.querySelector('.ghost');
       this._err = null;
-      this._input = root.querySelector('input');
+      this._input = null;
       this._depth = 0;
       this._gen = 0;
       this._view = { s: 1, x: 0, y: 0 };
@@ -285,24 +284,19 @@
       this._empty.addEventListener('click', (e) => {
         e.preventDefault();
         e.stopPropagation();
-        this._input.click();
+        this._pickFile();
       });
       root.addEventListener('click', (e) => {
         e.stopPropagation();
         const act = e.target && e.target.getAttribute && e.target.getAttribute('data-act');
-        if (act === 'replace') { this._exitReframe(true); this._input.click(); }
+        if (act === 'replace') { this._exitReframe(true); this._pickFile(); }
         if (act === 'clear') {
           this._exitReframe(false);
           this._gen++;
           this._local = null;
           if (this.id) setSlot(this.id, null); else this._render();
         }
-        if (!act && !this._empty.contains(e.target) && e.target !== this._input) this._input.click();
-      });
-      this._input.addEventListener('change', () => {
-        const f = this._input.files && this._input.files[0];
-        if (f) this._ingest(f);
-        this._input.value = '';
+        if (!act && !this._empty.contains(e.target) && e.target !== this._input) this._pickFile();
       });
       // naturalWidth/Height aren't known until load — re-apply so the cover
       // baseline is computed from real dimensions, not the 100%×100% fallback.
@@ -431,7 +425,43 @@
       this.removeEventListener('dragleave', this);
       this.removeEventListener('drop', this);
       if (this._ro) { this._ro.disconnect(); this._ro = null; }
+      this._dropPendingInput();
       this._exitReframe(false);
+    }
+
+    // The file input is created per pick and torn down as soon as it's
+    // consumed, never kept resident in the shadow DOM — a resident
+    // <input type="file"> in every slot outlives its page (slides stay
+    // mounted for the whole session) and pollutes any generic file-input
+    // lookup made against the document, so an upload driven on a
+    // different theme's page can resolve to a stale input and silently
+    // land nowhere. A canceled pick's input lingers only until the next
+    // pick or disconnect — deliberately no 'cancel' listener, because
+    // environments that never open a real picker dialog (headless
+    // automation) fire 'cancel' immediately on click, which would tear
+    // the input down before a programmatic file assignment can land.
+    // Same fix as theme04's copy of this component.
+    _pickFile() {
+      this._dropPendingInput();
+      const input = document.createElement('input');
+      input.type = 'file';
+      input.accept = ACCEPT.join(',');
+      input.hidden = true;
+      input.addEventListener('change', () => {
+        const f = input.files && input.files[0];
+        input.remove();
+        if (this._input === input) this._input = null;
+        if (f) this._ingest(f);
+      }, { once: true });
+      this._input = input;
+      this.shadowRoot.appendChild(input);
+      input.click();
+    }
+
+    _dropPendingInput() {
+      if (!this._input) return;
+      this._input.remove();
+      this._input = null;
     }
 
     _enterReframe() {

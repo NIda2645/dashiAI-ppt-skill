@@ -386,6 +386,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "01",
       "eyebrowLabel": "COVER",
       "wordmark": "AI CAPITAL LAB",
@@ -1700,6 +1701,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "19",
       "eyebrowLabel": "QUARTER BREAKDOWN",
       "title": "全年峰值季度",
@@ -2455,6 +2457,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "24",
       "eyebrowLabel": "AVERAGE TICKET",
       "kicker": "把全年融资换算成单笔，才能看清资本的下注密度。",
@@ -4175,6 +4178,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "10",
       "eyebrowLabel": "RISK ASSESSMENT",
       "title": "风险研判",
@@ -4514,6 +4518,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "12",
       "eyebrowLabel": "AVERAGE TICKET",
       "kicker": "把规模换算成单笔，更能看清资本的下注密度。",
@@ -4653,6 +4658,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "31",
       "eyebrowLabel": "HEALTHCARE AI",
       "title": "慢变量高壁垒",
@@ -5617,6 +5623,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "47",
       "eyebrowLabel": "OPEN SOURCE MODELS",
       "title": "社区影响力变现",
@@ -6297,6 +6304,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "51",
       "eyebrowLabel": "UNDISCLOSED MEGA",
       "title": "复杂交易结构",
@@ -6633,6 +6641,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "53",
       "eyebrowLabel": "STRATEGIC INVESTORS",
       "title": "钱以外的资源",
@@ -6957,6 +6966,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "55",
       "eyebrowLabel": "NVIDIA ECOSYSTEM",
       "title": "GPU 资源链条",
@@ -7104,6 +7114,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "56",
       "eyebrowLabel": "BAY AREA CLUSTER",
       "kicker": "一个城市群，吸走了全美 AI 大额融资的大半。",
@@ -7275,6 +7286,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "57",
       "eyebrowLabel": "NEW YORK CLUSTER",
       "title": "行业客户优势",
@@ -7494,6 +7506,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "58",
       "eyebrowLabel": "SEATTLE CLUSTER",
       "title": "云计算人才外溢",
@@ -7713,6 +7726,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "59",
       "eyebrowLabel": "BOSTON CLUSTER",
       "title": "科研与硬科技",
@@ -7932,6 +7946,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "60",
       "eyebrowLabel": "OTHER REGIONS",
       "title": "分散型应用落地",
@@ -8231,6 +8246,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "62",
       "eyebrowLabel": "OPENAI CASE",
       "title": "商业化标杆",
@@ -8387,6 +8403,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "63",
       "eyebrowLabel": "ANTHROPIC CASE",
       "title": "安全可靠模型",
@@ -8544,6 +8561,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "64",
       "eyebrowLabel": "XAI CASE",
       "title": "实时数据生态",
@@ -8701,6 +8719,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "65",
       "eyebrowLabel": "COREWEAVE CASE",
       "title": "算力基础设施",
@@ -8874,6 +8893,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "66",
       "eyebrowLabel": "SCALE AI CASE",
       "title": "数据基础设施",
@@ -9085,6 +9105,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "67",
       "eyebrowLabel": "PERPLEXITY CASE",
       "title": "AI 搜索入口",
@@ -9245,6 +9266,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "68",
       "eyebrowLabel": "DATABRICKS CASE",
       "title": "数据平台延展",
@@ -9405,6 +9427,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "69",
       "eyebrowLabel": "GLEAN CASE",
       "title": "企业知识入口",
@@ -9543,6 +9566,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "70",
       "eyebrowLabel": "FIGURE AI CASE",
       "kicker": "demo 之外，硬件 AI 真正的考验是量产。",
@@ -9682,6 +9706,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "71",
       "eyebrowLabel": "SSI CASE",
       "title": "强叙事模型实验室",
@@ -10002,6 +10027,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "73",
       "eyebrowLabel": "REVENUE RISK",
       "title": "从试点到稳定收入",
@@ -10183,6 +10209,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "74",
       "eyebrowLabel": "REGULATION RISK",
       "title": "隐私、版权与安全",
@@ -10382,6 +10409,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "75",
       "eyebrowLabel": "COMPUTE COST RISK",
       "kicker": "收入还没跑起来，算力账单已经在涨。",
@@ -10547,6 +10575,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "76",
       "eyebrowLabel": "OPEN SOURCE RISK",
       "title": "壁垒被压缩",
@@ -10726,6 +10755,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "77",
       "eyebrowLabel": "INFRASTRUCTURE STRATEGY",
       "title": "确定性预算",
@@ -10912,6 +10942,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "78",
       "eyebrowLabel": "VERTICAL STRATEGY",
       "title": "嵌入工作流",
@@ -11740,6 +11771,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "85",
       "eyebrowLabel": "MEGA DEALS",
       "title": "超级交易画像",
@@ -11903,6 +11935,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "86",
       "eyebrowLabel": "MEGA-DEAL AVERAGE",
       "kicker": "少数几笔交易，重画了全年的融资曲线。",
@@ -12235,6 +12268,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "82",
       "eyebrowLabel": "SOURCES & SCOPE",
       "title": "数据来源与口径",
@@ -12878,6 +12912,7 @@ export const pages = [
       }
     ],
     "defaultProps": {
+      "images": [],
       "eyebrowId": "89",
       "eyebrowLabel": "FORWARD VIEW",
       "kicker": "前瞻判断 / FORWARD STATEMENT",

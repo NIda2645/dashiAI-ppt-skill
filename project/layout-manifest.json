@@ -38617,10 +38617,24 @@
           ],
           "min": 4,
           "max": 6
+        },
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "缩略图卡数",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 6,
+          "maxFromKey": "itemCount"
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page007": {
       "key": "theme04_page007",
@@ -38750,9 +38764,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page008": {
       "key": "theme04_page008",
@@ -38977,10 +39005,24 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4,
+          "maxFromKey": "cardCount"
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page010": {
       "key": "theme04_page010",
@@ -39907,9 +39949,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片瓷砖",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page017": {
       "key": "theme04_page017",
@@ -42996,9 +43052,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 1,
+          "max": 4
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page042": {
       "key": "theme04_page042",
@@ -43118,9 +43188,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片格数",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page043": {
       "key": "theme04_page043",
@@ -43411,9 +43495,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "背景图片槽",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page045": {
       "key": "theme04_page045",
@@ -43573,9 +43671,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "整屏背景图",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page046": {
       "key": "theme04_page046",
@@ -43700,10 +43812,24 @@
           ],
           "min": 2,
           "max": 3
+        },
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3,
+          "maxFromKey": "itemCount"
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page047": {
       "key": "theme04_page047",
@@ -43843,6 +43969,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
           "key": "statCount",
           "publicKey": "itemCount",
           "label": "数据栏条目",
@@ -43854,7 +43990,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page048": {
       "key": "theme04_page048",
@@ -43919,9 +44058,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽条数",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page049": {
       "key": "theme04_page049",
@@ -44150,6 +44303,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "milestoneCount",
           "publicKey": "milestoneCount",
           "label": "里程碑数量",
@@ -44161,7 +44324,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page051": {
       "key": "theme04_page051",
@@ -44301,6 +44467,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "肖像图片槽",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
           "key": "statCount",
           "publicKey": "statCount",
           "label": "档案数据条数",
@@ -44312,7 +44488,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page052": {
       "key": "theme04_page052",
@@ -44891,6 +45070,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "背景图数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
           "key": "statCount",
           "publicKey": "statCount",
           "label": "数据卡数量",
@@ -44902,7 +45091,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page056": {
       "key": "theme04_page056",
@@ -45044,9 +45236,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page057": {
       "key": "theme04_page057",
@@ -45325,6 +45531,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        },
+        {
           "key": "statCount",
           "publicKey": "statCount",
           "label": "数据卡数量",
@@ -45336,7 +45552,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page059": {
       "key": "theme04_page059",
@@ -45423,9 +45642,33 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "thumbCount",
+          "publicKey": "thumbCount",
+          "label": "缩略图数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽画框数",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page060": {
       "key": "theme04_page060",
@@ -45546,9 +45789,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "照片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page061": {
       "key": "theme04_page061",
@@ -45908,6 +46165,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "pointCount",
           "publicKey": "pointCount",
           "label": "要点数量",
@@ -45919,7 +46186,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page064": {
       "key": "theme04_page064",
@@ -46750,10 +47020,24 @@
           ],
           "min": 2,
           "max": 3
+        },
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "头像图片槽",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3,
+          "maxFromKey": "cardCount"
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page071": {
       "key": "theme04_page071",
@@ -47095,9 +47379,23 @@
           "publicKey": "showDecorations"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "配图数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme04_page074": {
       "key": "theme04_page074",
@@ -48491,10 +48789,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page013": {
       "key": "theme05_page013",
@@ -49092,10 +49403,23 @@
           ],
           "min": 2,
           "max": 5
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page017": {
       "key": "theme05_page017",
@@ -50266,6 +50590,16 @@
           "max": 3
         },
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标行数",
@@ -50277,7 +50611,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page024": {
       "key": "theme05_page024",
@@ -51851,6 +52188,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标行数",
@@ -51862,7 +52209,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page034": {
       "key": "theme05_page034",
@@ -52170,10 +52520,23 @@
           ],
           "min": 2,
           "max": 3
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page036": {
       "key": "theme05_page036",
@@ -52315,10 +52678,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page037": {
       "key": "theme05_page037",
@@ -52830,6 +53206,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标行数",
@@ -52841,7 +53227,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page040": {
       "key": "theme05_page040",
@@ -53005,6 +53394,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "barCount",
           "publicKey": "barCount",
           "label": "占比条数量",
@@ -53016,7 +53415,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page041": {
       "key": "theme05_page041",
@@ -53565,6 +53967,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标行数",
@@ -53586,7 +53998,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page044": {
       "key": "theme05_page044",
@@ -53769,6 +54184,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标行数",
@@ -53790,7 +54215,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page045": {
       "key": "theme05_page045",
@@ -54117,10 +54545,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page047": {
       "key": "theme05_page047",
@@ -54289,6 +54730,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "sceneCount",
           "publicKey": "contentItemCount",
           "label": "场景卡数量",
@@ -54300,7 +54751,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page048": {
       "key": "theme05_page048",
@@ -54633,10 +55087,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page050": {
       "key": "theme05_page050",
@@ -54775,6 +55242,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "auxCount",
           "publicKey": "auxCount",
           "label": "辅助指标数",
@@ -54786,7 +55263,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page051": {
       "key": "theme05_page051",
@@ -54930,9 +55410,23 @@
           "publicKey": "showSheetLabel"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page052": {
       "key": "theme05_page052",
@@ -55891,10 +56385,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page058": {
       "key": "theme05_page058",
@@ -56195,10 +56702,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page060": {
       "key": "theme05_page060",
@@ -56546,6 +57066,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标行数",
@@ -56567,7 +57097,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page062": {
       "key": "theme05_page062",
@@ -56753,6 +57286,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标项数",
@@ -56774,7 +57317,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page063": {
       "key": "theme05_page063",
@@ -56927,6 +57473,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标项数",
@@ -56948,7 +57504,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page064": {
       "key": "theme05_page064",
@@ -57121,10 +57680,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page065": {
       "key": "theme05_page065",
@@ -57475,9 +58047,23 @@
           "publicKey": "showSheetLabel"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page067": {
       "key": "theme05_page067",
@@ -57652,6 +58238,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "tagCount",
           "publicKey": "tagCount",
           "label": "标签数量",
@@ -57663,7 +58259,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page068": {
       "key": "theme05_page068",
@@ -57846,6 +58445,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "nodeCount",
           "publicKey": "nodeCount",
           "label": "生态节点数",
@@ -57867,7 +58476,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page069": {
       "key": "theme05_page069",
@@ -58059,9 +58671,23 @@
           "publicKey": "showSheetLabel"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page070": {
       "key": "theme05_page070",
@@ -58432,6 +59058,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "stepCount",
           "publicKey": "stepCount",
           "label": "漏斗层数",
@@ -58441,7 +59077,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page072": {
       "key": "theme05_page072",
@@ -58805,6 +59444,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "sourceCount",
           "publicKey": "sourceCount",
           "label": "索引条数",
@@ -58816,7 +59465,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page074": {
       "key": "theme05_page074",
@@ -59171,6 +59823,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "milestoneCount",
           "publicKey": "milestoneCount",
           "label": "里程碑数",
@@ -59182,7 +59844,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page076": {
       "key": "theme05_page076",
@@ -61473,6 +62138,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 5
+        },
+        {
           "key": "tagCount",
           "publicKey": "tagCount",
           "label": "标签数量",
@@ -61484,7 +62159,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page089": {
       "key": "theme05_page089",
@@ -61663,6 +62341,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "tickerCount",
           "publicKey": "itemCount",
           "label": "指标条目数",
@@ -61674,7 +62362,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme05_page090": {
       "key": "theme05_page090",
@@ -62836,9 +63527,23 @@
           "publicKey": "accent"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "媒体占位数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page006": {
       "key": "theme06_page006",
@@ -63822,6 +64527,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -63833,7 +64548,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page015": {
       "key": "theme06_page015",
@@ -64418,10 +65136,23 @@
           ],
           "min": 0,
           "max": 3
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page020": {
       "key": "theme06_page020",
@@ -65742,10 +66473,23 @@
           ],
           "min": 3,
           "max": 5
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "媒体占位数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page031": {
       "key": "theme06_page031",
@@ -65966,10 +66710,23 @@
           ],
           "min": 0,
           "max": 3
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page033": {
       "key": "theme06_page033",
@@ -66090,6 +66847,16 @@
           "max": 3
         },
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -66101,7 +66868,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page034": {
       "key": "theme06_page034",
@@ -66851,6 +67621,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -66862,7 +67642,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page040": {
       "key": "theme06_page040",
@@ -67411,6 +68194,16 @@
           "max": 4
         },
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -67422,7 +68215,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page044": {
       "key": "theme06_page044",
@@ -67667,10 +68463,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page046": {
       "key": "theme06_page046",
@@ -67921,6 +68730,16 @@
           "max": 4
         },
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -67932,7 +68751,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page048": {
       "key": "theme06_page048",
@@ -68029,10 +68851,23 @@
           ],
           "min": 0,
           "max": 3
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page049": {
       "key": "theme06_page049",
@@ -68175,6 +69010,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "regionCount",
           "publicKey": "regionCount",
           "label": "气泡地区数",
@@ -68206,7 +69051,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page050": {
       "key": "theme06_page050",
@@ -68349,6 +69197,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "regionCount",
           "publicKey": "regionCount",
           "label": "气泡地区数",
@@ -68380,7 +69238,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page051": {
       "key": "theme06_page051",
@@ -68523,6 +69384,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "regionCount",
           "publicKey": "regionCount",
           "label": "气泡地区数",
@@ -68554,7 +69425,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page052": {
       "key": "theme06_page052",
@@ -68697,6 +69571,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "regionCount",
           "publicKey": "regionCount",
           "label": "气泡地区数",
@@ -68728,7 +69612,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page053": {
       "key": "theme06_page053",
@@ -68937,6 +69824,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -68958,7 +69855,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page055": {
       "key": "theme06_page055",
@@ -69069,6 +69969,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -69090,7 +70000,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page056": {
       "key": "theme06_page056",
@@ -69201,6 +70114,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -69222,7 +70145,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page057": {
       "key": "theme06_page057",
@@ -69333,6 +70259,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -69354,7 +70290,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page058": {
       "key": "theme06_page058",
@@ -69499,10 +70438,23 @@
           ],
           "min": 3,
           "max": 4
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page059": {
       "key": "theme06_page059",
@@ -69613,6 +70565,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -69634,7 +70596,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page060": {
       "key": "theme06_page060",
@@ -69745,6 +70710,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -69766,7 +70741,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page061": {
       "key": "theme06_page061",
@@ -69877,6 +70855,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -69898,7 +70886,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page062": {
       "key": "theme06_page062",
@@ -69995,10 +70986,23 @@
           ],
           "min": 0,
           "max": 3
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page063": {
       "key": "theme06_page063",
@@ -70109,6 +71113,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -70130,7 +71144,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page064": {
       "key": "theme06_page064",
@@ -70397,10 +71414,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page066": {
       "key": "theme06_page066",
@@ -70545,10 +71575,23 @@
           ],
           "min": 3,
           "max": 4
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page067": {
       "key": "theme06_page067",
@@ -70645,10 +71688,23 @@
           ],
           "min": 0,
           "max": 3
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page068": {
       "key": "theme06_page068",
@@ -70793,10 +71849,23 @@
           ],
           "min": 2,
           "max": 4
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page069": {
       "key": "theme06_page069",
@@ -70929,6 +71998,16 @@
           "max": 4
         },
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "watchCount",
           "publicKey": "watchCount",
           "label": "筛选清单条数",
@@ -70940,7 +72019,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page070": {
       "key": "theme06_page070",
@@ -71075,6 +72157,16 @@
           "max": 5
         },
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "watchCount",
           "publicKey": "watchCount",
           "label": "筛选清单条数",
@@ -71086,7 +72178,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page071": {
       "key": "theme06_page071",
@@ -71703,6 +72798,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 3
+        },
+        {
           "key": "metricCount",
           "publicKey": "metricCount",
           "label": "指标数量",
@@ -71724,7 +72829,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page076": {
       "key": "theme06_page076",
@@ -71821,10 +72929,23 @@
           ],
           "min": 0,
           "max": 3
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page077": {
       "key": "theme06_page077",
@@ -72099,10 +73220,23 @@
           ],
           "min": 3,
           "max": 4
+        },
+        {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page079": {
       "key": "theme06_page079",
@@ -72561,6 +73695,16 @@
       ],
       "countBindings": [
         {
+          "key": "mediaSlotCount",
+          "publicKey": "mediaSlotCount",
+          "label": "图片槽数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "statCount",
           "publicKey": "statCount",
           "label": "锚点指标数量",
@@ -72572,7 +73716,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme06_page083": {
       "key": "theme06_page083",
@@ -74113,10 +75260,23 @@
           ],
           "min": 2,
           "max": 5
+        },
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 1
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page014": {
       "key": "theme07_page014",
@@ -75881,9 +77041,23 @@
           "publicKey": "accentColor"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page027": {
       "key": "theme07_page027",
@@ -76458,6 +77632,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "metricCount",
           "publicKey": "itemCount",
           "label": "卡片数量",
@@ -76469,7 +77653,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page031": {
       "key": "theme07_page031",
@@ -76744,6 +77931,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "branchCount",
           "publicKey": "branchCount",
           "label": "卡片数量",
@@ -76755,7 +77952,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page033": {
       "key": "theme07_page033",
@@ -76914,6 +78114,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "segmentCount",
           "publicKey": "segmentCount",
           "label": "卡片数量",
@@ -76925,7 +78135,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page034": {
       "key": "theme07_page034",
@@ -77333,6 +78546,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "segmentCount",
           "publicKey": "segmentCount",
           "label": "卡片数量",
@@ -77344,7 +78567,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page037": {
       "key": "theme07_page037",
@@ -77507,6 +78733,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "segmentCount",
           "publicKey": "segmentCount",
           "label": "卡片数量",
@@ -77518,7 +78754,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page038": {
       "key": "theme07_page038",
@@ -77813,6 +79052,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "segmentCount",
           "publicKey": "segmentCount",
           "label": "卡片数量",
@@ -77824,7 +79073,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page040": {
       "key": "theme07_page040",
@@ -77961,6 +79213,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "segmentCount",
           "publicKey": "segmentCount",
           "label": "卡片数量",
@@ -77972,7 +79234,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page041": {
       "key": "theme07_page041",
@@ -78236,6 +79501,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "segmentCount",
           "publicKey": "segmentCount",
           "label": "卡片数量",
@@ -78247,7 +79522,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page043": {
       "key": "theme07_page043",
@@ -78411,6 +79689,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "stepCount",
           "publicKey": "stepCount",
           "label": "卡片数量",
@@ -78432,7 +79720,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page044": {
       "key": "theme07_page044",
@@ -78578,9 +79869,23 @@
           "publicKey": "accentColor"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page045": {
       "key": "theme07_page045",
@@ -78725,6 +80030,16 @@
       ],
       "countBindings": [
         {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 2
+        },
+        {
           "key": "segmentCount",
           "publicKey": "segmentCount",
           "label": "卡片数量",
@@ -78736,7 +80051,10 @@
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme07_page046": {
       "key": "theme07_page046",
@@ -82813,9 +84131,23 @@
           "publicKey": "showDecor"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "mediaCount",
+          "publicKey": "mediaCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme08_page005": {
       "key": "theme08_page005",
@@ -105038,7 +106370,7 @@
           "min": 2,
           "max": 6,
           "step": 1,
-          "desc": "内容卡片数量（自动分列填满版面）。",
+          "desc": "内容卡片数量，含图片位（自动分列填满版面）。",
           "publicKey": "memberCount"
         },
         {
@@ -106607,9 +107939,23 @@
           "publicKey": "showLead"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 4
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme10_page041": {
       "key": "theme10_page041",
@@ -107048,7 +108394,7 @@
           "min": 2,
           "max": 4,
           "step": 1,
-          "desc": "条目总数（1 条放大，其余进入右侧清单）。",
+          "desc": "条目总数，含圆形图片位（1 条放大，其余进入右侧清单）。",
           "publicKey": "itemCount"
         },
         {
@@ -107305,14 +108651,17 @@
           "publicKey": "cardCount",
           "label": "照片数量",
           "arrays": [
-            "cards"
+            "images"
           ],
           "min": 2,
           "max": 5
         }
       ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme10_page049": {
       "key": "theme10_page049",
@@ -107383,9 +108732,23 @@
           "publicKey": "radius"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "影像数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 5
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme10_page050": {
       "key": "theme10_page050",
@@ -107821,9 +109184,23 @@
           "publicKey": "showCaption"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 6
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme10_page055": {
       "key": "theme10_page055",
@@ -109881,9 +111258,23 @@
           "publicKey": "showIndex"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "图片数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 3,
+          "max": 6
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme10_page077": {
       "key": "theme10_page077",
@@ -111563,9 +112954,23 @@
           "publicKey": "showLead"
         }
       ],
-      "countBindings": [],
+      "countBindings": [
+        {
+          "key": "imageCount",
+          "publicKey": "imageCount",
+          "label": "内容数量",
+          "arrays": [
+            "images"
+          ],
+          "min": 0,
+          "max": 6
+        }
+      ],
       "lengthBindings": [],
-      "numberBounds": {}
+      "numberBounds": {},
+      "defaultProps": {
+        "images": []
+      }
     },
     "theme10_page094": {
       "key": "theme10_page094",

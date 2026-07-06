@@ -3144,21 +3144,63 @@ function reportRuntimeSlideError(context, slide, error){
   dispatchEvent(new CustomEvent('deck-runtime-error', {detail}));
 }
 
+function isRuntimeThemeSlide(slide){
+  return !!slide?.querySelector?.('.imported-theme-root');
+}
+
+function showRuntimeSlideErrorPlaceholder(slide, error){
+  if(!slide) return;
+  let overlay = slide.querySelector(':scope > [data-runtime-error-overlay]');
+  if(!overlay){
+    overlay = document.createElement('div');
+    overlay.setAttribute('data-runtime-error-overlay', 'true');
+    overlay.style.cssText = 'position:absolute;inset:0;z-index:80;display:flex;flex-direction:column;'
+      + 'align-items:center;justify-content:center;gap:10px;padding:48px;text-align:center;'
+      + 'background:rgba(17,17,20,0.94);color:#fff;font:600 22px/1.4 var(--sans,sans-serif);pointer-events:none;';
+    const title = document.createElement('div');
+    title.textContent = '该页渲染失败，内容已跳过';
+    const detail = document.createElement('div');
+    detail.style.cssText = 'font-weight:400;font-size:14px;opacity:.7;max-width:82%;word-break:break-word;';
+    overlay.append(title, detail);
+    slide.appendChild(overlay);
+  }
+  const detailEl = overlay.lastElementChild;
+  if(detailEl) detailEl.textContent = error?.message ? String(error.message).slice(0, 240) : '';
+}
+
+function clearRuntimeSlideErrorPlaceholder(slide){
+  slide?.querySelector?.(':scope > [data-runtime-error-overlay]')?.remove();
+}
+
+// isolated:true 的调用方(如 go()/commitSlideIndex)在这次调用之后还有收尾代码要跑(释放
+// 导航锁等)——异常在这里必须被兜住,不能冲断收尾代码。非 isolated 调用方(如 overview 缩略图
+// 生成管线的 renderOverviewThumb)自己有更专用的外层 try/catch 和恢复 UI,这里必须让异常正常
+// 往外传,不能抢先吞掉,否则外层那套上下文更准确的错误处理和占位 UI 就都不会触发了。
 function renderRuntimeSlideWithIsolation(slide, props, opts={}){
   if(!opts.isolated){
     const rendered = !!window.__renderRuntimeSlide?.(slide, props);
     delete slide.dataset.runtimeRenderError;
+    clearRuntimeSlideErrorPlaceholder(slide);
     return rendered;
   }
+  let rendered = false;
+  let thrown = null;
   try{
-    const rendered = !!window.__renderRuntimeSlide?.(slide, props);
-    delete slide.dataset.runtimeRenderError;
-    return rendered;
+    rendered = !!window.__renderRuntimeSlide?.(slide, props);
   }catch(error){
-    slide.dataset.runtimeRenderError = 'true';
-    reportRuntimeSlideError(opts.context || 'runtime isolated render', slide, error);
-    return false;
+    thrown = error;
   }
+  if(rendered){
+    delete slide.dataset.runtimeRenderError;
+    clearRuntimeSlideErrorPlaceholder(slide);
+    return true;
+  }
+  if(thrown) reportRuntimeSlideError(opts.context || 'runtime isolated render', slide, thrown);
+  if(isRuntimeThemeSlide(slide)){
+    slide.dataset.runtimeRenderError = 'true';
+    showRuntimeSlideErrorPlaceholder(slide, thrown);
+  }
+  return false;
 }
 
 function ensureRuntimeSlideRendered(slide, values, opts={}){
@@ -3645,7 +3687,7 @@ function commitSlideIndex(nextIndex, opts={}){
   applyAdjacentVisibility(idx);
   syncNav();
   const el=slides[idx];
-  ensureRuntimeSlideRendered(el);
+  ensureRuntimeSlideRendered(el, undefined, {isolated:true, context:'commit slide index'});
   syncDeckPageNumbers(el);
   window.__releaseInactiveRuntimeSlides?.(el);
   syncSlideTone(el);
@@ -3755,7 +3797,7 @@ function moveSlide(fromIndex, insertIndex){
     if(isActive) slide.setAttribute('data-deck-active', '');
     else slide.removeAttribute('data-deck-active');
   });
-  ensureRuntimeSlideRendered(active);
+  ensureRuntimeSlideRendered(active, undefined, {isolated:true, context:'move slide'});
   window.__releaseInactiveRuntimeSlides?.(active);
   syncSlideTone(active);
   syncActiveEffects(active);
@@ -3842,7 +3884,7 @@ function duplicateCatalogSlide(catalogIndex){
     props:{...(state.props?.[sourceId] || {})},
   }, sourceModel);
   window.__initEditableText?.(clone);
-  ensureRuntimeSlideRendered(clone);
+  ensureRuntimeSlideRendered(clone, undefined, {isolated:true, context:'duplicate slide'});
   const sourceCache = overviewThumbBitmapCache.get(getOverviewThumbCacheKey(source));
   if(sourceCache) rememberOverviewThumb(clone, sourceCache);
   updateAfterCatalogMutation(previousActiveSlide, idx, {type:'copy', sourceId, slideId:copyId});
@@ -4429,6 +4471,8 @@ function createOverviewLitePreview(slide){
 
 function createOverviewDomPreview(slide){
   const derivedStartAt = performance.now();
+  // 非隔离调用:这条路径跑在 renderOverviewThumb() 自己的 try/catch 里(见上方 'overview
+  // thumb' 报错点),那里有专门的占位 UI 和恢复逻辑,异常必须原样往外传,不能在这里被吞掉。
   ensureRuntimeSlideRendered(slide);
   if(shouldUseLiteOverviewPreview(slide) && !slide.firstElementChild) return createOverviewLitePreview(slide);
   const {width, height} = getOverviewSourceSize();
@@ -5817,7 +5861,7 @@ refreshRailCatalog();
     return viewModel?.model?.slides?.find(item => item.id === slideId)?.props || {};
   }
 
-  function renderPropControls(){
+  function renderPropControls(opts = {}){
     if(!propsField || !propsPanel) return;
     if(renderingPropControls){
       pendingPropControlsRender = true;
@@ -5901,7 +5945,7 @@ refreshRailCatalog();
           button.addEventListener('click', () => {
             updateCurrentProp(renderControl, item.value, {render:false});
             syncSelectionButtons(group, item.value);
-            if(!isColor) window.setTimeout(renderPropControls, 420);
+            if(!isColor) window.setTimeout(renderPropControls, 420, {skipApply:true});
             releasePreviewControlFocus(button);
           });
           group.appendChild(button);
@@ -6041,7 +6085,9 @@ refreshRailCatalog();
       nextPanel.appendChild(row);
     });
     propsPanel.replaceChildren(nextPanel);
-    applyPropValues(slide, values, {persist:false});
+    // 调用方如果刚调过 applyPropValues(比如 updateCurrentProp 里那次),这里就不用再渲染一遍
+    // 同样的值——避免用户每次调参都看到两次刷新。
+    if(!opts.skipApply) applyPropValues(slide, values, {persist:false});
     } finally {
       renderingPropControls = false;
       if(pendingPropControlsRender){
@@ -6236,7 +6282,7 @@ refreshRailCatalog();
     Object.assign(values, opts.extra || {});
     const unicornRefresh = control.key === 'backgroundMode' || control.key === 'unicornScene';
     applyPropValues(slide, values, {unicornRefresh});
-    if(opts.render !== false) renderPropControls();
+    if(opts.render !== false) renderPropControls({skipApply:true});
   }
 
   function normalizePropOptions(options){
@@ -6388,7 +6434,12 @@ refreshRailCatalog();
     }
     if(window.__renderRuntimeSlide?.(slide, next)){
       window.__initEditableText?.(slide);
-      window.__syncActiveEffects?.(slide);
+      // A control-panel tweak re-renders the already-active slide in place —
+      // not a slide entry/transition. `skipMotion` avoids replaying theme10's
+      // JS-driven entrance stagger (playTheme10Motion) on every prop change;
+      // other themes' pure-CSS entrance already only fires once on mount, so
+      // this is a no-op for them.
+      window.__syncActiveEffects?.(slide, {skipMotion:true});
       requestAnimationFrame(() => window.__initUnicornScenes?.(slide, {force:true}));
     }
   }
@@ -7631,6 +7682,11 @@ refreshRailCatalog();
   }
 
 	  function handleFocusIn(e){
+	    // 媒体槽子树里的 focus/input/blur(隐藏 file input 选图会触发 input+change)不是文案编辑;
+	    // 若槽恰好嵌在一个可编辑文本块里(如引述页头像),把它当文本编辑会用陈旧 innerHTML 快照
+	    // 覆写该块,连带摧毁 React 管理的槽 DOM(后续 reconcile 全部落空,媒体永远不显示)。
+	    // 与 handleEditablePointerDown 用同一个 isDeckFileSlotTarget 判定。
+	    if(window.__isDeckFileSlotTarget?.(e.target)) return;
 	    const el = e.target.closest('[data-editable-id]');
 	    if(!el || !deck.contains(el)) return;
 	    if(!canEditDeck()){
@@ -7642,12 +7698,14 @@ refreshRailCatalog();
 	  }
 
   function handleInput(e){
+    if(window.__isDeckFileSlotTarget?.(e.target)) return;
     const el = e.target.closest('[data-editable-id]');
     if(!el || !deck.contains(el)) return;
     saveTextElement(el, {dirty:false});
   }
 
 	  function handleBlur(e){
+	    if(window.__isDeckFileSlotTarget?.(e.target)) return;
 	    const el = e.target.closest('[data-editable-id]');
 	    if(!el || !deck.contains(el)) return;
 	    const before = el.dataset.editBefore;

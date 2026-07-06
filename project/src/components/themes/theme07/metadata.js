@@ -1832,6 +1832,7 @@ export const pages = [
         }
       ],
       "cardCount": 5,
+      "images": [],
       "imageCount": 1,
       "imageRatio": "portrait",
       "focusEnabled": true,
@@ -4139,6 +4140,7 @@ export const pages = [
           "role": "参投 11 笔 · 应用层为主"
         }
       ],
+      "images": [],
       "imageCount": 3,
       "imageRatio": "portrait",
       "showLabels": true,
@@ -4912,6 +4914,7 @@ export const pages = [
         "value": 58,
         "display": "58%"
       },
+      "images": [],
       "imageCount": 1,
       "imageRatio": "portrait",
       "metricCount": 4,
@@ -5269,6 +5272,7 @@ export const pages = [
           "note": "病历与文书自动化"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "landscape",
       "branchCount": 3,
@@ -5468,6 +5472,7 @@ export const pages = [
           "note": "智能投顾与问答"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "portrait",
       "chartType": "donut",
@@ -6004,6 +6009,7 @@ export const pages = [
           "note": "拣选与物流搬运"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "landscape",
       "segmentCount": 3,
@@ -6209,6 +6215,7 @@ export const pages = [
           "note": "座舱交互与语音"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "portrait",
       "chartType": "bars",
@@ -6593,6 +6600,7 @@ export const pages = [
           "note": "配乐与语音合成"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "landscape",
       "segmentCount": 3,
@@ -6766,6 +6774,7 @@ export const pages = [
           "note": "备课、批改与学情分析"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "portrait",
       "segmentCount": 3,
@@ -7109,6 +7118,7 @@ export const pages = [
           "note": "转化 · 邮件与语音触达"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "landscape",
       "segmentCount": 3,
@@ -7330,6 +7340,7 @@ export const pages = [
           "note": "部门级渗透"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "portrait",
       "stepCount": 4,
@@ -7514,6 +7525,7 @@ export const pages = [
         "tag": "商业化兑现"
       },
       "ribbonLabel": "影响力 → 收入",
+      "images": [],
       "imageCount": 1,
       "imageRatio": "landscape",
       "chartType": "ring",
@@ -7696,6 +7708,7 @@ export const pages = [
           "note": "攻击与漏洞挖掘"
         }
       ],
+      "images": [],
       "imageCount": 1,
       "imageRatio": "portrait",
       "segmentCount": 3,

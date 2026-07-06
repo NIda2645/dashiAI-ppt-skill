@@ -3660,3 +3660,12 @@
 .pulse-lede__source { font-size: var(--pulse-h3); font-weight: 600; opacity: 0.68; margin-top: 42px; clear: both; }
 .pulse-lede__band { flex: 0 0 var(--pulse-band-h); height: var(--pulse-band-h); display: flex; margin: 0 calc(-1 * var(--pulse-pad-x)) calc(-1 * var(--pulse-pad-y)); }
 .pulse-lede__band i { display: block; height: 100%; }
+
+/* =========================================================================
+   JAD-MEDIA-T05 — editor-only media entrance (imageCount defaults to 0, or
+   the slot is gated behind another control's default). Only ever rendered
+   when isTheme05EditMode() is true; never present in demo/export output.
+   ========================================================================= */
+.pulse-bd__media--editor-only,
+.pulse-scene__media--editor-only,
+.pulse-sprd__media--editor-only { outline: 2px dashed var(--pulse-mute); outline-offset: -2px; }

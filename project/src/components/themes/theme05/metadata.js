@@ -1925,6 +1925,7 @@ export const pages = [
       "showGalleryCaption": true,
       "accentColor": "#d8402e",
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "CASE STUDIES",
         "title": "典型案例深度剖析",
@@ -2846,6 +2847,7 @@ export const pages = [
       "accentColor": "#d8402e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "RISK ASSESSMENT",
         "title": "风险研判",
@@ -4293,6 +4295,7 @@ export const pages = [
       "accentColor": "#d8402e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "QUARTER BREAKDOWN",
         "title": "全年峰值季度",
@@ -6203,6 +6206,7 @@ export const pages = [
       "accentColor": "#efbe2e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "ENTERPRISE SEARCH",
         "en": "ENTERPRISE SEARCH",
@@ -6598,6 +6602,7 @@ export const pages = [
       "accentColor": "#2c44a0",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "HEALTHCARE AI",
         "en": "HEALTHCARE AI",
@@ -6772,6 +6777,7 @@ export const pages = [
       "accentColor": "#2c44a0",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "FINANCE AI",
         "en": "FINANCE AI",
@@ -7402,6 +7408,7 @@ export const pages = [
       "accentColor": "#4da0c6",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "VECTOR DATABASE",
         "title": "RAG 基础组件",
@@ -7610,6 +7617,7 @@ export const pages = [
       "accentColor": "#e2742c",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "DATA LABELING",
         "title": "高质量数据供给",
@@ -8306,6 +8314,7 @@ export const pages = [
       "accentColor": "#d8402e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "EMBODIED AI",
         "title": "从软件走向物理世界",
@@ -8554,6 +8563,7 @@ export const pages = [
       "accentColor": "#4da0c6",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "AUTONOMOUS AI",
         "title": "车载模型升级",
@@ -8992,6 +9002,7 @@ export const pages = [
       "accentColor": "#d8402e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "GENERATIVE CONTENT",
         "title": "图像、视频与创意",
@@ -9234,6 +9245,7 @@ export const pages = [
       "accentColor": "#3c9a52",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "EDUCATION AI",
         "title": "个性化学习与教师工具",
@@ -9726,6 +9738,7 @@ export const pages = [
       "accentColor": "#e2742c",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "SALES & MARKETING AI",
         "title": "增长效率工具",
@@ -9924,6 +9937,7 @@ export const pages = [
       "accentColor": "#3c9a52",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "LOW-CODE AI",
         "title": "企业流程嵌入",
@@ -10109,6 +10123,7 @@ export const pages = [
       "accentColor": "#7a3c90",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "OPEN-SOURCE MODELS",
         "title": "社区影响力变现",
@@ -11316,6 +11331,7 @@ export const pages = [
       "accentColor": "#d8402e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "STRATEGIC INVESTORS",
         "title": "钱以外的资源",
@@ -11713,6 +11729,7 @@ export const pages = [
       "accentColor": "#3c9a52",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "NVIDIA ECOSYSTEM",
         "title": "GPU 资源链条",
@@ -12143,6 +12160,7 @@ export const pages = [
       "accentColor": "#2c44a0",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "NEW YORK CLUSTER",
         "title": "行业客户优势",
@@ -12383,6 +12401,7 @@ export const pages = [
       "accentColor": "#4da0c6",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "SEATTLE CLUSTER",
         "title": "云计算人才外溢",
@@ -12588,6 +12607,7 @@ export const pages = [
       "accentColor": "#7a3c90",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "BOSTON CLUSTER",
         "title": "科研与硬科技",
@@ -12805,6 +12825,7 @@ export const pages = [
       "accentColor": "#e2742c",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "OTHER REGIONS",
         "title": "分散型应用落地",
@@ -13250,6 +13271,7 @@ export const pages = [
       "accentColor": "#3c9a52",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "BENCHMARK CASE",
         "title": "商业化标杆",
@@ -13472,6 +13494,7 @@ export const pages = [
       "accentColor": "#efbe2e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "TRUST DOSSIER",
         "title": "安全可靠模型",
@@ -13709,6 +13732,7 @@ export const pages = [
       "accentColor": "#4da0c6",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "ECOSYSTEM NEXUS",
         "title": "实时数据生态",
@@ -13972,6 +13996,7 @@ export const pages = [
       "accentColor": "#d8402e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "COREWEAVE CASE",
         "title": "算力基础设施",
@@ -14463,6 +14488,7 @@ export const pages = [
       "accentColor": "#7a3c90",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "PERPLEXITY CASE",
         "title": "AI 搜索入口",
@@ -14972,6 +14998,7 @@ export const pages = [
       "accentColor": "#3c9a52",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "GLEAN CASE",
         "title": "企业知识入口",
@@ -15431,6 +15458,7 @@ export const pages = [
       "accentColor": "#2c44a0",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "SSI CASE",
         "title": "强叙事模型实验室",
@@ -18385,6 +18413,7 @@ export const pages = [
       "accentColor": "#d8402e",
       "showConclusion": true,
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "Visual Field Notes",
         "title": "代表企业影像",
@@ -18592,6 +18621,7 @@ export const pages = [
       "showMediaCaption": true,
       "accentColor": "#d8402e",
       "showSheetLabel": true,
+      "images": [],
       "copy": {
         "eyebrow": "Field · 现场",
         "title": "硅谷的一天",
