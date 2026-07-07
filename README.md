@@ -20,7 +20,7 @@
 
 > 我们花了两个多月，和团队里最专业的设计师一起打磨这套 Skill。丰富的视觉效果只是它的表象——真正想解决的问题是：**让生成之后如何编辑这件事，比生成本身更重要。**
 
-![生成效果演示](assets/readme/hero-result.gif)
+![生成效果演示](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/hero-result.gif)
 
 ## 12 套内置视觉主题
 
@@ -28,12 +28,12 @@
 
 |  |  |
 |---|---|
-| <img src="assets/readme/themes/theme01.jpg" width="440" alt="轻拟态风内页预览"><br>**theme01 轻拟态风**<br>适配场景：产品介绍、企业汇报、方案说明、轻量级发布<br>适配人群：创业团队、产品经理、销售顾问 | <img src="assets/readme/themes/theme02.jpg" width="440" alt="炫光紫绿风内页预览"><br>**theme02 炫光紫绿风**<br>适配场景：科技发布会、AI / 自动驾驶 / 机器人主题、增长故事<br>适配人群：科技公司创始人、技术负责人 |
-| <img src="assets/readme/themes/theme03.jpg" width="440" alt="深浅代码风内页预览"><br>**theme03 深浅代码风**<br>适配场景：技术方案、开发者大会、系统架构、AI 工程实践<br>适配人群：工程师、架构师、开发者社区 | <img src="assets/readme/themes/theme04.jpg" width="440" alt="玻璃糖果风内页预览"><br>**theme04 玻璃糖果风**<br>适配场景：年轻化品牌、消费产品、创意提案、社媒感内容<br>适配人群：品牌团队、设计师、内容创作者 |
-| <img src="assets/readme/themes/theme05.jpg" width="440" alt="色谱图表风内页预览"><br>**theme05 色谱图表风**<br>适配场景：数据报告、市场分析、KPI 复盘、行业研究<br>适配人群：数据分析师、咨询顾问、研究员 | <img src="assets/readme/themes/theme06.jpg" width="440" alt="深色图谱风内页预览"><br>**theme06 深色图谱风**<br>适配场景：高密度数据展示、战略分析、科技 / 金融 / 产业报告<br>适配人群：战略团队、投资人、高管汇报者 |
-| <img src="assets/readme/themes/theme07.jpg" width="440" alt="冷白调研风内页预览"><br>**theme07 冷白调研风**<br>适配场景：调研报告、白皮书、竞品分析、学术 / 政策型表达<br>适配人群：研究机构、咨询团队、智库 | <img src="assets/readme/themes/theme08.jpg" width="440" alt="黑金实验风内页预览"><br>**theme08 黑金实验风**<br>适配场景：高端发布、品牌提案、实验性概念、奢华科技叙事<br>适配人群：高端品牌、创意总监 |
-| <img src="assets/readme/themes/theme09.jpg" width="440" alt="深蓝杂志风内页预览"><br>**theme09 深蓝杂志风**<br>适配场景：品牌故事、人物访谈、企业形象册、深度专题<br>适配人群：公关团队、媒体编辑、创始人 | <img src="assets/readme/themes/theme10.jpg" width="440" alt="金色指数风内页预览"><br>**theme10 金色指数风**<br>适配场景：金融数据、投资报告、商业指数、年度榜单<br>适配人群：投资机构、金融分析师、商业媒体 |
-| <img src="assets/readme/themes/theme11.jpg" width="440" alt="高能增长风内页预览"><br>**theme11 高能增长风**<br>适配场景：增长复盘、商业计划、融资路演、市场扩张方案<br>适配人群：创业者、增长团队、VC/PE 路演 | <img src="assets/readme/themes/theme12.jpg" width="440" alt="声波霓虹风内页预览"><br>**theme12 声波霓虹风**<br>适配场景：音乐娱乐、潮流活动、直播内容、年轻化发布<br>适配人群：娱乐品牌、活动策划、潮流消费品牌 |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme01.jpg" width="440" alt="轻拟态风内页预览"><br>**theme01 轻拟态风**<br>适配场景：产品介绍、企业汇报、方案说明、轻量级发布<br>适配人群：创业团队、产品经理、销售顾问 | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme02.jpg" width="440" alt="炫光紫绿风内页预览"><br>**theme02 炫光紫绿风**<br>适配场景：科技发布会、AI / 自动驾驶 / 机器人主题、增长故事<br>适配人群：科技公司创始人、技术负责人 |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme03.jpg" width="440" alt="深浅代码风内页预览"><br>**theme03 深浅代码风**<br>适配场景：技术方案、开发者大会、系统架构、AI 工程实践<br>适配人群：工程师、架构师、开发者社区 | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme04.jpg" width="440" alt="玻璃糖果风内页预览"><br>**theme04 玻璃糖果风**<br>适配场景：年轻化品牌、消费产品、创意提案、社媒感内容<br>适配人群：品牌团队、设计师、内容创作者 |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme05.jpg" width="440" alt="色谱图表风内页预览"><br>**theme05 色谱图表风**<br>适配场景：数据报告、市场分析、KPI 复盘、行业研究<br>适配人群：数据分析师、咨询顾问、研究员 | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme06.jpg" width="440" alt="深色图谱风内页预览"><br>**theme06 深色图谱风**<br>适配场景：高密度数据展示、战略分析、科技 / 金融 / 产业报告<br>适配人群：战略团队、投资人、高管汇报者 |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme07.jpg" width="440" alt="冷白调研风内页预览"><br>**theme07 冷白调研风**<br>适配场景：调研报告、白皮书、竞品分析、学术 / 政策型表达<br>适配人群：研究机构、咨询团队、智库 | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme08.jpg" width="440" alt="黑金实验风内页预览"><br>**theme08 黑金实验风**<br>适配场景：高端发布、品牌提案、实验性概念、奢华科技叙事<br>适配人群：高端品牌、创意总监 |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme09.jpg" width="440" alt="深蓝杂志风内页预览"><br>**theme09 深蓝杂志风**<br>适配场景：品牌故事、人物访谈、企业形象册、深度专题<br>适配人群：公关团队、媒体编辑、创始人 | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme10.jpg" width="440" alt="金色指数风内页预览"><br>**theme10 金色指数风**<br>适配场景：金融数据、投资报告、商业指数、年度榜单<br>适配人群：投资机构、金融分析师、商业媒体 |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme11.jpg" width="440" alt="高能增长风内页预览"><br>**theme11 高能增长风**<br>适配场景：增长复盘、商业计划、融资路演、市场扩张方案<br>适配人群：创业者、增长团队、VC/PE 路演 | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme12.jpg" width="440" alt="声波霓虹风内页预览"><br>**theme12 声波霓虹风**<br>适配场景：音乐娱乐、潮流活动、直播内容、年轻化发布<br>适配人群：娱乐品牌、活动策划、潮流消费品牌 |
 
 ## 30 秒开始
 
@@ -106,7 +106,7 @@ npx skills add https://github.com/chuspeeism/dashiAI-ppt-skill --skill dashiai-p
 
 HTML 版与导出 PPTX 版的逐页对比：
 
-![HTML 与导出 PPTX 逐页对比](assets/readme/html-vs-pptx.gif)
+![HTML 与导出 PPTX 逐页对比](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/html-vs-pptx.gif)
 
 ## 平台支持
 
@@ -172,7 +172,7 @@ git clone https://github.com/chuspeeism/dashiAI-ppt-skill.git ~/.codex/skills/da
 
 如果你提供的是纯文字资料，Skill 会根据实际情况在合适的页面里预留图片位置，后续点击占位符就能填图：
 
-![图片占位符一键填图](assets/readme/image-placeholder.gif)
+![图片占位符一键填图](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/image-placeholder.gif)
 
 ## 生成后编辑：每一页都自带控制台
 
@@ -184,7 +184,7 @@ git clone https://github.com/chuspeeism/dashiAI-ppt-skill.git ~/.codex/skills/da
 
 | 点击任意文字就地编辑 | 加图片 |
 |---|---|
-| ![点击文字就地编辑，装饰元素随字数自适应](assets/readme/text-edit.gif) | ![向页面插入图片](assets/readme/add-image.gif) |
+| ![点击文字就地编辑，装饰元素随字数自适应](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/text-edit.gif) | ![向页面插入图片](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/add-image.gif) |
 
 ### 控制台改：布局、模块数量、图表、配色
 
@@ -192,17 +192,17 @@ git clone https://github.com/chuspeeism/dashiAI-ppt-skill.git ~/.codex/skills/da
 
 | 拖滑杆增减模块 | 换布局 |
 |---|---|
-| ![拖动滑杆调节目录、表格、多项式、图片数量](assets/readme/slider-edit.gif) | ![一句话切换页面布局](assets/readme/layout-switch.gif) |
+| ![拖动滑杆调节目录、表格、多项式、图片数量](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/slider-edit.gif) | ![一句话切换页面布局](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/layout-switch.gif) |
 
 | 换图表 | 风格内配色切换 |
 |---|---|
-| ![一句话更换图表类型](assets/readme/chart-switch.gif) | ![每套风格内支持局部配色调换](assets/readme/palette-switch.gif) |
+| ![一句话更换图表类型](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/chart-switch.gif) | ![每套风格内支持局部配色调换](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/palette-switch.gif) |
 
 ### 翻页动画
 
 内置 9 种切换动画：液态形变、切入、横滑、行扫、缩放、竖条、混合、横切、画廊（不想要动画也可以一键关掉）。在控制台里选一个喜欢的效果，一键切换：
 
-![翻页过渡动画效果](assets/readme/transitions.gif)
+![翻页过渡动画效果](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/transitions.gif)
 
 ### 还有更多
 
@@ -222,15 +222,15 @@ git clone https://github.com/chuspeeism/dashiAI-ppt-skill.git ~/.codex/skills/da
 
 翻一遍图表版式（2 倍速）：
 
-![多种图表版式展示](assets/readme/layouts-tour.gif)
+![多种图表版式展示](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/layouts-tour.gif)
 
 内置的分析模型与专业版式（SWOT、波特五力、PEST、商业模式画布、双钻模型、资本流向桑基图……）：
 
-![内置分析模型版式](assets/readme/analysis-models.png)
+![内置分析模型版式](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/analysis-models.png)
 
 高频使用的目录页、表格页、数字海报页、图文页：
 
-![常用版式](assets/readme/common-layouts.png)
+![常用版式](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/common-layouts.png)
 
 版式库的组织方式：
 
@@ -246,7 +246,7 @@ git clone https://github.com/chuspeeism/dashiAI-ppt-skill.git ~/.codex/skills/da
 - **PDF**：适合归档和打印
 - **PPTX**：**可编辑导出**——逐节点还原版式，文字全部保持可编辑，交给领导 / 老师 / 同事继续改完全没问题
 
-![一键导出可编辑 PPT](assets/readme/export-pptx.gif)
+![一键导出可编辑 PPT](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/export-pptx.gif)
 
 你甚至可以跨过 HTML 这个中间态，直接跟 Agent 说"用这个 skill 生成 PPT 格式的文件"，从提示词一步到 PPTX。
 

@@ -20,7 +20,7 @@ A PPT skill built for people who actually present at work. Throw a document at y
 
 > We spent over two months polishing this skill together with the best designers on our team. The rich visuals are just the surface — the real problem we set out to solve: **Making a deck editable after generation matters more than the generation itself.**
 
-![Generated deck demo](assets/readme/hero-result.gif)
+![Generated deck demo](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/hero-result.gif)
 
 ## 12 Built-in Visual Themes
 
@@ -28,12 +28,12 @@ At generation time the skill shows you previews to choose from, and you can ask 
 
 |  |  |
 |---|---|
-| <img src="assets/readme/themes/theme01.jpg" width="440" alt="theme01 Soft Neumorphic body layouts preview"><br>**theme01 Soft Neumorphic (轻拟态风)**<br>Best for: product intros, corporate reports, proposal walkthroughs, lightweight launches<br>Made for: startup teams, product managers, sales consultants | <img src="assets/readme/themes/theme02.jpg" width="440" alt="theme02 Neon Glow body layouts preview"><br>**theme02 Neon Glow (炫光紫绿风)**<br>Best for: tech launch events, AI / autonomous driving / robotics topics, growth stories<br>Made for: tech founders, engineering leads |
-| <img src="assets/readme/themes/theme03.jpg" width="440" alt="theme03 Code Mono body layouts preview"><br>**theme03 Code Mono (深浅代码风)**<br>Best for: technical proposals, developer conferences, system architecture, AI engineering practice<br>Made for: engineers, architects, developer communities | <img src="assets/readme/themes/theme04.jpg" width="440" alt="theme04 Glass Candy body layouts preview"><br>**theme04 Glass Candy (玻璃糖果风)**<br>Best for: youthful brands, consumer products, creative pitches, social-media-flavored content<br>Made for: brand teams, designers, content creators |
-| <img src="assets/readme/themes/theme05.jpg" width="440" alt="theme05 Spectrum Charts body layouts preview"><br>**theme05 Spectrum Charts (色谱图表风)**<br>Best for: data reports, market analysis, KPI reviews, industry research<br>Made for: data analysts, consultants, researchers | <img src="assets/readme/themes/theme06.jpg" width="440" alt="theme06 Dark Atlas body layouts preview"><br>**theme06 Dark Atlas (深色图谱风)**<br>Best for: dense data displays, strategic analysis, tech / finance / industry reports<br>Made for: strategy teams, investors, executive presenters |
-| <img src="assets/readme/themes/theme07.jpg" width="440" alt="theme07 Cool White Research body layouts preview"><br>**theme07 Cool White Research (冷白调研风)**<br>Best for: research reports, whitepapers, competitive analysis, academic / policy communication<br>Made for: research institutes, consulting teams, think tanks | <img src="assets/readme/themes/theme08.jpg" width="440" alt="theme08 Black Gold Lab body layouts preview"><br>**theme08 Black Gold Lab (黑金实验风)**<br>Best for: premium launches, brand pitches, experimental concepts, luxury-tech storytelling<br>Made for: high-end brands, creative directors |
-| <img src="assets/readme/themes/theme09.jpg" width="440" alt="theme09 Deep Blue Editorial body layouts preview"><br>**theme09 Deep Blue Editorial (深蓝杂志风)**<br>Best for: brand stories, interviews, corporate profiles, long-form features<br>Made for: PR teams, media editors, founders | <img src="assets/readme/themes/theme10.jpg" width="440" alt="theme10 Golden Index body layouts preview"><br>**theme10 Golden Index (金色指数风)**<br>Best for: financial data, investment reports, business indices, annual rankings<br>Made for: investment firms, financial analysts, business media |
-| <img src="assets/readme/themes/theme11.jpg" width="440" alt="theme11 High-Energy Growth body layouts preview"><br>**theme11 High-Energy Growth (高能增长风)**<br>Best for: growth reviews, business plans, fundraising pitches, market expansion plans<br>Made for: founders, growth teams, VC/PE roadshows | <img src="assets/readme/themes/theme12.jpg" width="440" alt="theme12 Soundwave Neon body layouts preview"><br>**theme12 Soundwave Neon (声波霓虹风)**<br>Best for: music and entertainment, trend events, livestream content, youth-oriented launches<br>Made for: entertainment brands, event planners, trend-driven consumer brands |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme01.jpg" width="440" alt="theme01 Soft Neumorphic body layouts preview"><br>**theme01 Soft Neumorphic (轻拟态风)**<br>Best for: product intros, corporate reports, proposal walkthroughs, lightweight launches<br>Made for: startup teams, product managers, sales consultants | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme02.jpg" width="440" alt="theme02 Neon Glow body layouts preview"><br>**theme02 Neon Glow (炫光紫绿风)**<br>Best for: tech launch events, AI / autonomous driving / robotics topics, growth stories<br>Made for: tech founders, engineering leads |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme03.jpg" width="440" alt="theme03 Code Mono body layouts preview"><br>**theme03 Code Mono (深浅代码风)**<br>Best for: technical proposals, developer conferences, system architecture, AI engineering practice<br>Made for: engineers, architects, developer communities | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme04.jpg" width="440" alt="theme04 Glass Candy body layouts preview"><br>**theme04 Glass Candy (玻璃糖果风)**<br>Best for: youthful brands, consumer products, creative pitches, social-media-flavored content<br>Made for: brand teams, designers, content creators |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme05.jpg" width="440" alt="theme05 Spectrum Charts body layouts preview"><br>**theme05 Spectrum Charts (色谱图表风)**<br>Best for: data reports, market analysis, KPI reviews, industry research<br>Made for: data analysts, consultants, researchers | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme06.jpg" width="440" alt="theme06 Dark Atlas body layouts preview"><br>**theme06 Dark Atlas (深色图谱风)**<br>Best for: dense data displays, strategic analysis, tech / finance / industry reports<br>Made for: strategy teams, investors, executive presenters |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme07.jpg" width="440" alt="theme07 Cool White Research body layouts preview"><br>**theme07 Cool White Research (冷白调研风)**<br>Best for: research reports, whitepapers, competitive analysis, academic / policy communication<br>Made for: research institutes, consulting teams, think tanks | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme08.jpg" width="440" alt="theme08 Black Gold Lab body layouts preview"><br>**theme08 Black Gold Lab (黑金实验风)**<br>Best for: premium launches, brand pitches, experimental concepts, luxury-tech storytelling<br>Made for: high-end brands, creative directors |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme09.jpg" width="440" alt="theme09 Deep Blue Editorial body layouts preview"><br>**theme09 Deep Blue Editorial (深蓝杂志风)**<br>Best for: brand stories, interviews, corporate profiles, long-form features<br>Made for: PR teams, media editors, founders | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme10.jpg" width="440" alt="theme10 Golden Index body layouts preview"><br>**theme10 Golden Index (金色指数风)**<br>Best for: financial data, investment reports, business indices, annual rankings<br>Made for: investment firms, financial analysts, business media |
+| <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme11.jpg" width="440" alt="theme11 High-Energy Growth body layouts preview"><br>**theme11 High-Energy Growth (高能增长风)**<br>Best for: growth reviews, business plans, fundraising pitches, market expansion plans<br>Made for: founders, growth teams, VC/PE roadshows | <img src="https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/theme12.jpg" width="440" alt="theme12 Soundwave Neon body layouts preview"><br>**theme12 Soundwave Neon (声波霓虹风)**<br>Best for: music and entertainment, trend events, livestream content, youth-oriented launches<br>Made for: entertainment brands, event planners, trend-driven consumer brands |
 
 ## Get Started in 30 Seconds
 
@@ -110,7 +110,7 @@ Or try these:
 
 Page-by-page comparison between the HTML deck and the exported PPTX:
 
-![Page-by-page comparison of HTML deck and exported PPTX](assets/readme/html-vs-pptx.gif)
+![Page-by-page comparison of HTML deck and exported PPTX](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/html-vs-pptx.gif)
 
 ## Platform Support
 
@@ -176,7 +176,7 @@ Drop in whatever document you have and say you want a deck (the agent discovers 
 
 If your source material is text-only, the skill reserves image slots on the right pages as appropriate; click a placeholder later to fill it in:
 
-![One-click image fill for placeholders](assets/readme/image-placeholder.gif)
+![One-click image fill for placeholders](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/image-placeholder.gif)
 
 ## Editing After Generation: Every Page Has Its Own Console
 
@@ -188,7 +188,7 @@ Click any text anywhere to edit it; decorated text auto-adapts to its length. Cl
 
 | Click any text to edit in place | Add an image |
 |---|---|
-| ![Click text to edit in place; decorative elements adapt to text length](assets/readme/text-edit.gif) | ![Insert an image into a page](assets/readme/add-image.gif) |
+| ![Click text to edit in place; decorative elements adapt to text length](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/text-edit.gif) | ![Insert an image into a page](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/add-image.gif) |
 
 ### Console edits: layout, module count, charts, palettes
 
@@ -196,17 +196,17 @@ TOC pages, table pages, multi-item pages (layouts with several parallel entries)
 
 | Drag a slider to add or remove modules | Switch layouts |
 |---|---|
-| ![Drag sliders to adjust TOC, table, multi-item, and image counts](assets/readme/slider-edit.gif) | ![Switch a page layout in one sentence](assets/readme/layout-switch.gif) |
+| ![Drag sliders to adjust TOC, table, multi-item, and image counts](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/slider-edit.gif) | ![Switch a page layout in one sentence](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/layout-switch.gif) |
 
 | Swap charts | Palette switching within a theme |
 |---|---|
-| ![Swap chart types in one sentence](assets/readme/chart-switch.gif) | ![Each theme supports local palette swaps](assets/readme/palette-switch.gif) |
+| ![Swap chart types in one sentence](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/chart-switch.gif) | ![Each theme supports local palette swaps](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/palette-switch.gif) |
 
 ### Page transitions
 
 9 built-in transition animations: liquid morph, cut-in, horizontal slide, line sweep, zoom, vertical bars, blend, horizontal cut, gallery (you can also switch animations off entirely with one click). Pick the one you like in the console and switch instantly:
 
-![Page transition animations](assets/readme/transitions.gif)
+![Page transition animations](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/transitions.gif)
 
 ### And more
 
@@ -226,15 +226,15 @@ While writing this README, we rendered all 12 themes for real and went through t
 
 A pass through the chart layouts (at 2x speed):
 
-![Tour of chart layouts](assets/readme/layouts-tour.gif)
+![Tour of chart layouts](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/layouts-tour.gif)
 
 Built-in analysis frameworks and specialized layouts (SWOT, Porter's Five Forces, PEST, Business Model Canvas, Double Diamond, capital-flow Sankey...):
 
-![Built-in analysis framework layouts](assets/readme/analysis-models.png)
+![Built-in analysis framework layouts](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/analysis-models.png)
 
 The high-frequency staples — TOC, table, big-number poster, and image-text pages:
 
-![Common layouts](assets/readme/common-layouts.png)
+![Common layouts](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/common-layouts.png)
 
 How the library is organized:
 
@@ -250,7 +250,7 @@ The export menu in the top-right corner of the browser has three options:
 - **PDF**: for archiving and printing
 - **PPTX**: **editable export** — layouts reconstructed node by node, all text kept editable; perfectly fine to hand off to your boss / professor / teammates for further edits
 
-![One-click export to editable PPT](assets/readme/export-pptx.gif)
+![One-click export to editable PPT](https://github.com/chuspeeism/dashiAI-ppt-skill/releases/download/readme-assets-v1/export-pptx.gif)
 
 You can even skip the HTML intermediate entirely — tell the agent "use this skill to generate a PPT file" and go from prompt straight to PPTX.
 
