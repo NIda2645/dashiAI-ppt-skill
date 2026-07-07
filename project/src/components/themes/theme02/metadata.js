@@ -8470,6 +8470,13 @@ export const pages = [
       "aurora": true,
       "auroraSpeed": 1,
       "index": "39 / 73"
+    },
+    "numberBounds": {
+      "gauges[].value": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {

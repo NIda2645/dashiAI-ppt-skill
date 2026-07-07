@@ -4210,6 +4210,18 @@ export const pages = [
         }
       ],
       "closingLine": "模型能力只是入口，交付能力才是商业化。"
+    },
+    "numberBounds": {
+      "dims[].a": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      },
+      "dims[].b": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      }
     }
   },
   {
@@ -7430,6 +7442,13 @@ export const pages = [
         }
       ],
       "closingLine": "能量化 ROI 的场景更容易获得预算。"
+    },
+    "numberBounds": {
+      "funnel[].pct": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -8806,6 +8825,13 @@ export const pages = [
         ]
       },
       "closingLine": "AI 公司融资，是在锁定未来资源。"
+    },
+    "numberBounds": {
+      "cards[].w": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -11077,6 +11103,13 @@ export const pages = [
         }
       ],
       "closingLine": "新入口，要用留存证明价值。"
+    },
+    "numberBounds": {
+      "stages[].w": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -11250,6 +11283,13 @@ export const pages = [
         }
       ],
       "closingLine": "存量客户基础，是 AI 商业化的捷径。"
+    },
+    "numberBounds": {
+      "layers[].meter": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -11536,6 +11576,13 @@ export const pages = [
         }
       ],
       "closingLine": "窄场景也能产生高价值。"
+    },
+    "numberBounds": {
+      "sources[].v": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -11738,6 +11785,13 @@ export const pages = [
         }
       ],
       "closingLine": "强叙事，需要更长时间兑现。"
+    },
+    "numberBounds": {
+      "gauges[].fill": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -12422,6 +12476,13 @@ export const pages = [
         }
       ],
       "closingLine": "没有壁垒的模型能力会迅速商品化。"
+    },
+    "numberBounds": {
+      "pressures[].v": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {

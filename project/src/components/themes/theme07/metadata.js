@@ -16,7 +16,7 @@ export const pages = [
     "pageNumber": 1,
     "layout": "THEME07-001",
     "slot": "cover-lean-page",
-    "label": "01 封面 01 · 精益智造",
+    "label": "封面 精益智造",
     "bgClass": "",
     "controls": [
       {
@@ -100,7 +100,7 @@ export const pages = [
     "pageNumber": 2,
     "layout": "THEME07-002",
     "slot": "cover-supply-chain-page",
-    "label": "02 封面 03 · 链通全国",
+    "label": "封面 链通全国",
     "bgClass": "",
     "controls": [
       {
@@ -200,7 +200,7 @@ export const pages = [
     "pageNumber": 3,
     "layout": "THEME07-003",
     "slot": "cover-retail-trend-page",
-    "label": "03 封面 04 · 把握趋势",
+    "label": "封面 把握趋势",
     "bgClass": "",
     "controls": [
       {
@@ -282,7 +282,7 @@ export const pages = [
     "pageNumber": 4,
     "layout": "THEME07-004",
     "slot": "cover-supply-strategy-page",
-    "label": "04 封面 07 · 供应链战略",
+    "label": "封面 供应链战略",
     "bgClass": "",
     "controls": [
       {
@@ -353,7 +353,7 @@ export const pages = [
     "pageNumber": 5,
     "layout": "THEME07-005",
     "slot": "cover-page",
-    "label": "09 01",
+    "label": "封面 Cover",
     "bgClass": "",
     "controls": [
       {
@@ -491,7 +491,7 @@ export const pages = [
     "pageNumber": 6,
     "layout": "THEME07-006",
     "slot": "summary-page",
-    "label": "10 02",
+    "label": "摘要 Overview",
     "bgClass": "",
     "controls": [
       {
@@ -679,7 +679,7 @@ export const pages = [
     "pageNumber": 7,
     "layout": "THEME07-007",
     "slot": "contents-page",
-    "label": "11 03",
+    "label": "目录 Contents",
     "bgClass": "",
     "controls": [
       {
@@ -869,7 +869,7 @@ export const pages = [
     "pageNumber": 8,
     "layout": "THEME07-008",
     "slot": "method-page",
-    "label": "12 04",
+    "label": "方法 Methodology",
     "bgClass": "",
     "controls": [
       {
@@ -1031,7 +1031,7 @@ export const pages = [
     "pageNumber": 9,
     "layout": "THEME07-009",
     "slot": "case-page",
-    "label": "16 08",
+    "label": "案例 Cases",
     "bgClass": "",
     "controls": [
       {
@@ -1202,7 +1202,7 @@ export const pages = [
     "pageNumber": 10,
     "layout": "THEME07-010",
     "slot": "monthly-page",
-    "label": "17 09",
+    "label": "热力 Heatmap",
     "bgClass": "",
     "controls": [
       {
@@ -1380,7 +1380,7 @@ export const pages = [
     "pageNumber": 11,
     "layout": "THEME07-011",
     "slot": "ranking-page",
-    "label": "18 10",
+    "label": "排名 Ranking",
     "bgClass": "",
     "controls": [
       {
@@ -1533,7 +1533,7 @@ export const pages = [
     "pageNumber": 12,
     "layout": "THEME07-012",
     "slot": "matrix-page",
-    "label": "19 11",
+    "label": "象限 Quadrant",
     "bgClass": "",
     "controls": [
       {
@@ -1687,7 +1687,7 @@ export const pages = [
     "pageNumber": 13,
     "layout": "THEME07-013",
     "slot": "risk-page",
-    "label": "20 12",
+    "label": "风险 Risk",
     "bgClass": "",
     "controls": [
       {
@@ -1849,7 +1849,7 @@ export const pages = [
     "pageNumber": 14,
     "layout": "THEME07-014",
     "slot": "outlook-page",
-    "label": "21 13",
+    "label": "策略 Outlook",
     "bgClass": "",
     "controls": [
       {
@@ -2038,7 +2038,7 @@ export const pages = [
     "pageNumber": 15,
     "layout": "THEME07-015",
     "slot": "quote-page",
-    "label": "22 14",
+    "label": "结论 Conclusion",
     "bgClass": "",
     "controls": [
       {
@@ -2174,7 +2174,7 @@ export const pages = [
     "pageNumber": 16,
     "layout": "THEME07-016",
     "slot": "chapter-page",
-    "label": "23 15",
+    "label": "章节 市场数据",
     "bgClass": "",
     "controls": [
       {
@@ -2307,7 +2307,7 @@ export const pages = [
     "pageNumber": 17,
     "layout": "THEME07-017",
     "slot": "deal-map-page",
-    "label": "24 16",
+    "label": "气泡 Deal Map",
     "bgClass": "",
     "controls": [
       {
@@ -2501,7 +2501,7 @@ export const pages = [
     "pageNumber": 18,
     "layout": "THEME07-018",
     "slot": "cold-start-page",
-    "label": "25 17",
+    "label": "季度 Q1 冷启动",
     "bgClass": "",
     "controls": [
       {
@@ -2698,7 +2698,7 @@ export const pages = [
     "pageNumber": 19,
     "layout": "THEME07-019",
     "slot": "accelerate-page",
-    "label": "26 18",
+    "label": "季度 Q2 加速",
     "bgClass": "",
     "controls": [
       {
@@ -2874,7 +2874,7 @@ export const pages = [
     "pageNumber": 20,
     "layout": "THEME07-020",
     "slot": "peak-page",
-    "label": "27 19",
+    "label": "季度 Q3 峰值",
     "bgClass": "",
     "controls": [
       {
@@ -3087,7 +3087,7 @@ export const pages = [
     "pageNumber": 21,
     "layout": "THEME07-021",
     "slot": "cooldown-page",
-    "label": "28 20",
+    "label": "季度 Q4 回落",
     "bgClass": "",
     "controls": [
       {
@@ -3279,7 +3279,7 @@ export const pages = [
     "pageNumber": 22,
     "layout": "THEME07-022",
     "slot": "peak-trough-page",
-    "label": "29 21",
+    "label": "峰谷 Peak/Trough",
     "bgClass": "",
     "controls": [
       {
@@ -3528,7 +3528,7 @@ export const pages = [
     "pageNumber": 23,
     "layout": "THEME07-023",
     "slot": "waterfall-page",
-    "label": "30 22",
+    "label": "瀑布 Waterfall",
     "bgClass": "",
     "controls": [
       {
@@ -3695,7 +3695,7 @@ export const pages = [
     "pageNumber": 24,
     "layout": "THEME07-024",
     "slot": "deal-size-page",
-    "label": "31 23",
+    "label": "区间 Deal Size",
     "bgClass": "",
     "controls": [
       {
@@ -3857,7 +3857,7 @@ export const pages = [
     "pageNumber": 25,
     "layout": "THEME07-025",
     "slot": "avg-ticket-page",
-    "label": "32 24",
+    "label": "均值 Avg Ticket",
     "bgClass": "",
     "controls": [
       {
@@ -3984,7 +3984,7 @@ export const pages = [
     "pageNumber": 26,
     "layout": "THEME07-026",
     "slot": "investor-page",
-    "label": "33 25",
+    "label": "图谱 Investors",
     "bgClass": "",
     "controls": [
       {
@@ -4158,7 +4158,7 @@ export const pages = [
     "pageNumber": 27,
     "layout": "THEME07-027",
     "slot": "active-capital-page",
-    "label": "34 26",
+    "label": "排名 Active Capital",
     "bgClass": "",
     "controls": [
       {
@@ -4362,7 +4362,7 @@ export const pages = [
     "pageNumber": 28,
     "layout": "THEME07-028",
     "slot": "concentration-page",
-    "label": "35 28",
+    "label": "集中度 Concentration",
     "bgClass": "",
     "controls": [
       {
@@ -4525,7 +4525,7 @@ export const pages = [
     "pageNumber": 29,
     "layout": "THEME07-029",
     "slot": "syndicate-page",
-    "label": "36 27",
+    "label": "阵容 Syndicate",
     "bgClass": "",
     "controls": [
       {
@@ -4747,7 +4747,7 @@ export const pages = [
     "pageNumber": 30,
     "layout": "THEME07-030",
     "slot": "knowledge-page",
-    "label": "37 29",
+    "label": "赛道 企业搜索",
     "bgClass": "",
     "controls": [
       {
@@ -4932,7 +4932,7 @@ export const pages = [
     "pageNumber": 31,
     "layout": "THEME07-031",
     "slot": "legal-page",
-    "label": "38 30",
+    "label": "赛道 法律 AI",
     "bgClass": "",
     "controls": [
       {
@@ -5117,7 +5117,7 @@ export const pages = [
     "pageNumber": 32,
     "layout": "THEME07-032",
     "slot": "healthcare-page",
-    "label": "39 31",
+    "label": "赛道 医疗 AI",
     "bgClass": "",
     "controls": [
       {
@@ -5290,7 +5290,7 @@ export const pages = [
     "pageNumber": 33,
     "layout": "THEME07-033",
     "slot": "finance-page",
-    "label": "40 32",
+    "label": "赛道 金融 AI",
     "bgClass": "",
     "controls": [
       {
@@ -5491,7 +5491,7 @@ export const pages = [
     "pageNumber": 34,
     "layout": "THEME07-034",
     "slot": "compute-page",
-    "label": "41 33",
+    "label": "赛道 算力云",
     "bgClass": "",
     "controls": [
       {
@@ -5682,7 +5682,7 @@ export const pages = [
     "pageNumber": 35,
     "layout": "THEME07-035",
     "slot": "chip-page",
-    "label": "42 34",
+    "label": "赛道 AI 芯片",
     "bgClass": "",
     "controls": [
       {
@@ -5854,7 +5854,7 @@ export const pages = [
     "pageNumber": 36,
     "layout": "THEME07-036",
     "slot": "robotics-page",
-    "label": "43 35",
+    "label": "赛道 具身智能",
     "bgClass": "",
     "controls": [
       {
@@ -6027,7 +6027,7 @@ export const pages = [
     "pageNumber": 37,
     "layout": "THEME07-037",
     "slot": "autonomy-page",
-    "label": "44 36",
+    "label": "赛道 自动驾驶",
     "bgClass": "",
     "controls": [
       {
@@ -6235,7 +6235,7 @@ export const pages = [
     "pageNumber": 38,
     "layout": "THEME07-038",
     "slot": "safety-page",
-    "label": "45 37",
+    "label": "赛道 AI 安全",
     "bgClass": "",
     "controls": [
       {
@@ -6436,7 +6436,7 @@ export const pages = [
     "pageNumber": 39,
     "layout": "THEME07-039",
     "slot": "content-gen-page",
-    "label": "46 38",
+    "label": "赛道 内容生成",
     "bgClass": "",
     "controls": [
       {
@@ -6618,7 +6618,7 @@ export const pages = [
     "pageNumber": 40,
     "layout": "THEME07-040",
     "slot": "education-page",
-    "label": "47 39",
+    "label": "赛道 教育 AI",
     "bgClass": "",
     "controls": [
       {
@@ -6792,7 +6792,7 @@ export const pages = [
     "pageNumber": 41,
     "layout": "THEME07-041",
     "slot": "support-page",
-    "label": "48 40",
+    "label": "赛道 客服 AI",
     "bgClass": "",
     "controls": [
       {
@@ -6963,7 +6963,7 @@ export const pages = [
     "pageNumber": 42,
     "layout": "THEME07-042",
     "slot": "sales-page",
-    "label": "49 41",
+    "label": "赛道 销售营销",
     "bgClass": "",
     "controls": [
       {
@@ -7136,7 +7136,7 @@ export const pages = [
     "pageNumber": 43,
     "layout": "THEME07-043",
     "slot": "low-code-page",
-    "label": "50 42",
+    "label": "赛道 低代码",
     "bgClass": "",
     "controls": [
       {
@@ -7360,7 +7360,7 @@ export const pages = [
     "pageNumber": 44,
     "layout": "THEME07-044",
     "slot": "open-source-page",
-    "label": "51 43",
+    "label": "赛道 开源模型",
     "bgClass": "",
     "controls": [
       {
@@ -7544,7 +7544,7 @@ export const pages = [
     "pageNumber": 45,
     "layout": "THEME07-045",
     "slot": "alignment-page",
-    "label": "52 44",
+    "label": "赛道 模型对齐",
     "bgClass": "",
     "controls": [
       {
@@ -7727,7 +7727,7 @@ export const pages = [
     "pageNumber": 46,
     "layout": "THEME07-046",
     "slot": "capital-chapter-page",
-    "label": "53 45",
+    "label": "章节 资本结构",
     "bgClass": "",
     "controls": [
       {
@@ -7918,6 +7918,13 @@ export const pages = [
       "hubCount": 5,
       "showDecorations": true,
       "accentColor": "#86D62B"
+    },
+    "numberBounds": {
+      "hubs[].d": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -7926,7 +7933,7 @@ export const pages = [
     "pageNumber": 47,
     "layout": "THEME07-047",
     "slot": "early-stage-page",
-    "label": "54 46",
+    "label": "信号 早期轮",
     "bgClass": "",
     "controls": [
       {
@@ -8122,7 +8129,7 @@ export const pages = [
     "pageNumber": 48,
     "layout": "THEME07-048",
     "slot": "deal-structure-page",
-    "label": "55 47",
+    "label": "结构 未披露轮次",
     "bgClass": "",
     "controls": [
       {
@@ -8296,7 +8303,7 @@ export const pages = [
     "pageNumber": 49,
     "layout": "THEME07-049",
     "slot": "investor-mix-page",
-    "label": "56 48",
+    "label": "构成 Investor Mix",
     "bgClass": "",
     "controls": [
       {
@@ -8504,7 +8511,7 @@ export const pages = [
     "pageNumber": 50,
     "layout": "THEME07-050",
     "slot": "resource-page",
-    "label": "57 49",
+    "label": "角色 战略投资者",
     "bgClass": "",
     "controls": [
       {
@@ -8706,7 +8713,7 @@ export const pages = [
     "pageNumber": 51,
     "layout": "THEME07-051",
     "slot": "alliance-page",
-    "label": "58 50",
+    "label": "联盟 云厂商",
     "bgClass": "",
     "controls": [
       {
@@ -8888,7 +8895,7 @@ export const pages = [
     "pageNumber": 52,
     "layout": "THEME07-052",
     "slot": "ecosystem-page",
-    "label": "59 51",
+    "label": "生态 NVIDIA",
     "bgClass": "",
     "controls": [
       {
@@ -9084,7 +9091,7 @@ export const pages = [
     "pageNumber": 53,
     "layout": "THEME07-053",
     "slot": "geo-center-page",
-    "label": "60 52",
+    "label": "地理 湾区中心",
     "bgClass": "",
     "controls": [
       {
@@ -9211,7 +9218,7 @@ export const pages = [
     "pageNumber": 54,
     "layout": "THEME07-054",
     "slot": "region-cluster-page",
-    "label": "61 53",
+    "label": "集群 区域对比",
     "bgClass": "",
     "controls": [
       {
@@ -9612,7 +9619,7 @@ export const pages = [
     "pageNumber": 55,
     "layout": "THEME07-055",
     "slot": "resource-triad-page",
-    "label": "62 54",
+    "label": "三角 人才资本算力",
     "bgClass": "",
     "controls": [
       {
@@ -9781,7 +9788,7 @@ export const pages = [
     "pageNumber": 56,
     "layout": "THEME07-056",
     "slot": "open-aicase-page",
-    "label": "63 55",
+    "label": "案例 OpenAI",
     "bgClass": "",
     "controls": [
       {
@@ -9983,7 +9990,7 @@ export const pages = [
     "pageNumber": 57,
     "layout": "THEME07-057",
     "slot": "figure-case-page",
-    "label": "64 59",
+    "label": "案例 Figure",
     "bgClass": "",
     "controls": [
       {
@@ -10121,7 +10128,7 @@ export const pages = [
     "pageNumber": 58,
     "layout": "THEME07-058",
     "slot": "ssicase-page",
-    "label": "65 60",
+    "label": "案例 SSI",
     "bgClass": "",
     "controls": [
       {
@@ -10323,7 +10330,7 @@ export const pages = [
     "pageNumber": 59,
     "layout": "THEME07-059",
     "slot": "risk-chapter-page",
-    "label": "66 61",
+    "label": "章节 风险策略",
     "bgClass": "",
     "controls": [
       {
@@ -10457,7 +10464,7 @@ export const pages = [
     "pageNumber": 60,
     "layout": "THEME07-060",
     "slot": "revenue-page",
-    "label": "67 62",
+    "label": "风险 收入验证",
     "bgClass": "",
     "controls": [
       {
@@ -10630,7 +10637,7 @@ export const pages = [
     "pageNumber": 61,
     "layout": "THEME07-061",
     "slot": "compliance-page",
-    "label": "68 63",
+    "label": "风险 监管合规",
     "bgClass": "",
     "controls": [
       {
@@ -10807,6 +10814,13 @@ export const pages = [
       "focusIndex": 0,
       "showDecorations": true,
       "accentColor": "#86D62B"
+    },
+    "numberBounds": {
+      "rows[].level": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -10815,7 +10829,7 @@ export const pages = [
     "pageNumber": 62,
     "layout": "THEME07-062",
     "slot": "margin-page",
-    "label": "69 64",
+    "label": "风险 算力成本",
     "bgClass": "",
     "controls": [
       {
@@ -10972,7 +10986,7 @@ export const pages = [
     "pageNumber": 63,
     "layout": "THEME07-063",
     "slot": "moat-page",
-    "label": "70 65",
+    "label": "风险 壁垒压缩",
     "bgClass": "",
     "controls": [
       {
@@ -11129,6 +11143,13 @@ export const pages = [
       "showValues": true,
       "showDecorations": true,
       "accentColor": "#86D62B"
+    },
+    "numberBounds": {
+      "indicators[].value": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -11137,7 +11158,7 @@ export const pages = [
     "pageNumber": 64,
     "layout": "THEME07-064",
     "slot": "strategy-infra-page",
-    "label": "71 66",
+    "label": "策略 优先基建",
     "bgClass": "",
     "controls": [
       {
@@ -11322,6 +11343,13 @@ export const pages = [
       "showMeter": true,
       "showDecorations": true,
       "accentColor": "#86D62B"
+    },
+    "numberBounds": {
+      "cards[].certainty": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -11330,7 +11358,7 @@ export const pages = [
     "pageNumber": 65,
     "layout": "THEME07-065",
     "slot": "strategy-vertical-page",
-    "label": "72 67",
+    "label": "策略 垂直应用",
     "bgClass": "",
     "controls": [
       {
@@ -11535,7 +11563,7 @@ export const pages = [
     "pageNumber": 66,
     "layout": "THEME07-066",
     "slot": "repricing-page",
-    "label": "73 68",
+    "label": "策略 IPO 重定价",
     "bgClass": "",
     "controls": [
       {
@@ -11705,7 +11733,7 @@ export const pages = [
     "pageNumber": 67,
     "layout": "THEME07-067",
     "slot": "closing-page",
-    "label": "74 69",
+    "label": "结语 Closing",
     "bgClass": "",
     "controls": [
       {
@@ -11840,7 +11868,7 @@ export const pages = [
     "pageNumber": 68,
     "layout": "THEME07-068",
     "slot": "appendix-chapter-page",
-    "label": "75 70",
+    "label": "章节 附录",
     "bgClass": "",
     "controls": [
       {
@@ -11973,7 +12001,7 @@ export const pages = [
     "pageNumber": 69,
     "layout": "THEME07-069",
     "slot": "forward-page",
-    "label": "76 71",
+    "label": "前瞻 Forward",
     "bgClass": "",
     "controls": [
       {
@@ -12161,7 +12189,7 @@ export const pages = [
     "pageNumber": 70,
     "layout": "THEME07-070",
     "slot": "sources-page",
-    "label": "77 72",
+    "label": "口径 数据来源",
     "bgClass": "",
     "controls": [
       {
@@ -12347,6 +12375,13 @@ export const pages = [
       "focusIndex": 0,
       "showDecorations": true,
       "accentColor": "#86D62B"
+    },
+    "numberBounds": {
+      "rows[].level": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -12355,7 +12390,7 @@ export const pages = [
     "pageNumber": 71,
     "layout": "THEME07-071",
     "slot": "about-lab-page",
-    "label": "78 73",
+    "label": "关于 About the Lab",
     "bgClass": "",
     "controls": [
       {

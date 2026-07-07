@@ -3635,6 +3635,13 @@ export const pages = [
       "showContext": true,
       "showTrack": true,
       "showDecorations": true
+    },
+    "numberBounds": {
+      "dialsData[].value": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -6334,6 +6341,13 @@ export const pages = [
       "showConversion": true,
       "showStageIndex": true,
       "showDecorations": true
+    },
+    "numberBounds": {
+      "stagesData[].topW": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {

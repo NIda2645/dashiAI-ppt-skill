@@ -7760,6 +7760,18 @@ export const pages = [
       "page": "46",
       "total": "82",
       "footerTagline": "CREATIVE SYSTEM — Independent Media Kit"
+    },
+    "numberBounds": {
+      "metrics[].a": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      },
+      "metrics[].b": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      }
     }
   },
   {
@@ -7919,6 +7931,13 @@ export const pages = [
       "page": "47",
       "total": "82",
       "footerTagline": "CREATIVE SYSTEM — Independent Media Kit"
+    },
+    "numberBounds": {
+      "stages[].w": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -8906,6 +8925,18 @@ export const pages = [
       "page": "53",
       "total": "82",
       "footerTagline": "CREATIVE SYSTEM — Independent Media Kit"
+    },
+    "numberBounds": {
+      "kpis[].v": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      },
+      "kpis[].target": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {

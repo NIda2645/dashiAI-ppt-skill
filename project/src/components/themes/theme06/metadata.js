@@ -2645,6 +2645,13 @@ export const pages = [
       "focusEnabled": true,
       "focusIndex": 3,
       "accent": "#c8f135"
+    },
+    "numberBounds": {
+      "stages[].value": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -2960,6 +2967,18 @@ export const pages = [
       "barsCaption": "能力对比柱 / CAPABILITY BARS",
       "dotsCaption": "能力点阵 / CAPABILITY DOTS",
       "legendCaption": "维度明细 / DIMENSIONS"
+    },
+    "numberBounds": {
+      "axes[].mag": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      },
+      "axes[].base": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {

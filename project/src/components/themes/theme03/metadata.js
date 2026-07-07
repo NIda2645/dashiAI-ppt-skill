@@ -7890,7 +7890,7 @@ export const pages = [
           "en": "REVENUE",
           "value": "8",
           "unit": "亿美元",
-          "mag": 0.0008290155440414508
+          "mag": 0.000829015544041
         }
       ],
       "showDecor": false,

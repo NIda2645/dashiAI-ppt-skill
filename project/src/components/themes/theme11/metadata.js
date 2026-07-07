@@ -3956,6 +3956,13 @@ export const pages = [
           "d": "把例行的内容发布与迁移工作交给我们，团队得以专注核心。"
         }
       ]
+    },
+    "numberBounds": {
+      "metrics[].bar": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -5296,6 +5303,18 @@ export const pages = [
       ],
       "metaLeft": "IGNIS — 燃点 · 能力轮廓（自评 vs 行业中位）",
       "metaMid": "短板，才是复利的天花板"
+    },
+    "numberBounds": {
+      "axes[].us": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      },
+      "axes[].base": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      }
     }
   },
   {
@@ -11806,6 +11825,18 @@ export const pages = [
       ],
       "metaLeft": "IGNIS — 燃点 · 接入前后跃迁",
       "metaMid": "陡的那条，是自然流量"
+    },
+    "numberBounds": {
+      "metrics[].b": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      },
+      "metrics[].a": {
+        "min": 0,
+        "max": 100,
+        "semantics": "coordinate"
+      }
     }
   },
   {
@@ -13380,6 +13411,28 @@ export const pages = [
       ],
       "metaLeft": "IGNIS — 燃点 · 关键指标达成（中位样本）",
       "metaMid": "越过那条线，才算数"
+    },
+    "numberBounds": {
+      "rows[].meas": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      },
+      "rows[].target": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      },
+      "rows[].b2": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      },
+      "rows[].b3": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {

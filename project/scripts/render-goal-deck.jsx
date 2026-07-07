@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+import { scrubLocalPaths } from './scrub-local-paths.mjs';
 import fs from 'node:fs';
 import path from 'node:path';
 import { composeDeck } from '../src/deckComposer.jsx';
@@ -50,12 +51,3 @@ function displayPath(file) {
   return relative && !relative.startsWith('..') && !path.isAbsolute(relative) ? relative : path.basename(file);
 }
 
-function scrubLocalPaths(value) {
-  return String(value || '')
-    .replace(/file:\/\/\/?[^\s"'`<>),;]*/gi, '<local-path>')
-    .replace(/\/(?:private\/)?var\/[^\s"'`<>),;\r\n]+(?:\/[^/\\"'`<>),;\r\n]+)*/g, '<local-path>')
-    .replace(/\/Users\/[^/\\"'`<>),;\r\n]+(?:\/[^/\\"'`<>),;\r\n]+)*/g, '<local-path>')
-    .replace(/\/Volumes\/[^/\\"'`<>),;\r\n]+(?:\/[^/\\"'`<>),;\r\n]+)*/g, '<local-path>')
-    .replace(/\/home\/[^/\\"'`<>),;\r\n]+(?:\/[^/\\"'`<>),;\r\n]+)*/g, '<local-path>')
-    .replace(/(?<![A-Za-z])[A-Za-z]:[\\/][^\s"'`<>),;]+(?:[\\/][^\s"'`<>),;]+)*/g, '<local-path>');
-}

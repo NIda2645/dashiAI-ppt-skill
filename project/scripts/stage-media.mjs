@@ -402,5 +402,7 @@ function mimeForExt(ext, kind = null) {
   }[ext] || (kind === 'image' ? 'image/*' : 'application/octet-stream');
 }
 
-// Exposed for unit tests (the CLI body above is guarded by isMainModule).
-export { slugify, resolveSourcePath, matchNormalizedEntry, normalizationForms };
+// Exposed for unit tests (the CLI body above is guarded by isMainModule) and for
+// scripts/persist-deck-state.mjs, which reuses generateVideoPoster for server-side
+// media saved from data: URLs (same poster convention as CLI-staged video files).
+export { slugify, resolveSourcePath, matchNormalizedEntry, normalizationForms, generateVideoPoster };

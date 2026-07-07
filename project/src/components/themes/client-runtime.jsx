@@ -283,7 +283,8 @@ function createMediaApi(slide, baseProps, entry, defaults) {
   // atomically. Read back the gate's current value first so undo restores it.
   function updateList(key, index, value, extraProps) {
     const slideId = slide.dataset.vmSlideId;
-    const currentProps = window.__deckViewModel?.getState?.().props?.[slideId] || {};
+    const vmApi = window.__deckViewModel;
+    const currentProps = (vmApi?.peek ? vmApi.peek('props') : vmApi?.getState?.().props)?.[slideId] || {};
     const safeCurrentProps = sanitizeExternalStateValues(entry, defaults, currentProps);
     const sourceProps = { ...baseProps, ...safeCurrentProps };
     const nextList = toArray(sourceProps[key]);
@@ -334,7 +335,8 @@ function createMediaApi(slide, baseProps, entry, defaults) {
     isActive: () => isRuntimeSlideActive(slide),
     get: (key, index) => {
       const slideId = slide.dataset.vmSlideId;
-      const currentProps = window.__deckViewModel?.getState?.().props?.[slideId] || {};
+      const vmApi = window.__deckViewModel;
+      const currentProps = (vmApi?.peek ? vmApi.peek('props') : vmApi?.getState?.().props)?.[slideId] || {};
       const sourceProps = { ...baseProps, ...currentProps };
       return toArray(sourceProps[key])[index] || null;
     },

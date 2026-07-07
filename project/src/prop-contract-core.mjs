@@ -79,7 +79,7 @@ export function normalizeSlidePropsForContract(layout, props = {}, contract = nu
   const authoredProps = aliasResult.props || {};
   const authoredCounts = deriveAuthoredCounts(authoredProps, contract?.countBindings || []);
   const shapeResult = contract
-    ? validateAuthoredPropShape(authoredProps, contract.defaultProps, contract.propShapes, contract.controls, contract.numberBounds)
+    ? validateAuthoredPropShape(authoredProps, contract.defaultProps, contract.propShapes, contract.controls, contract.numberBounds, contract.freeTextFields)
     : { errors: [], warnings: [] };
   const next = { ...authoredProps };
   if (contract) applyMediaBackgroundMode(next, authoredProps, contract);
@@ -195,8 +195,59 @@ export function createContract(page, themePack) {
     countBindings,
     lengthBindings,
     numberBounds: normalizeContractNumberBounds(page.numberBounds),
+    freeTextFields: freeTextArrayFieldsForKey(page.key),
     propShapes: describePropShapes(defaultProps),
   };
+}
+
+// Array-item fields that collide between "structural discriminator" (locked to the shipped
+// enum) and "authored display copy" (must accept any string authored by the skill/user).
+// isEnumFieldName below matches purely on field *name*, so it can't tell theme03 ScorecardSlide's
+// `rows[].q` (a fixed quadrant token: 'star'|'bubble'|'hidden', switches icon/color) apart from
+// e.g. theme07 MethodPage's `layers[].q` (a rewritable research question) -- both are named `q`.
+// Pages that use a colliding name as prose opt out here, keyed by generated page key (mirrors the
+// numberBounds override above); pages absent from this table keep the generic enum lock, so
+// genuinely structural uses (theme03_page065) still fail validation -- see
+// scripts/test/test-jad231-validation-guard.mjs "token q fields still reject authored business
+// copy" vs "FAQ and question q fields accept authored business copy".
+const FREE_TEXT_ARRAY_FIELDS = {
+  theme04_page019: ['colsData[].q'], // Slide59Stacked: quarter tick label, not a mode switch
+  // Note: theme07/source/src/pages/TrendPage.jsx also has a quarters[].q tick label with the same
+  // bug, but that component isn't imported by theme07/runtime.jsx (unregistered/unreachable), so
+  // there is no live page key to target here.
+  theme07_page008: ['layers[].q'], // MethodPage: rewritable research question
+  theme07_page018: ['context[].q'], // ColdStartPage: quarter tick label
+  theme07_page021: ['nodes[].q'], // CooldownPage: quarter tick label
+  theme09_page105: ['items[].q'], // SlideFAQ: FAQ question
+  theme10_page055: ['items[].q'], // SlideFAQ: FAQ question
+  theme11_page043: ['qa[].q'], // Slide39FAQ: FAQ question
+  theme11_page052: ['quotes[].q'], // Slide48Voices: testimonial quote text
+  theme12_page040: ['items[].q'], // SwSlideFaq: FAQ question
+  theme12_page081: ['milestones[].q'], // SwSlideTimeline: quarter tick label
+  theme12_page085: ['quotes[].q'], // SwSlideQuoteWall: testimonial quote text
+};
+
+function freeTextArrayFieldsForKey(pageKey) {
+  return FREE_TEXT_ARRAY_FIELDS[pageKey] || [];
+}
+
+// Flat union of the table above, keyed by path only ("arrayKey[].field") rather than by page.
+// Safe because no two pages currently registered here share an "arrayKey[].field" path with
+// opposite (structural vs. prose) intent -- see the per-page comments above. Consumed by
+// scripts/skill-workflow-utils.mjs's copy-field classifier (isFillableCopyLeaf), which walks
+// defaultProps generically and doesn't carry page-key context down to individual leaf checks.
+export const FREE_TEXT_ARRAY_FIELD_PATHS = new Set(Object.values(FREE_TEXT_ARRAY_FIELDS).flat());
+
+// Narrows a contract's freeTextFields list down to the field names opted out for one specific
+// array key, e.g. "items[].q" -> Set{'q'} when arrayKey === 'items'. Mirrors
+// explicitNumberBoundsForArrayKey below.
+function explicitFreeTextFieldsForArrayKey(freeTextFields, arrayKey) {
+  const prefix = `${arrayKey}[].`;
+  const result = new Set();
+  for (const path of freeTextFields || []) {
+    if (path.startsWith(prefix)) result.add(path.slice(prefix.length));
+  }
+  return result;
 }
 
 // Explicit, page-declared numeric domains for array-item fields whose values are consumed
@@ -615,7 +666,7 @@ function manifestMediaDefaults(defaultProps = {}, countBindings = []) {
   );
 }
 
-export function validateAuthoredPropShape(props = {}, defaults = {}, propShapes = null, controls = [], numberBoundsConfig = {}) {
+export function validateAuthoredPropShape(props = {}, defaults = {}, propShapes = null, controls = [], numberBoundsConfig = {}, freeTextFields = []) {
   const errors = [];
   const warnings = [];
   const controlByKey = new Map((controls || []).filter(c => c?.key).map(c => [c.key, c]));
@@ -632,7 +683,8 @@ export function validateAuthoredPropShape(props = {}, defaults = {}, propShapes 
     // default value's own JS type must not veto a value the control itself offers.
     if (isValueAmongControlOptions(value, controlByKey.get(key))) continue;
     const explicitBoundsByField = explicitNumberBoundsForArrayKey(numberBoundsConfig, key);
-    validateValueShape(value, defaults[key], `props.${key}`, errors, warnings, explicitBoundsByField);
+    const freeTextFieldsForKey = explicitFreeTextFieldsForArrayKey(freeTextFields, key);
+    validateValueShape(value, defaults[key], `props.${key}`, errors, warnings, explicitBoundsByField, freeTextFieldsForKey);
   }
   return { errors, warnings };
 }
@@ -643,7 +695,7 @@ function isValueAmongControlOptions(value, control) {
   return options.some(option => sameContractValue(option?.value, value));
 }
 
-function validateValueShape(value, defaultValue, field, errors, warnings = [], explicitBoundsByField = null) {
+function validateValueShape(value, defaultValue, field, errors, warnings = [], explicitBoundsByField = null, freeTextFieldsForKey = null) {
   if (isSerializedReactElementLike(value)) {
     errors.push(`${field}: serialized React element is not allowed; use plain text`);
     return;
@@ -693,7 +745,7 @@ function validateValueShape(value, defaultValue, field, errors, warnings = [], e
       }
       return;
     }
-    const enumFields = enumFieldsForArrayItems(defaultValue);
+    const enumFields = enumFieldsForArrayItems(defaultValue, freeTextFieldsForKey);
     const numberBounds = numberBoundsForArrayItems(defaultValue, explicitBoundsByField);
     value.forEach((item, index) => {
       if (!isPlainObject(item)) {
@@ -766,12 +818,12 @@ function validatePrimitiveValue(value, expected, defaultValue, field, errors) {
   }
 }
 
-function enumFieldsForArrayItems(items = []) {
+function enumFieldsForArrayItems(items = [], excludedFields = null) {
   const result = new Map();
   const objects = items.filter(isPlainObject);
   const keys = new Set(objects.flatMap(item => Object.keys(item)));
   for (const key of keys) {
-    if (!isEnumFieldName(key)) continue;
+    if (!isEnumFieldName(key) || excludedFields?.has(key)) continue;
     const values = objects
       .map(item => item?.[key])
       .filter(item => typeof item === 'string' && item.trim());
@@ -817,7 +869,11 @@ export function numberBoundsForArrayItems(items = [], explicitBoundsByField = nu
       continue;
     }
     if (isPercentDistributionField(key, objects)) {
-      result.set(key, { min: 0, max: 100, explicit: true, semantics: null });
+      // JAD batch-test r5: components render these fields verbatim as "<value>%" (donut/share/mix
+      // labels), so authored values must already BE percentages -- a raw magnitude (e.g. 1520 亿)
+      // renders as "1520%". Label the intent so inspect:layout surfaces semantics:'percent'
+      // alongside the same 0-100 domain this branch has always enforced.
+      result.set(key, { min: 0, max: 100, explicit: true, semantics: 'percent' });
       continue;
     }
     const values = objects.map(item => item?.[key]);
@@ -1471,7 +1527,10 @@ function resolveControlValue(value, defaults) {
 }
 
 export function serializeValue(value) {
-  if (value == null || ['string', 'number', 'boolean'].includes(typeof value)) return value;
+  // 数值统一 12 位有效数字:Math.sin/cos 生成的 defaults 在 macOS/Linux libm 上
+  // 最后一位 ulp 不同,会让生成物平台不确定(CI committed-artifacts 校验失败)。
+  if (typeof value === 'number') return Number.isFinite(value) ? Number(value.toPrecision(12)) : value;
+  if (value == null || ['string', 'boolean'].includes(typeof value)) return value;
   if (isSerializedReactElementLike(value)) return reactElementText(value);
   if (Array.isArray(value)) return value.map(serializeValue);
   if (typeof value !== 'object') return undefined;

@@ -6774,6 +6774,18 @@ export const pages = [
         "#7a5ae0"
       ],
       "showCaption": true
+    },
+    "numberBounds": {
+      "cards[].value": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      },
+      "cards[].restValue": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -8093,6 +8105,13 @@ export const pages = [
       "showGrade": true,
       "accentColor": "#e8503a",
       "showCaption": true
+    },
+    "numberBounds": {
+      "criteria[].score": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -10701,6 +10720,13 @@ export const pages = [
       "showBadge": true,
       "accentColor": "#7a5ae0",
       "showCaption": true
+    },
+    "numberBounds": {
+      "bars[].value": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {
@@ -12564,6 +12590,13 @@ export const pages = [
       "arcWidth": 24,
       "accentColor": "#5b8def",
       "showCaption": true
+    },
+    "numberBounds": {
+      "gauges[].value": {
+        "min": 0,
+        "max": 100,
+        "semantics": "percent"
+      }
     }
   },
   {

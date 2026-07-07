@@ -105,6 +105,9 @@ function injectPreviewOptions(html, options, { includeThemeSwitcher = false } = 
   const previewOptions = {
     ...options,
     themePacks: includeThemeSwitcher ? options.themePacks : {},
+    // 多主题调试总览(showcase)不自动保存:它是共享调试产物,浏览器里的试验性编辑
+    // 不应烧回 index.html(会污染 render:themes 与其上运行的其他测试)。
+    ...(includeThemeSwitcher ? { autosave: false } : {}),
   };
   const json = escapeScriptJson(JSON.stringify(previewOptions));
   return html.replace(

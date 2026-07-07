@@ -1607,6 +1607,9 @@
   #deck-page-pager button:disabled:hover{background:transparent;color:var(--pp-fg2)}
   #deck-page-pager svg{width:16px;height:16px}
   #deck-page-count{min-width:58px;text-align:center;font:600 12px/1 var(--mono);color:var(--pp-fg)}
+  #deck-save-status{position:fixed;left:24px;bottom:24px;z-index:110;max-width:320px;padding:9px 14px;border:1px solid var(--pp-border);border-radius:10px;background:var(--pp-bg);color:var(--pp-fg2);box-shadow:0 8px 26px rgba(0,0,0,.18);font:500 12px/1.4 var(--sans-zh);pointer-events:none}
+  #deck-save-status[hidden]{display:none}
+  body.editor-panels-collapsed #deck-save-status,body[data-mode="present"] #deck-save-status{display:none}
   #preview-panel-collapse{position:fixed;right:10px;top:9px;z-index:82;width:34px;height:34px;display:none;place-items:center;border:1px solid var(--pp-border);border-radius:6px;background:var(--pp-bg);color:var(--pp-icon);cursor:pointer;transition:background .15s,color .15s,border-color .15s,box-shadow .15s}
   body.preview-panel-open #preview-panel-collapse,body.editor-panels-collapsed #preview-panel-collapse{display:grid}
   #preview-panel-collapse:hover{background:var(--pp-chip);color:var(--pp-fg);border-color:var(--pp-border)}
@@ -1807,7 +1810,7 @@
   @media print{
     *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important}
     :root{--deck-scale:1!important}
-    #hint,#nav,#deck-topbar,#deck-page-pager,#preview-panel-collapse,#preview-panel,#slide-rail,.deck-export-overlay,.page-transition-stage{display:none!important}
+    #hint,#nav,#deck-topbar,#deck-page-pager,#deck-save-status,#preview-panel-collapse,#preview-panel,#slide-rail,.deck-export-overlay,.page-transition-stage{display:none!important}
     html,body{width:1920px!important;height:auto!important;margin:0!important;background:#fff!important;overflow:visible!important}
     body{user-select:auto!important}
     #deck-viewport{position:static!important;left:auto!important;top:auto!important;width:1920px!important;height:auto!important;overflow:visible!important;background:#fff!important}
@@ -1823,6 +1826,7 @@
 </head>
 <body>
 <div id="hint" aria-hidden="true"></div>
+<div id="deck-save-status" role="status" aria-live="polite" hidden>更改仅保存在本浏览器,分发前请导出</div>
 
 <header id="deck-topbar" aria-label="演示控制台工具栏">
   <div class="pp-topbar-brand">
@@ -1986,9 +1990,8 @@
   if(!vmEl) return;
 
   const STORE = 'dashi-ppt-view-model';
-  const URL_STATE_PARAM = 'deckState';
-  const URL_STATE_MAX_LENGTH = 12000;
-  const URL_STATE_DEBOUNCE_MS = 260;
+  const SERVER_SAVE_URL = '/api/save-deck-state';
+  const SERVER_SAVE_DEBOUNCE_MS = 2000;
   const RESTORED_EMPHASIS_INDEX_KEYS = new Set(['activeIndex', 'currentIndex', 'emphasisIndex', 'featureIndex', 'focusCol', 'focusIndex', 'highlightCol', 'highlightIndex', 'highlightRowIndex']);
   const OMIT_AUTHORED_PROP = Symbol('omit-authored-prop');
   const PRIVATE_NESTED_PROP_KEYS = new Set([
@@ -1999,7 +2002,6 @@
   const vm = readJson(vmEl, {});
   vm.state = vm.state || {};
   const embeddedText = readJson(textEl, {});
-  const baseThemePack = document.documentElement.dataset.themePack || '';
   const baseState = {
     slideOrder: [...(vm.state.slideOrder || (vm.slides || []).map(slide => slide.id))],
     skippedSlides: uniqueIds(vm.state.skippedSlides || []),
@@ -2008,29 +2010,26 @@
     text: {...(vm.state.text || {}), ...embeddedText},
     props: {...(vm.state.props || {})},
   };
-  const baseSlideOrderIndex = new Map(baseState.slideOrder.map((id, index) => [id, index]));
-  const urlStateStatus = {param:URL_STATE_PARAM, limit:URL_STATE_MAX_LENGTH, loaded:false, tooLarge:false, lastError:''};
+  // boot 恢复只有两层:HTML 内嵌基线(baseState)+ localStorage(仅签名匹配时生效)。
+  // 不再有第三层 URL 编辑状态——分享链接式的编辑持久化已被自动保存(烧回 index.html 本体)取代。
   const deckSignature = createDeckSignature(vm, baseState.text);
-  const urlState = readUrlEditState(deckSignature);
-  const restored = urlState?.state || {};
   const saved = readSaved(deckSignature);
-  vm.state.slideOrder = hasOwn(restored, 'slideOrder') ? restored.slideOrder : (saved.slideOrder || baseState.slideOrder);
-  vm.state.skippedSlides = hasOwn(restored, 'skippedSlides') ? restored.skippedSlides : (saved.skippedSlides || baseState.skippedSlides);
-  vm.state.deletedSlides = hasOwn(restored, 'deletedSlides') ? restored.deletedSlides : (saved.deletedSlides || baseState.deletedSlides);
-  vm.state.duplicatedSlides = hasOwn(restored, 'duplicatedSlides') ? restored.duplicatedSlides : (saved.duplicatedSlides || baseState.duplicatedSlides);
-  vm.state.text = {...baseState.text, ...(saved.text || {}), ...(restored.text || {})};
-  vm.state.props = mergePropsStates(baseState.props, urlState ? null : saved.props, restored.props);
-  if(urlState) vm.state.props = mergeLocalMediaProps(vm.state.props, saved.props);
-  vm.state.props = normalizeRestoredProps(vm.state.props, {migrateLegacyEmphasis:urlState});
+  vm.state.slideOrder = saved.slideOrder || baseState.slideOrder;
+  vm.state.skippedSlides = saved.skippedSlides || baseState.skippedSlides;
+  vm.state.deletedSlides = saved.deletedSlides || baseState.deletedSlides;
+  vm.state.duplicatedSlides = saved.duplicatedSlides || baseState.duplicatedSlides;
+  vm.state.text = {...baseState.text, ...(saved.text || {})};
+  vm.state.props = normalizeRestoredProps(mergePropsStates(baseState.props, saved.props));
   vm.state.__deckSignature = deckSignature;
 
   writeJson(textEl, vm.state.text);
   writeVm();
-  updateUrlStateStatus({loaded:Boolean(urlState)});
 
   window.__deckViewModel = {
     model: vm,
     getState,
+    // 只读浅引用:getState 是全量深拷贝(含媒体 base64,可达数 MB),高频只读用 peek。
+    peek(key){ return key == null ? vm.state : vm.state?.[key]; },
     setTextState,
     setSlideOrder,
     setSkippedSlides,
@@ -2044,10 +2043,6 @@
   };
   window.__getDeckViewModelState = getState;
   window.__syncDeckViewModelFromDom = syncFromDom;
-  window.__deckUrlStateInitial = urlState || null;
-  window.__deckUrlStateStatus = {...urlStateStatus};
-  window.__scheduleDeckUrlStateWrite = scheduleUrlStateWrite;
-  window.__writeDeckUrlStateNow = writeUrlStateNow;
 
   function getState(){
     return JSON.parse(JSON.stringify({
@@ -2149,153 +2144,109 @@
     } catch (error) {
       console.warn('[deck view model] state could not be persisted', error);
     }
-    scheduleUrlStateWrite();
+    scheduleServerSave();
   }
 
   function writeVm(){
     writeJson(vmEl, vm);
   }
 
-  let urlStateWriteTimer = null;
+  // 预览服务下的自动保存:防抖 POST 把 state 烧回 index.html 本体(见 scripts/serve-preview-https.mjs
+  // 的 /api/save-deck-state)。file:// 或没起预览服务时这次 fetch 天然失败——那就只退回 localStorage/
+  // URL 状态兜底,并在“确有未落盘改动”时亮起低调的常驻提醒条(deckSaveDirty && serviceAvailable===false)。
+  // serviceAvailable 初始为 null(未知):第一次保存结果出来之前不显示提醒,避免每次编辑都闪一下。
+  let serverSaveTimer = null;
+  let serverSaveInFlight = false;
+  let serverSaveQueued = false;
+  let deckSaveDirty = false;
 
-  function scheduleUrlStateWrite(){
-    if(urlStateWriteTimer !== null) clearTimeout(urlStateWriteTimer);
-    urlStateWriteTimer = setTimeout(() => {
-      urlStateWriteTimer = null;
-      writeUrlStateNow();
-    }, URL_STATE_DEBOUNCE_MS);
-  }
-
-  function writeUrlStateNow(){
-    if(urlStateWriteTimer !== null){
-      clearTimeout(urlStateWriteTimer);
-      urlStateWriteTimer = null;
-    }
-    const payload = buildUrlEditState();
-    const next = new URL(location.href);
-    if(!payload){
-      next.searchParams.delete(URL_STATE_PARAM);
-      replaceUrlIfChanged(next);
-      updateUrlStateStatus({encodedLength:0, tooLarge:false, lastError:''});
-      return;
-    }
-    const encoded = encodeUrlState(payload);
-    if(encoded.length > URL_STATE_MAX_LENGTH){
-      next.searchParams.delete(URL_STATE_PARAM);
-      replaceUrlIfChanged(next);
-      updateUrlStateStatus({
-        encodedLength:encoded.length,
-        tooLarge:true,
-        lastError:'too-large',
-      });
-      return;
-    }
-    next.searchParams.set(URL_STATE_PARAM, encoded);
-    replaceUrlIfChanged(next);
-    updateUrlStateStatus({encodedLength:encoded.length, tooLarge:false, lastError:''});
-  }
-
-  function replaceUrlIfChanged(next){
-    const href = next.href;
-    if(href === location.href) return;
-    history.replaceState(history.state, document.title, href);
-  }
-
-  function buildUrlEditState(){
-    const state = getState();
-    const compact = {};
-    const slideOrder = uniqueIds(state.slideOrder || []);
-    if(!arraysEqual(slideOrder, baseState.slideOrder)) compact.slideOrder = compactSlideOrderForUrl(slideOrder);
-    const skippedSlides = uniqueIds(state.skippedSlides || []);
-    if(skippedSlides.length) compact.skippedSlides = skippedSlides;
-    const deletedSlides = uniqueIds(state.deletedSlides || []);
-    if(deletedSlides.length) compact.deletedSlides = deletedSlides;
-    const duplicatedSlides = sanitizeDuplicatedSlides(state.duplicatedSlides || []);
-    if(duplicatedSlides.length) compact.duplicatedSlides = duplicatedSlides;
-    const text = diffFlatState(state.text || {}, getDefaultTextState());
-    if(Object.keys(text).length) compact.text = text;
-    const props = compactPropsState(state.props || {}, {forUrl:true});
-    if(Object.keys(props).length) compact.props = props;
-    const hasEditState = Object.keys(compact).length > 0;
-    const view = readUrlViewState();
-    if(!hasEditState && !viewHasChanges(view)) return null;
-    return {
-      v:1,
-      sig:deckSignature,
-      state:compact,
-      view:hasEditState ? view : compactViewState(view),
-    };
-  }
-
-  function viewHasChanges(view){
-    return Boolean(view.themePack && view.themePack !== baseThemePack)
-      || Number(view.currentSlide || 0) > 0;
-  }
-
-  function compactViewState(view){
-    const next = {};
-    if(view.themePack) next.themePack = view.themePack;
-    if(Number(view.currentSlide || 0) > 0) next.currentSlide = view.currentSlide;
-    return next;
-  }
-
-  function readUrlViewState(){
-    const preview = window.__getPreviewState?.() || {};
-    const currentSlide = Number(window.__currentSlideIndex || 0);
-    return {
-      themePack:String(preview.themePack || document.documentElement.dataset.themePack || ''),
-      currentSlide:Number.isFinite(currentSlide) ? currentSlide : 0,
-    };
-  }
-
-  function readUrlEditState(signature){
-    const encoded = new URLSearchParams(location.search).get(URL_STATE_PARAM);
-    if(!encoded) return null;
-    if(encoded.length > URL_STATE_MAX_LENGTH){
-      updateUrlStateStatus({encodedLength:encoded.length, tooLarge:true, lastError:'too-large'});
-      return null;
-    }
+  function deckAutosaveDisabled(){
     try {
-      const payload = JSON.parse(decodeUrlState(encoded));
-      if(payload?.v !== 1) throw new Error('version');
-      if(payload.sig && payload.sig !== signature){
-        updateUrlStateStatus({encodedLength:encoded.length, lastError:'signature-mismatch'});
-        return null;
-      }
-      const normalized = normalizeUrlEditState(payload);
-      updateUrlStateStatus({encodedLength:encoded.length, loaded:true, lastError:''});
-      return normalized;
+      const options = JSON.parse(document.getElementById('preview-options')?.textContent || '{}');
+      return options.autosave === false;
+    } catch { return false; }
+  }
+  let serverSaveAvailable = null;
+
+  function scheduleServerSave(){
+    if(deckAutosaveDisabled()) return;
+    deckSaveDirty = true;
+    updateSaveStatusBanner();
+    if(serverSaveTimer !== null) clearTimeout(serverSaveTimer);
+    serverSaveTimer = setTimeout(runServerSave, SERVER_SAVE_DEBOUNCE_MS);
+  }
+
+  async function runServerSave(){
+    serverSaveTimer = null;
+    if(serverSaveInFlight){ serverSaveQueued = true; return; }
+    serverSaveInFlight = true;
+    let succeeded = false;
+    try {
+      const response = await fetch(SERVER_SAVE_URL, {
+        method:'POST',
+        headers:{'content-type':'application/json'},
+        body:JSON.stringify({state:getState()}),
+      });
+      if(!response.ok) throw new Error(`save-deck-state responded ${response.status}`);
+      const result = await response.json();
+      serverSaveAvailable = true;
+      if(result && result.mediaMap) applyMediaMapReconciliation(result.mediaMap);
+      succeeded = true;
     } catch (error) {
-      updateUrlStateStatus({encodedLength:encoded.length, lastError:'invalid'});
-      console.warn('[deck url state] could not be restored', error);
-      return null;
+      serverSaveAvailable = false;
+    } finally {
+      serverSaveInFlight = false;
+      if(succeeded) deckSaveDirty = false;
+      updateSaveStatusBanner();
+      if(serverSaveQueued){
+        serverSaveQueued = false;
+        scheduleServerSave();
+      }
     }
   }
 
-  function normalizeUrlEditState(payload){
-    const state = payload.state || {};
-    const view = payload.view || {};
-    return {
-      v:1,
-      sig:payload.sig || '',
-      state:{
-        ...(hasOwn(state, 'slideOrder') ? {slideOrder:restoreSlideOrderFromUrl(state.slideOrder)} : {}),
-        ...(hasOwn(state, 'skippedSlides') ? {skippedSlides:uniqueIds(state.skippedSlides)} : {}),
-        ...(hasOwn(state, 'deletedSlides') ? {deletedSlides:uniqueIds(state.deletedSlides)} : {}),
-        ...(hasOwn(state, 'duplicatedSlides') ? {duplicatedSlides:sanitizeDuplicatedSlides(state.duplicatedSlides)} : {}),
-        ...(state.text && typeof state.text === 'object' ? {text:sanitizeTextState(state.text)} : {}),
-        ...(state.props && typeof state.props === 'object' ? {props:sanitizePropsState(state.props)} : {}),
-      },
-      view:{
-        themePack: typeof view.themePack === 'string' ? view.themePack : '',
-        currentSlide: Number.isFinite(Number(view.currentSlide)) ? Number(view.currentSlide) : null,
-      },
-    };
+  // 服务端把 data: 媒体落盘后,回传"原始 data: URL → 相对路径"的映射(mediaMap),而不是整份
+  // state:这次 fetch 从发出到响应之间用户可能已经继续编辑(打了更多字、换了别的图),直接拿
+  // 服务端回显的旧 state 整体覆盖当下 vm.state 会把这段等待期里的新编辑悄悄冲掉。所以这里只做
+  // "精确字符串替换"——把当下(最新)vm.state.props 里仍然等于某个原始 data: URL 的位置换成
+  // 对应相对路径,其余字段一律不碰;如果那个位置在等待期间已经被换成别的内容,替换会自然落空,
+  // 留到下一次保存周期用新内容的 data: URL 再处理一遍。
+  // 不调用 persist()/scheduleServerSave():这只是把服务端已确认落盘的结果同步回来,不是新的编辑。
+  function applyMediaMapReconciliation(mediaMap){
+    const entries = Object.entries(mediaMap || {});
+    if(!entries.length) return;
+    vm.state.props = replaceKnownDataUrls(vm.state.props, entries);
+    writeVm();
+    try {
+      localStorage.setItem(STORE, JSON.stringify(vm.state || {}));
+    } catch (error) {
+      console.warn('[deck view model] reconciled state could not be persisted', error);
+    }
   }
 
-  // URL 来源的文案是不可信输入(分享链接里的 deckState)。文案允许少量内联标签,
-  // 但必须剥离脚本/事件处理器/危险元素,否则 restore 时的 el.innerHTML = value 即 XSS。
-  // 用 <template> 解析(content 惰性,<img onerror>/<script> 不会执行),按白名单清洗。
+  function replaceKnownDataUrls(value, entries){
+    if(Array.isArray(value)) return value.map(item => replaceKnownDataUrls(item, entries));
+    if(value && typeof value === 'object'){
+      const next = {};
+      for(const [key, item] of Object.entries(value)) next[key] = replaceKnownDataUrls(item, entries);
+      return next;
+    }
+    if(typeof value === 'string'){
+      for(const [from, to] of entries){ if(value === from) return to; }
+    }
+    return value;
+  }
+
+  function updateSaveStatusBanner(){
+    const el = document.getElementById('deck-save-status');
+    if(!el) return;
+    const show = deckSaveDirty && serverSaveAvailable === false;
+    el.hidden = !show;
+  }
+
+  // 富文本可能被程序化写入 contenteditable(el.innerHTML = value),必须剥离脚本/事件处理器/
+  // 危险元素才安全。用 <template> 解析(content 惰性,<img onerror>/<script> 不会执行),按白名单清洗。
+  // 暴露为 window.__sanitizeRichText 供外部/测试直接调用。
   var SANITIZE_ALLOWED_TAGS = {B:1,STRONG:1,I:1,EM:1,BR:1,SUP:1,SUB:1};
   function sanitizeRichText(value){
     if (typeof value !== 'string' || value.indexOf('<') === -1) return value;
@@ -2322,164 +2273,6 @@
     return tpl.innerHTML;
   }
   if (typeof window !== 'undefined') window.__sanitizeRichText = sanitizeRichText;
-
-  function sanitizeTextState(text){
-    return Object.fromEntries(
-      Object.entries(text || {})
-        .filter(([key, value]) => key && typeof value === 'string')
-        .map(([key, value]) => [key, sanitizeRichText(value)]),
-    );
-  }
-
-  function compactPropsState(props, opts = {}){
-    const out = {};
-    Object.entries(props || {}).forEach(([slideId, values]) => {
-      const merged = {...getDefaultSlideProps(slideId), ...(values || {})};
-      const current = opts.forUrl ? sanitizeForUrl(merged) : merged;
-      if(!current || typeof current !== 'object' || Array.isArray(current)) return;
-      const diff = compactStatePropsFromRender(slideId, current);
-      if(diff && Object.keys(diff).length) out[slideId] = diff;
-    });
-    return out;
-  }
-
-  function materializePropsState(props){
-    const out = {};
-    Object.entries(props || {}).forEach(([slideId, values]) => {
-      const materialized = materializeSlideProps(slideId, values);
-      if(materialized && typeof materialized === 'object' && !Array.isArray(materialized) && Object.keys(materialized).length){
-        out[slideId] = materialized;
-      }
-    });
-    return out;
-  }
-
-  function materializeSlideProps(slideId, values){
-    const defaults = getComponentDefaultSlideProps(slideId);
-    const source = getSlideSourceProps(slideId);
-    const baseProps = baseState.props?.[slideId] || {};
-    const base = mergeRenderablePropValue(mergeRenderablePropValue(defaults, source), baseProps);
-    return mergeCompactPropValue(base, values || {});
-  }
-
-  function mergeRenderablePropValue(base, override){
-    if(override === undefined) return cloneJsonValue(base);
-    if(Array.isArray(override)){
-      const baseItems = Array.isArray(base) ? base : [];
-      return override.map((item, index) => mergeRenderablePropValue(baseItems[index], item));
-    }
-    if(override && typeof override === 'object'){
-      const out = base && typeof base === 'object' && !Array.isArray(base) ? cloneJsonValue(base) : {};
-      Object.entries(override).forEach(([key, value]) => {
-        out[key] = mergeRenderablePropValue(out[key], value);
-      });
-      return out;
-    }
-    return override;
-  }
-
-  function mergeCompactPropValue(base, override){
-    if(override === undefined) return cloneJsonValue(base);
-    if(Array.isArray(override)){
-      const baseItems = Array.isArray(base) ? base : [];
-      const length = Math.max(baseItems.length, override.length);
-      return Array.from({length}, (_, index) => (
-        index < override.length
-          ? mergeCompactPropValue(baseItems[index], override[index])
-          : cloneJsonValue(baseItems[index])
-      ));
-    }
-    if(override && typeof override === 'object'){
-      const out = base && typeof base === 'object' && !Array.isArray(base) ? cloneJsonValue(base) : {};
-      Object.entries(override).forEach(([key, value]) => {
-        out[key] = mergeCompactPropValue(out[key], value);
-      });
-      return out;
-    }
-    return override;
-  }
-
-  function sanitizePropsState(props){
-    const out = {};
-    Object.entries(props || {}).forEach(([slideId, values]) => {
-      const sanitized = sanitizeForUrl(values);
-      if(sanitized && typeof sanitized === 'object' && !Array.isArray(sanitized) && Object.keys(sanitized).length){
-        out[slideId] = sanitized;
-      }
-    });
-    return out;
-  }
-
-  function sanitizeDuplicatedSlides(records){
-    return (Array.isArray(records) ? records : [])
-      .map(record => {
-        if(!record?.sourceId || !record?.copyId) return null;
-        const sanitized = sanitizeForUrl({
-          type:record.type || 'copy',
-          sourceId:String(record.sourceId),
-          copyId:String(record.copyId),
-          copyKey:String(record.copyKey || record.copyId),
-          themePack:record.themePack ? String(record.themePack) : '',
-          props:record.props || {},
-        });
-        return sanitized?.sourceId && sanitized?.copyId ? sanitized : null;
-      })
-      .filter(Boolean);
-  }
-
-  function sanitizeForUrl(value){
-    if(value == null) return value;
-    if(typeof value === 'string'){
-      return /^data:(image|video)\//i.test(value) ? undefined : sanitizeRichText(value);
-    }
-    if(['number','boolean'].includes(typeof value)) return value;
-    if(Array.isArray(value)){
-      const items = value.map(sanitizeForUrl).filter(item => item !== undefined);
-      return items.length ? items : undefined;
-    }
-    if(typeof value !== 'object') return undefined;
-    if(typeof value.src === 'string' && /^data:(image|video)\//i.test(value.src)) return undefined;
-    const out = {};
-    Object.entries(value).forEach(([key, item]) => {
-      const sanitized = sanitizeForUrl(item);
-      if(sanitized !== undefined) out[key] = sanitized;
-    });
-    return Object.keys(out).length ? out : undefined;
-  }
-
-  function compactSlideOrderForUrl(order){
-    return uniqueIds(order).map(id => baseSlideOrderIndex.has(id) ? baseSlideOrderIndex.get(id) : id);
-  }
-
-  function restoreSlideOrderFromUrl(order){
-    if(!Array.isArray(order)) return [];
-    const ids = order.map(item => {
-      if(Number.isInteger(item)) return baseState.slideOrder[item] || '';
-      return typeof item === 'string' ? item : '';
-    });
-    return uniqueIds(ids);
-  }
-
-  function diffFlatState(current, base){
-    const out = {};
-    Object.entries(current || {}).forEach(([key, value]) => {
-      if(value !== base[key]) out[key] = value;
-    });
-    return out;
-  }
-
-  function getDefaultTextState(){
-    return {...(baseState.text || {}), ...(window.__getDeckDefaultTextState?.() || {})};
-  }
-
-  function diffObject(current, base){
-    const out = {};
-    Object.entries(current || {}).forEach(([key, value]) => {
-      const baseValue = base?.[key];
-      if(JSON.stringify(value) !== JSON.stringify(baseValue)) out[key] = value;
-    });
-    return out;
-  }
 
   function compactStatePropsFromRender(slideId, renderProps){
     const defaults = getComponentDefaultSlideProps(slideId);
@@ -2563,16 +2356,18 @@
     return out;
   }
 
-  function normalizeRestoredProps(props, opts = {}){
+  function normalizeRestoredProps(props){
     const out = {};
     Object.entries(props || {}).forEach(([slideId, rawValues]) => {
-      const normalized = normalizeRestoredSlideProps(slideId, rawValues, opts);
+      const normalized = normalizeRestoredSlideProps(slideId, rawValues);
       if(normalized && Object.keys(normalized).length) out[slideId] = normalized;
     });
     return out;
   }
 
-  function normalizeRestoredSlideProps(slideId, rawValues, opts = {}){
+  // 防御性钳制:localStorage 里保存的 range 类 prop 可能带着旧版本写入的越界值
+  // (例如联动 count 收窄后残留的旧 index),启动时按当前控件边界夹回合法范围。
+  function normalizeRestoredSlideProps(slideId, rawValues){
     if(!rawValues || typeof rawValues !== 'object' || Array.isArray(rawValues)) return {};
     const controls = getSlidePropControls(slideId);
     if(!controls.length) return {...rawValues};
@@ -2584,28 +2379,9 @@
       const bounds = resolveRestoredRangeBounds(control, values);
       const current = Number(values[control.key]);
       if(!Number.isFinite(current)) return;
-      const migrated = opts.migrateLegacyEmphasis && shouldMigrateLegacyEmphasisValue(control, rawValues, values, bounds)
-        ? Number(control.default)
-        : current;
-      values[control.key] = Math.min(bounds.max, Math.max(bounds.min, migrated));
+      values[control.key] = Math.min(bounds.max, Math.max(bounds.min, current));
     });
     return compactStatePropsFromRender(slideId, values);
-  }
-
-  function shouldMigrateLegacyEmphasisValue(control, rawValues, values, bounds){
-    if(!control?.maxFromKey || !RESTORED_EMPHASIS_INDEX_KEYS.has(control.key)) return false;
-    if(hasOwn(rawValues, control.maxFromKey)) return false;
-    const min = Number(control.min ?? 0);
-    const current = Number(values[control.key]);
-    const nextDefault = Number(control.default);
-    const linkedValue = Number(values[control.maxFromKey]);
-    return min === 1
-      && Number.isFinite(current)
-      && Number.isFinite(nextDefault)
-      && Number.isFinite(linkedValue)
-      && current === nextDefault - 1
-      && bounds.max === nextDefault
-      && linkedValue === nextDefault;
   }
 
   function resolveRestoredRangeBounds(control, values){
@@ -2633,62 +2409,8 @@
     return readDatasetJson(slideEl?.querySelector('[data-prop-controls]')?.dataset.propControls, []);
   }
 
-  function mergeLocalMediaProps(currentProps, savedProps){
-    const out = mergePropsStates(currentProps);
-    Object.entries(savedProps || {}).forEach(([slideId, values]) => {
-      Object.entries(values || {}).forEach(([key, value]) => {
-        if(!containsLocalMediaValue(value)) return;
-        if(!out[slideId]) out[slideId] = {};
-        out[slideId][key] = cloneJsonValue(value);
-      });
-    });
-    return out;
-  }
-
-  function containsLocalMediaValue(value){
-    if(value == null) return false;
-    if(typeof value === 'string') return /^data:(image|video)\//i.test(value);
-    if(Array.isArray(value)) return value.some(containsLocalMediaValue);
-    if(typeof value !== 'object') return false;
-    if(typeof value.src === 'string' && /^data:(image|video)\//i.test(value.src)) return true;
-    return Object.values(value).some(containsLocalMediaValue);
-  }
-
-  function cloneJsonValue(value){
-    return value == null ? value : JSON.parse(JSON.stringify(value));
-  }
-
-  function encodeUrlState(payload){
-    const bytes = new TextEncoder().encode(JSON.stringify(payload));
-    let binary = '';
-    const chunkSize = 0x8000;
-    for(let i = 0; i < bytes.length; i += chunkSize){
-      binary += String.fromCharCode(...bytes.subarray(i, i + chunkSize));
-    }
-    return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/g, '');
-  }
-
-  function decodeUrlState(encoded){
-    const base64 = encoded.replace(/-/g, '+').replace(/_/g, '/');
-    const padded = base64 + '='.repeat((4 - base64.length % 4) % 4);
-    const binary = atob(padded);
-    const bytes = new Uint8Array(binary.length);
-    for(let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
-    return new TextDecoder().decode(bytes);
-  }
-
-  function updateUrlStateStatus(update){
-    Object.assign(urlStateStatus, update || {});
-    window.__deckUrlStateStatus = {...urlStateStatus};
-  }
-
   function hasOwn(object, key){
     return Object.prototype.hasOwnProperty.call(object || {}, key);
-  }
-
-  function arraysEqual(a, b){
-    if(a.length !== b.length) return false;
-    return a.every((item, index) => item === b[index]);
   }
 
   function readDatasetJson(value, fallback){
@@ -2759,6 +2481,37 @@ let deckLeft=0;
 let deckTop=0;
 let deckScale=1;
 let activeThemePack=document.documentElement.dataset.themePack || '';
+// 轻量视图定位:?page=<1-based>&pack=<themePack>,仅影响初始导航,翻页/切包时用 replaceState
+// 防抖回写(见 scheduleViewParamsWrite)。不进入 vm.state / localStorage / 自动保存链路。
+const baseThemePackForViewParams=activeThemePack;
+const VIEW_PARAM_PAGE='page';
+const VIEW_PARAM_PACK='pack';
+const VIEW_PARAM_WRITE_DEBOUNCE_MS=260;
+let viewParamsWriteTimer=null;
+function scheduleViewParamsWrite(){
+  if(viewParamsWriteTimer !== null) clearTimeout(viewParamsWriteTimer);
+  viewParamsWriteTimer=setTimeout(() => {
+    viewParamsWriteTimer=null;
+    writeViewParamsNow();
+  }, VIEW_PARAM_WRITE_DEBOUNCE_MS);
+}
+function writeViewParamsNow(){
+  if(viewParamsWriteTimer !== null){
+    clearTimeout(viewParamsWriteTimer);
+    viewParamsWriteTimer=null;
+  }
+  try {
+    const next=new URL(location.href);
+    if(idx > 0) next.searchParams.set(VIEW_PARAM_PAGE, String(idx + 1));
+    else next.searchParams.delete(VIEW_PARAM_PAGE);
+    if(activeThemePack && activeThemePack !== baseThemePackForViewParams) next.searchParams.set(VIEW_PARAM_PACK, activeThemePack);
+    else next.searchParams.delete(VIEW_PARAM_PACK);
+    if(next.href === location.href) return;
+    history.replaceState(history.state, document.title, next.href);
+  } catch {
+    // 静默失败:轻量视图定位不能影响翻页/切包本身。
+  }
+}
 let deckMode=document.body.dataset.mode === 'present' ? 'present' : 'edit';
 var overviewGrid=null;
 let adjacentPreloadTimer=null;
@@ -2950,7 +2703,7 @@ function writeStoredSlideIndex(index){
       updatedAt: new Date().toISOString(),
     }));
   } catch {}
-  window.__scheduleDeckUrlStateWrite?.();
+  scheduleViewParamsWrite();
 }
 
 function previewStoreKey(){
@@ -3068,8 +2821,16 @@ function applyPersistedSlideOrder(){
   });
 }
 
+const slideStateSetCache = new Map();
 function getSlideStateSet(key){
-  return new Set((window.__deckViewModel?.getState?.()?.[key] || []).filter(Boolean).map(String));
+  const vmApi = window.__deckViewModel;
+  const source = vmApi?.peek ? vmApi.peek(key) : vmApi?.getState?.()?.[key];
+  const list = Array.isArray(source) ? source : [];
+  const cached = slideStateSetCache.get(key);
+  if(cached && cached.source === source) return cached.set;
+  const set = new Set(list.filter(Boolean).map(String));
+  slideStateSetCache.set(key, { source, set });
+  return set;
 }
 
 function isSlideHiddenByThemePack(slide){
@@ -3294,7 +3055,7 @@ function setActiveThemePack(themePack, opts={}){
   if(isEditMode() && overviewGrid){
     refreshRailCatalog();
   }
-  window.__scheduleDeckUrlStateWrite?.();
+  scheduleViewParamsWrite();
 }
 window.__setActiveThemePack=setActiveThemePack;
 
@@ -5455,12 +5216,9 @@ addEventListener('touchend',e=>{
   }
 },{passive:true});
 
-const initialSlideParam = new URLSearchParams(location.search).get('slide');
-const initialUrlSlide = window.__deckUrlStateInitial?.view?.currentSlide;
+const initialSlideParam = new URLSearchParams(location.search).get(VIEW_PARAM_PAGE);
 const storedSlide = readStoredSlideIndex();
-const initialSlide = Number.isFinite(Number(initialUrlSlide))
-  ? Number(initialUrlSlide)
-  : (initialSlideParam ? Number(initialSlideParam) - 1 : (storedSlide ?? 0));
+const initialSlide = initialSlideParam ? Number(initialSlideParam) - 1 : (storedSlide ?? 0);
 layoutDeck();
 go(Number.isFinite(initialSlide) ? initialSlide : 0, {animate:false, skipThumbPause:true});
 refreshRailCatalog();
@@ -5528,7 +5286,7 @@ refreshRailCatalog();
   let pendingPropControlsRender = false;
   var ENGLISH_PROP_OPTION_LABELS;
 
-  const urlViewState = window.__deckUrlStateInitial?.view || {};
+  const urlThemePack = new URLSearchParams(location.search).get(VIEW_PARAM_PACK) || '';
   const saved = readSaved();
   const transitionModes = window.__pageTransitionModes || ['none', 'liquidMorph'];
   const themePacks = options.themePacks || {};
@@ -5536,7 +5294,7 @@ refreshRailCatalog();
   const previewCountButtonLimit = normalizePreviewCountButtonLimit(
     options.previewControls?.countButtonMaxValue ?? options.previewCountButtonLimit,
   );
-  const initialThemePack = normalizeThemePack(urlViewState.themePack)
+  const initialThemePack = normalizeThemePack(urlThemePack)
     || normalizeThemePack(saved.themePack)
     || normalizeThemePack(options.current?.themePack)
     || normalizeThemePack(document.documentElement.dataset.themePack)
@@ -5609,7 +5367,7 @@ refreshRailCatalog();
 
   function writeSaved(){
     localStorage.setItem(window.__previewStoreKey?.() || STORE, JSON.stringify(state));
-    window.__scheduleDeckUrlStateWrite?.();
+    scheduleViewParamsWrite();
   }
 
   function releasePreviewControlFocus(control){
@@ -6509,9 +6267,7 @@ refreshRailCatalog();
     Object.keys(localStorage).filter(key => key.startsWith(`${STORE}:`)).forEach(key => localStorage.removeItem(key));
     localStorage.removeItem('dashi-ppt-view-model');
     Object.keys(localStorage).filter(key => key.startsWith('dashi-ppt-current-slide:')).forEach(key => localStorage.removeItem(key));
-    const next = new URL(location.href);
-    next.searchParams.delete('deckState');
-    location.replace(next.href);
+    location.reload();
   });
 
   function getCurrentSlide(){
@@ -6763,10 +6519,11 @@ refreshRailCatalog();
     };
   }
 
+  // 导出走 snapshot(见 buildPdfExportSnapshot / collectEditablePptxCanvasSnapshots)把当前主题包/
+  // 页面/编辑状态整份带给服务端,sourcePath 只用来定位要打开的 HTML 文件——不需要,也不应该带上
+  // 任何查询参数(轻量视图定位参数也不例外),避免污染导出产物。
   function getServerExportSourcePath() {
-    const url = new URL(location.href);
-    url.searchParams.delete('deckState');
-    return url.pathname + url.search;
+    return new URL(location.href).pathname;
   }
 
   function startServerExportDownload(downloadUrl, exportType){
