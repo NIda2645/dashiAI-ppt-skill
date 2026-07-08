@@ -14,6 +14,9 @@ export const RUNTIME_ASSET_PATHS = [
   'assets/unicorn/automations_remix_scene.json',
   'assets/unicorn/moving_into_remix_scene.json',
   'assets/unicorn/goey_balls_remix_scene.json',
+  // 场景 JSON 引用的贴图(蓝噪声/字体图集)本地快照:引用远程 assets.unicorn.studio
+  // 会让交付 deck 产生外链请求(隐私/离线/供应链面),与 SDK 本体一样全部随 deck 分发。
+  'assets/unicorn/media',
   'assets/vendor/unicornstudio.umd.js',
   'assets/vendor/fonts',
 ];
