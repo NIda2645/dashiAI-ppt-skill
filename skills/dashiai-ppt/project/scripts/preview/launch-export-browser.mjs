@@ -29,6 +29,11 @@ export async function launchExportBrowser(chromium, { fallbackTmpDirs = [], log 
     const message = String((error && error.message) || error);
     if (!SANDBOX_LAUNCH_FAILURE_RE.test(message)) throw error;
     log('[export] 浏览器常规启动被宿主沙箱拦截(Mach/Singleton/tmp),改用 --single-process 重试');
-    return chromium.launch({ ...baseOptions, args: ['--single-process', '--in-process-gpu'] });
+    // --disable-gpu:第 4 层防线。single-process + in-process-gpu 会把 GPU 初始化
+    // 拉进浏览器主进程,进而向 WindowServer 查询真实显示器建立刷新同步
+    // (CVDisplayLinkCreateWithCGDisplay);豆包的服务上下文接触不到图形会话,
+    // 该调用返回 kCVReturnInvalidDisplay 后浏览器直接崩溃(newPage 时报
+    // "browser has been closed")。headless 导出全程用软件渲染即可,不碰显示服务。
+    return chromium.launch({ ...baseOptions, args: ['--single-process', '--in-process-gpu', '--disable-gpu'] });
   }
 }
