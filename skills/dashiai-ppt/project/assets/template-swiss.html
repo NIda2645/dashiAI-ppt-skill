@@ -7459,9 +7459,11 @@ refreshRailCatalog();
   const EXPORT_GUIDE_COPY = {
     file: {
       title: '当前非 HTTP 模式,无法导出',
-      desc: '直接打开本地 HTML 文件时没有导出服务。把下面的提示词发给 AI,让它启动 HTTP 服务后再导出:',
-      startLabel: '发送给 AI,启动 HTTP 服务:',
-      startPrompt: () => `帮我启动http服务来预览这个网页 ${deckLocalDirForPrompt()}`,
+      desc: '直接打开本地 HTML 文件时没有导出服务。把下面的提示词发给 AI,让它用 DashiAI PPT 的预览服务打开后再导出:',
+      startLabel: '发送给 AI,启动预览服务:',
+      // 提示词必须指名 dashiai-ppt 的预览服务:只说"启动 http 服务"会诱导 AI 用
+      // python -m http.server 等静态服务器,那正是 no-service 场景的事故根源。
+      startPrompt: () => `帮我用 dashiai-ppt 的预览服务启动这个 PPT 的预览 ${deckLocalDirForPrompt()}`,
     },
     'no-service': {
       title: '当前服务不支持导出',
@@ -7485,6 +7487,7 @@ refreshRailCatalog();
           <div class="ehm-prompt"><code data-prompt="start"></code><button class="ehm-copy" type="button" data-copy="start">复制</button></div>
           <div class="ehm-label">也可以直接跟 AI 说:</div>
           <div class="ehm-prompt"><code data-prompt="export"></code><button class="ehm-copy" type="button" data-copy="export">复制</button></div>
+          <p class="ehm-desc" data-manual-cmd style="margin:14px 0 0"></p>
         </div>`;
       modal.addEventListener('click', event => {
         const copyKey = event.target?.dataset?.copy;
@@ -7501,6 +7504,7 @@ refreshRailCatalog();
     modal.querySelector('[data-label="start"]').textContent = copy.startLabel;
     modal.querySelector('[data-prompt="start"]').textContent = copy.startPrompt();
     modal.querySelector('[data-prompt="export"]').textContent = '帮我导出PPTX';
+    modal.querySelector('[data-manual-cmd]').textContent = '手动方式:在终端运行 npm --prefix <skill-root>/project run preview:start -- <输出 ppt 目录> <port>,再用它输出的 http://127.0.0.1:<port>/ 打开导出。';
     modal.classList.add('open');
   }
 
