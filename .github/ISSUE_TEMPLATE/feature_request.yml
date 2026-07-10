@@ -1,0 +1,16 @@
+name: 💡 功能建议 / Feature Request
+description: 新功能、新主题风格或体验改进建议
+labels: [enhancement]
+body:
+  - type: textarea
+    id: need
+    attributes:
+      label: 想解决什么问题?
+      description: 描述场景与痛点,比场景化的解决方案更有帮助
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: 期望的功能形态(可选)
+      description: 如果你已经想好了希望它长什么样,写在这里
