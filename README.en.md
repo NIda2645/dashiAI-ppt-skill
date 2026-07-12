@@ -59,7 +59,7 @@ Install the dashiai-ppt skill for me: run `npx dashiai-ppt-skill`, or clone http
 
 Already installed? Run `npx dashiai-ppt-skill@latest` to update in place (installed dependencies are preserved).
 
-Requirements: a machine that runs **Node.js 18+ and npm** (dependencies auto-install on first generation); exporting PPTX / PDF requires Chrome / Chromium / Edge installed locally.
+Requirements: a machine that runs **Node.js 20+ and npm** (dependencies auto-install on first generation); exporting PPTX / PDF requires Chrome / Chromium / Edge installed locally.
 
 Once installed, just tell your agent:
 
@@ -285,7 +285,7 @@ Not as free-form values. Visual styling is decided by the selected theme package
 Zero content upload: your documents and deck content are never sent to any server — generation, editing, and export all run locally, and the output opens offline. Only two things touch the network: npm auto-installing dependencies on first generation, and a silent version check after each task (reads only the remote version number, 8-second timeout, skips on failure). Also, the local preview server allows LAN access by default (handy for phone/tablet preview) — viewing only; export endpoints are open to localhost only.
 
 **What are the requirements?**
-Node.js 18+ and npm (dependencies auto-install on first generation); PPTX / PDF export needs Chrome / Chromium / Edge installed locally (point to it with the `CHROME_PATH` environment variable if needed).
+Node.js 20+ and npm (dependencies auto-install on first generation); PPTX / PDF export needs Chrome / Chromium / Edge installed locally (point to it with the `CHROME_PATH` environment variable if needed).
 
 **How do I update?**
 Run `git pull` in the skill directory. The skill also checks for new versions silently after each task — it stays quiet when you're up to date, and only adds a note at the end of a reply when there's a new release.

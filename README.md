@@ -54,7 +54,7 @@ npx --registry=https://registry.npmmirror.com dashiai-ppt-skill@latest
 帮我安装 skill：npx dashiai-ppt-skill@latest，国内镜像 npx --registry=https://registry.npmmirror.com dashiai-ppt-skill@latest
 ```
 
-环境要求：Node.js 18+ 和 npm；导出 PPTX / PDF 需要本机装有 Chrome / Chromium / Edge。
+环境要求：Node.js 20+ 和 npm；导出 PPTX / PDF 需要本机装有 Chrome / Chromium / Edge。
 
 ## 效果
 
