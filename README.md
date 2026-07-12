@@ -53,12 +53,6 @@ npx dashiai-ppt-skill
 
 需要装到指定目录时加 `--dir <路径>`（如 `--dir ~/.codex/skills`）。
 
-**Codex / Cursor 等 Agent** 也可以用 skills CLI：
-
-```bash
-npx skills add https://github.com/chuspeeism/dashiAI-ppt-skill --skill dashiai-ppt
-```
-
 也可以直接把这句话发给你的 AI Agent，让它自己完成安装：
 
 ```text

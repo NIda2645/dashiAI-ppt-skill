@@ -41,32 +41,23 @@ At generation time the skill shows you previews to choose from, and you can ask 
 
 ## Get Started in 30 Seconds
 
-**Claude Code** — official plugin (auto-updates; upgrade later with `/plugin marketplace update dashiai-ppt-skill`):
-
-```
-/plugin marketplace add chuspeeism/dashiAI-ppt-skill
-/plugin install dashiai-ppt@dashiai-ppt-skill
-```
-
-**Codex / Cursor / other agents** — one-liner:
+Install (or update) with a single command — it detects common skills directories automatically, installs into every one it finds, and keeps already-installed dependencies:
 
 ```bash
-npx skills add https://github.com/chuspeeism/dashiAI-ppt-skill --skill dashiai-ppt
+npx dashiai-ppt-skill
 ```
+
+Use `--dir <path>` to target a specific skills directory (e.g. `--dir ~/.claude/skills`), or `--list` to see what gets detected.
 
 Or just hand this to your AI agent and let it figure out the install:
 
 ```text
-Clone and install this skill: https://github.com/chuspeeism/dashiAI-ppt-skill
+Install the dashiai-ppt skill for me: run `npx dashiai-ppt-skill`, or clone https://github.com/chuspeeism/dashiAI-ppt-skill
 ```
 
-> The skill content lives in the repo's `skills/dashiai-ppt/` subdirectory — the agent should place that subdirectory into its own skills directory. Agents with no fixed skills-directory convention (e.g. Marvis / Workbuddy / Dumate / Qclaw) can just drop that subdirectory anywhere and point them at its `SKILL.md`.
+> When installing from the repo instead of npm, the skill content lives in the `skills/dashiai-ppt/` subdirectory — the agent should place that subdirectory into its own skills directory. Agents with no fixed skills-directory convention (e.g. Marvis / Workbuddy / Dumate / Qclaw) can just drop that subdirectory anywhere and point them at its `SKILL.md`.
 
-Already installed? Update with:
-
-```text
-Update the dashiai-ppt skill for me: https://github.com/chuspeeism/dashiAI-ppt-skill
-```
+Already installed? Re-run `npx dashiai-ppt-skill` to update in place.
 
 Requirements: a machine that runs **Node.js 18+ and npm** (dependencies auto-install on first generation); exporting PPTX / PDF requires Chrome / Chromium / Edge installed locally.
 
