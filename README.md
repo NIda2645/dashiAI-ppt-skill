@@ -13,7 +13,7 @@
 ![Qclaw](https://img.shields.io/badge/Qclaw-Supported-14B8A6?style=flat-square)
 [![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL--3.0-blue?style=flat-square)](./LICENSE)
 
-> 🌏 **English version: [README.en.md](./README.en.md)**
+[English](./README.en.md) · [简体中文](README.md)
 
 一个真正适合职场人的 PPT Skill。把文档丢给你的 AI Agent，每一页都自带编辑控制台的 PPT Skill——不满意的地方直接在浏览器里改，改完还能一键导出成真实的、可编辑的 PPTX。
 
