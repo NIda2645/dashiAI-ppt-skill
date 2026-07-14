@@ -1,4 +1,4 @@
-# DashiAI PPT Skill · 大师 PPT / 网页 PPT / 可编辑 PPTX
+# Dashi PPT Skill · 大师 PPT / 网页 PPT / 可编辑 PPTX
 
 ![GitHub stars](https://img.shields.io/github/stars/chuspeeism/dashi-ppt-skill?style=flat-square)
 ![Skill](https://img.shields.io/badge/Skill-Agent-111111?style=flat-square)
