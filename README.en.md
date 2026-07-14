@@ -49,7 +49,7 @@ Use `--dir <path>` to target a specific skills directory (e.g. `--dir ~/.claude/
 Or hand this to your AI agent:
 
 ```text
-Install the dashiai-ppt skill for me: npx dashi-ppt-skill@latest
+Install the dashi-ppt skill for me: npx dashi-ppt-skill@latest
 ```
 
 Requirements: Node.js 20+ and npm; exporting PPTX / PDF requires Chrome / Chromium / Edge installed locally.
