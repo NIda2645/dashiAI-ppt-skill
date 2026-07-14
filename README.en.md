@@ -1,4 +1,4 @@
-# DashiAI PPT Skill · Web Decks / Per-Page Console / Editable PPTX Export
+# Dashi PPT Skill · Web Decks / Per-Page Console / Editable PPTX Export
 
 ![GitHub stars](https://img.shields.io/github/stars/chuspeeism/dashi-ppt-skill?style=flat-square)
 ![Skill](https://img.shields.io/badge/Skill-Agent-111111?style=flat-square)
